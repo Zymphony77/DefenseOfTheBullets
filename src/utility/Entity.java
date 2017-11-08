@@ -8,6 +8,7 @@ public abstract class Entity {
 	protected Pair refPoint;
 	protected double maxHp;
 	protected double hp;
+	protected double attack;
 	protected double direction;		// Angle against X-axis
 	protected double speed;
 	protected boolean hpBarVisible;
