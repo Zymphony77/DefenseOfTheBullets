@@ -12,6 +12,7 @@ public abstract class Entity {
 	protected double direction;		// Angle against X-axis
 	protected double speed;
 	protected boolean hpBarVisible;
+	protected boolean isDead;
 	
 	public Entity(Pair refPoint, double maxHp, double direction, double speed, boolean hpBarVisible) {
 		this.refPoint = new Pair(refPoint);
@@ -20,19 +21,16 @@ public abstract class Entity {
 		this.direction = direction;
 		this.speed = speed;
 		this.hpBarVisible = hpBarVisible;
+		this.isDead = false;
 		
 		this.canvas = new Canvas();
 	}
 	
-	public void takeDamage(double damage) {
-		if(hp > damage) {
-			hp -= damage;
-		} else {
-			die();
-		}
-	}
+	public abstract void attack(Entity entity);		// Only Body Damage
+	public abstract void takeDamage(double damage);
 	
 	public void die() {
+		isDead = true;
 		canvas.setOpacity(0);
 	}
 	
@@ -66,5 +64,9 @@ public abstract class Entity {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public boolean isDead() {
+		return isDead;
 	}
 }
