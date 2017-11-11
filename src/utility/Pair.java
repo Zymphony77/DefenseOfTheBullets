@@ -17,5 +17,21 @@ public class Pair {
 		this.first = tmp.first;
 		this.second = tmp.second;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o == null)
+			return false;
+		if(o instanceof Pair){
+			Pair tmp = (Pair)o;
+			if(tmp.first == first && tmp.second == second){
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		return false;
+	}
 }
 
