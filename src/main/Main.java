@@ -3,16 +3,30 @@ package main;
 import javafx.application.Application;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import job.*;
+import java.util.LinkedList;
+
+import entity.*;
+import entity.bullet.*;
+import entity.job.*;
 import utility.*;
 
 public class Main extends Application {
-	int x = 0;
+	public static final int SCREEN_SIZE = 750;
+	
+	public static LinkedList<Novice> playerList;
+	public static LinkedList<Bullet> bulletList;
+	
+	private static Novice player;
+	
+	private static Pane playerPane;
+	private static Pane bulletPane;
+	private static Pane wholePane;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -20,21 +34,50 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		Novice novice = new Novice(new Pair(100, 100), true);
+		playerPane = new Pane();
+		bulletPane = new Pane();
 		
-		StackPane pane = new StackPane();
-		pane.getChildren().add(novice.getCanvas());
+		playerList = new LinkedList<Novice>();
+		bulletList = new LinkedList<Bullet>();
 		
-		Scene scene = new Scene(pane, 500, 500);
+		wholePane = new Pane();
+		wholePane.getChildren().addAll(playerPane, bulletPane);
+		
+		Novice player = new Novice(new Pair(SCREEN_SIZE / 2, SCREEN_SIZE / 2), Side.BLUE);
+		addEntity(player);
+		
+		Scene scene = new Scene(wholePane, SCREEN_SIZE, SCREEN_SIZE);
+		
+		scene.setOnKeyPressed(event -> Handler.keyPressed(event, player));
+		scene.setOnMouseMoved(event -> Handler.changeDirection(event, player));
+		
 		primaryStage.setScene(scene);
+		primaryStage.setTitle("DotB: Defense of the Bullets");
+		primaryStage.setResizable(false);
 		primaryStage.show();
-		
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(5), event -> {
-			novice.getCanvas().setTranslateX(x);
-			novice.getCanvas().setRotate(-x);
-			--x;
-		}));
-		timeline.setCycleCount(200);
-		timeline.play();
+	}
+	
+	public static void addEntity(Entity entity) {
+		if(entity instanceof Novice) {
+			playerList.add((Novice) entity);
+			playerPane.getChildren().add(entity.getCanvas());
+		} else if(entity instanceof Bullet) {
+			bulletList.add((Bullet) entity);
+			bulletPane.getChildren().add(entity.getCanvas());
+		}
+	}
+	
+	public static void removeEntity(Entity entity) {
+		if(entity instanceof Novice) {
+			playerList.remove((Novice) entity);
+			playerPane.getChildren().remove(entity.getCanvas());
+		} else if(entity instanceof Bullet) {
+			bulletList.remove((Bullet) entity);
+			bulletPane.getChildren().remove(entity.getCanvas());
+		}
+	}
+	
+	public static Pair getShift() {
+		return player.getRefPoint();
 	}
 }

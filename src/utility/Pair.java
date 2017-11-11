@@ -1,21 +1,19 @@
 package utility;
 
-public class Pair 
-{
+public class Pair {
 	public int first, second;
 	
-	public Pair(int first, int second)
-	{
-		this.first = first;
-		this.second = second;
-	}
-	public Pair()
-	{
+	public Pair() {
 		first = 0;
 		second = 0;
 	}
-	public Pair(Pair tmp)
-	{
+	
+	public Pair(int first, int second) {
+		this.first = first;
+		this.second = second;
+	}
+	
+	public Pair(Pair tmp) {
 		this.first = tmp.first;
 		this.second = tmp.second;
 	}

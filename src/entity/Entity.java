@@ -1,32 +1,41 @@
-package utility;
+package entity;
 
 import javafx.scene.canvas.Canvas;
+import utility.Pair;
+import utility.Side;
 
 public abstract class Entity {
 	protected Canvas canvas;
-	
 	protected Pair refPoint;
 	protected double maxHp;
 	protected double hp;
 	protected double attack;
 	protected double direction;		// Angle against X-axis
 	protected double speed;
-	protected boolean hpBarVisible;
+	protected Side side;
 	protected boolean isDead;
 	
-	public Entity(Pair refPoint, double maxHp, double direction, double speed, boolean hpBarVisible) {
+	public Entity(Pair refPoint, double maxHp, double direction, double speed, Side side) {
 		this.refPoint = new Pair(refPoint);
 		this.maxHp = maxHp;
 		this.hp = maxHp;
 		this.direction = direction;
 		this.speed = speed;
-		this.hpBarVisible = hpBarVisible;
+		this.side = side;
 		this.isDead = false;
 		
 		this.canvas = new Canvas();
+		
+		draw();
 	}
 	
-	public abstract void attack(Entity entity);		// Only Body Damage
+	public abstract void draw();
+	public abstract void changeCenter(Pair center);
+	
+	public void attack(Entity entity) {
+		entity.takeDamage(attack);
+	}
+	
 	public abstract void takeDamage(double damage);
 	
 	public void die() {
@@ -44,6 +53,10 @@ public abstract class Entity {
 	
 	public void setDirection(double direction) {
 		this.direction = direction;
+	}
+	
+	public Pair getRefPoint() {
+		return refPoint;
 	}
 	
 	public Canvas getCanvas() {
@@ -66,7 +79,13 @@ public abstract class Entity {
 		return speed;
 	}
 	
+	public Side getSide() {
+		return side;
+	}
+	
 	public boolean isDead() {
 		return isDead;
 	}
+	
+	public abstract int getRadius();
 }
