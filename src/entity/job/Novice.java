@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import main.*;
-import entity.Entity;
+import entity.*;
 import entity.bullet.Bullet;
 import utility.*;
 
@@ -15,6 +15,7 @@ public class Novice extends Entity {
 	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;
 	
+	protected HpBar hpBar;
 	protected double exp;
 	protected int level;
 	
@@ -37,6 +38,9 @@ public class Novice extends Entity {
 		gc.fillRect(2*RADIUS, 25, RADIUS, 10);
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
+		
+		hpBar = new HpBar(this);
+		Component.getInstance().addComponent(hpBar);
 	}
 	
 	public void changeCenter(Pair center) {
@@ -69,7 +73,7 @@ public class Novice extends Entity {
 		double y = refPoint.second + (int) (Math.sin(Math.toRadians(direction))*(RADIUS + 17));
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 1, side);
-		Component.getInstance().addEntity(bullet);
+		Component.getInstance().addComponent(bullet);
 	}
 	
 	public int getRadius() {

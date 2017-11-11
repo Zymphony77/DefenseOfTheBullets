@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-import entity.Entity;
+import entity.*;
 import entity.bullet.Bullet;
 import entity.job.Novice;
 import entity.food.*;
@@ -42,8 +42,8 @@ public class Component {
 		bulletList = new LinkedList<Bullet>();
 		foodList = new LinkedList<Food>();
 		
-		
 		grid = new Canvas(Main.SCREEN_SIZE * 32 / 30, Main.SCREEN_SIZE * 32 / 30);
+		
 		GraphicsContext gc = grid.getGraphicsContext2D();
 		gc.setStroke(Color.gray(0.95));
 		gc.setLineWidth(1);
@@ -93,26 +93,30 @@ public class Component {
 	
 	public void initialize(Side side) {
 		player = new Novice(new Pair(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2), side);
-		addEntity(player);
+		addComponent(player);
 	}
 	
-	public void addEntity(Entity entity) {
-		if(entity instanceof Novice) {
-			playerList.add((Novice) entity);
-			playerPane.getChildren().add(entity.getCanvas());
-		} else if(entity instanceof Bullet) {
-			bulletList.add((Bullet) entity);
-			bulletPane.getChildren().add(entity.getCanvas());
+	public void addComponent(Object component) {
+		if(component instanceof Novice) {
+			playerList.add((Novice) component);
+			playerPane.getChildren().add(((Entity) component).getCanvas());
+		} else if(component instanceof Bullet) {
+			bulletList.add((Bullet) component);
+			bulletPane.getChildren().add(((Entity) component).getCanvas());
+		} else if(component instanceof HpBar) {
+			hpBarPane.getChildren().add(((HpBar) component).getCanvas()); 
 		}
 	}
 	
-	public void removeEntity(Entity entity) {
-		if(entity instanceof Novice) {
-			playerList.remove((Novice) entity);
-			playerPane.getChildren().remove(entity.getCanvas());
-		} else if(entity instanceof Bullet) {
-			bulletList.remove((Bullet) entity);
-			bulletPane.getChildren().remove(entity.getCanvas());
+	public void removeComponent(Object component) {
+		if(component instanceof Novice) {
+			playerList.remove((Novice) component);
+			playerPane.getChildren().remove(((Entity) component).getCanvas());
+		} else if(component instanceof Bullet) {
+			bulletList.remove((Bullet) component);
+			bulletPane.getChildren().remove(((Entity) component).getCanvas());
+		} else if(component instanceof HpBar) {
+			hpBarPane.getChildren().remove(((HpBar) component).getCanvas()); 
 		}
 	}
 	
