@@ -13,12 +13,13 @@ import entity.food.*;
 import utility.*;
 
 public class Component {
-	private static final double MAX_SIZE = 4000;
+	private static final double MAX_SIZE = 15000;
 	private static final Component instance = new Component();
 	
 	private LinkedList<Novice> playerList;
 	private LinkedList<Bullet> bulletList;
 	private LinkedList<Food> foodList;
+	private Canvas[] boundaryList;
 	
 	private Novice player;
 	
@@ -41,6 +42,7 @@ public class Component {
 		bulletList = new LinkedList<Bullet>();
 		foodList = new LinkedList<Food>();
 		
+		
 		grid = new Canvas(Main.SCREEN_SIZE * 32 / 30, Main.SCREEN_SIZE * 32 / 30);
 		GraphicsContext gc = grid.getGraphicsContext2D();
 		gc.setStroke(Color.gray(0.95));
@@ -56,27 +58,37 @@ public class Component {
 	}
 	
 	private void addBoundary() {
-		Canvas topCanvas = new Canvas(MAX_SIZE + Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
-		topCanvas.getGraphicsContext2D().setFill(Color.gray(0.8));
-		topCanvas.getGraphicsContext2D().fillRect(-Main.SCREEN_SIZE / 2, 
-				-Main.SCREEN_SIZE / 2, MAX_SIZE + Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		boundaryList = new Canvas[4];
 		
-		Canvas bottomCanvas = new Canvas(MAX_SIZE + Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
-		bottomCanvas.getGraphicsContext2D().setFill(Color.gray(0.8));
-		bottomCanvas.getGraphicsContext2D().fillRect(-Main.SCREEN_SIZE / 2, 
-				MAX_SIZE, MAX_SIZE + Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		// top canvas
+		boundaryList[0] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		boundaryList[0].getGraphicsContext2D().setFill(Color.gray(0.8));
+		boundaryList[0].getGraphicsContext2D().fillRect(0, -375, Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		
-		Canvas leftCanvas = new Canvas(Main.SCREEN_SIZE / 2, MAX_SIZE + Main.SCREEN_SIZE);
-		leftCanvas.getGraphicsContext2D().setFill(Color.gray(0.8));
-		leftCanvas.getGraphicsContext2D().fillRect(-Main.SCREEN_SIZE / 2, 
-				-Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2, MAX_SIZE + Main.SCREEN_SIZE);
+		// bottom canvas
+		boundaryList[1] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		boundaryList[1].getGraphicsContext2D().setFill(Color.gray(0.8));
+		boundaryList[1].getGraphicsContext2D().fillRect(0, MAX_SIZE, Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		
-		Canvas rightCanvas = new Canvas(Main.SCREEN_SIZE / 2, MAX_SIZE + Main.SCREEN_SIZE);
-		rightCanvas.getGraphicsContext2D().setFill(Color.gray(0.8));
-		rightCanvas.getGraphicsContext2D().fillRect(MAX_SIZE, MAX_SIZE,
-				Main.SCREEN_SIZE / 2, MAX_SIZE + Main.SCREEN_SIZE);
+		// left canvas
+		boundaryList[2] = new Canvas(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		boundaryList[2].getGraphicsContext2D().setFill(Color.gray(0.8));
+		boundaryList[2].getGraphicsContext2D().fillRect(-375, 0, Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
 		
-		boundaryPane.getChildren().addAll(topCanvas, bottomCanvas, leftCanvas, rightCanvas);
+		// right canvas
+		boundaryList[3] = new Canvas(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		boundaryList[3].getGraphicsContext2D().setFill(Color.gray(0.8));
+		boundaryList[3].getGraphicsContext2D().fillRect(0, MAX_SIZE, Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		
+		boundaryPane.getChildren().addAll(boundaryList[0], boundaryList[1], boundaryList[2], boundaryList[3]);
+	}
+	
+	public void moveBoundary() {
+		boundaryList[0].setTranslateX(getShift().first);
+		boundaryList[1].setTranslateX(getShift().first);
+		
+		boundaryList[2].setTranslateX(getShift().second);
+		boundaryList[3].setTranslateX(getShift().second);
 	}
 	
 	public void initialize(Side side) {
