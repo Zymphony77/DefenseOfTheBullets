@@ -27,8 +27,6 @@ public class Bullet extends Entity {
 	}
 	
 	public void draw() {
-		System.out.println("RefPoint: " + refPoint.first + " " + refPoint.second);
-		
 		canvas.setWidth(2*RADIUS);
 		canvas.setHeight(2*RADIUS);
 		

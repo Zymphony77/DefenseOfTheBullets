@@ -3,7 +3,7 @@ package entity.job;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import main.Main;
+import main.*;
 import entity.Entity;
 import entity.bullet.Bullet;
 import utility.*;
@@ -68,11 +68,11 @@ public class Novice extends Entity {
 	}
 	
 	public void shoot() {
-		int x = refPoint.first + (int) (Math.cos(Math.toRadians(direction))*(RADIUS + 15));
-		int y = refPoint.second + (int) (Math.sin(Math.toRadians(direction))*(RADIUS + 15));
+		double x = refPoint.first + (int) (Math.cos(Math.toRadians(direction))*(RADIUS + 17));
+		double y = refPoint.second + (int) (Math.sin(Math.toRadians(direction))*(RADIUS + 17));
 		
 		Bullet bullet = new Bullet(new Pair(x, y), 10, direction, 1, side);
-		Main.addEntity(bullet);
+		Component.getInstance().addEntity(bullet);
 	}
 	
 	public int getRadius() {

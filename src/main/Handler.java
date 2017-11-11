@@ -8,18 +8,17 @@ import entity.job.*;
 import utility.*;
 
 public class Handler {
-	public static void keyPressed(KeyEvent event, Novice player) {
+	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
-			player.shoot();
+			Component.getInstance().getPlayer().shoot();
 		}
 	}
 	
-	public static void changeDirection(MouseEvent event, Novice player) {
+	public static void changeDirection(MouseEvent event) {
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
 		
-		player.setDirection(Math.toDegrees(Math.atan2(y, x)));
-		
-		player.rotate();
+		Component.getInstance().getPlayer().setDirection(Math.toDegrees(Math.atan2(y, x)));
+		Component.getInstance().getPlayer().rotate();
 	}
 }
