@@ -33,10 +33,10 @@ public abstract class Entity {
 	public abstract void changeCenter(Pair center);
 	
 	public void attack(Entity entity) {
-		entity.takeDamage(attack);
+		entity.takeDamage(this, attack);
 	}
 	
-	public abstract void takeDamage(double damage);
+	public abstract void takeDamage(Entity entity, double damage);
 	
 	public void die() {
 		isDead = true;

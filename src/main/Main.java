@@ -28,9 +28,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		wholePane = new Pane();
-		wholePane.getChildren().addAll(Component.getInstance().getBulletPane());
-		wholePane.getChildren().addAll(Component.getInstance().getPlayerPane());
-		wholePane.getChildren().addAll(Component.getInstance().getHpBarPane());
+		wholePane.getChildren().add(Component.getInstance().getGrid());
+		wholePane.getChildren().add(Component.getInstance().getBulletPane());
+		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
+		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
 		
 		Component.getInstance().initialize(Side.BLUE);
 		

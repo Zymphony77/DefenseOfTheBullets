@@ -1,23 +1,24 @@
 package entity.bullet;
 
-import entity.Entity;
 import javafx.scene.canvas.GraphicsContext;
 
-import main.Main;
+import entity.*;
+import entity.job.*;
+import main.*;
 import utility.*;
 
 public class Bullet extends Entity {
 	private static int RADIUS = 7;
 	
-	public Bullet(Pair refPoint, double maxHp, double direction, double speed, Side side) {
+	Novice shooter;
+	
+	public Bullet(Novice shooter, Pair refPoint, double maxHp, double direction, double speed, Side side) {
 		super(refPoint, maxHp, direction, speed, side);
-	}
-	
-	public void attack(Entity entity) {
 		
+		this.shooter = shooter;
 	}
 	
-	public void takeDamage(double damage) {
+	public void takeDamage(Entity entity, double damage) {
 		if(hp > damage) {
 			hp -= damage;
 		} else {

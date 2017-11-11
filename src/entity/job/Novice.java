@@ -33,7 +33,6 @@ public class Novice extends Entity {
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
-		// Body
 		gc.setFill(Color.DARKGRAY);
 		gc.fillRect(2*RADIUS, 25, RADIUS, 10);
 		gc.setFill(Color.GRAY);
@@ -53,11 +52,7 @@ public class Novice extends Entity {
 		hp = Math.min(hp + amount, maxHp);
 	}
 	
-	public void attack(Entity entity) {
-		entity.takeDamage(attack);
-	}
-	
-	public void takeDamage(double damage) {
+	public void takeDamage(Entity entity, double damage) {
 		if(hp > damage) {
 			hp -= damage;
 		} else {
@@ -65,13 +60,15 @@ public class Novice extends Entity {
 			hp = 0;
 			die();
 		}
+		
+		// Give EXP to shooter
 	}
 	
 	public void shoot() {
 		double x = refPoint.first + (int) (Math.cos(Math.toRadians(direction))*(RADIUS + 17));
 		double y = refPoint.second + (int) (Math.sin(Math.toRadians(direction))*(RADIUS + 17));
 		
-		Bullet bullet = new Bullet(new Pair(x, y), 10, direction, 1, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 1, side);
 		Component.getInstance().addEntity(bullet);
 	}
 	
