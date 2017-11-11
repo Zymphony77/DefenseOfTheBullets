@@ -3,11 +3,13 @@ package main;
 import java.util.LinkedList;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.canvas.Canvas; 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 
 import entity.Entity;
 import entity.bullet.Bullet;
 import entity.job.Novice;
+import entity.food.*;
 import utility.*;
 
 public class Component {
@@ -16,32 +18,37 @@ public class Component {
 	
 	private LinkedList<Novice> playerList;
 	private LinkedList<Bullet> bulletList;
+	private LinkedList<Food> foodList;
 	
 	private Novice player;
 	
 	private Canvas grid;
 	private Pane boundaryPane;
 	private Pane bulletPane;
+	private Pane foodPane;
 	private Pane playerPane;
 	private Pane hpBarPane;
 	
 	public Component() {
 		playerPane = new Pane();
+		boundaryPane = new Pane();
 		bulletPane = new Pane();
+		foodPane = new Pane();
 		hpBarPane = new Pane();
 		boundaryPane = new Pane();
 		
 		playerList = new LinkedList<Novice>();
 		bulletList = new LinkedList<Bullet>();
+		foodList = new LinkedList<Food>();
 		
 		grid = new Canvas(Main.SCREEN_SIZE * 32 / 30, Main.SCREEN_SIZE * 32 / 30);
-		grid.getGraphicsContext2D().setFill(Color.gray(0.95));
+		GraphicsContext gc = grid.getGraphicsContext2D();
+		gc.setStroke(Color.gray(0.95));
+		gc.setLineWidth(1);
 		for(int i = 0; i < 32; ++i) {
 			for(int j = 0; j < 32; ++j) {
-				if((i + j) % 2 == 0) {
-					grid.getGraphicsContext2D().fillRect(Main.SCREEN_SIZE * i / 30, 
-							Main.SCREEN_SIZE * j / 30, Main.SCREEN_SIZE / 30, Main.SCREEN_SIZE / 30);
-				}
+				grid.getGraphicsContext2D().strokeRect(Main.SCREEN_SIZE * i / 30, 
+						Main.SCREEN_SIZE * j / 30, Main.SCREEN_SIZE / 30, Main.SCREEN_SIZE / 30);
 			}
 		}
 		
@@ -117,8 +124,16 @@ public class Component {
 		return bulletList;
 	}
 	
+	public LinkedList<Food> getFoodList() {
+		return foodList;
+	}
+	
 	public Canvas getGrid() {
 		return grid;
+	}
+	
+	public Pane getBoundaryPane() {
+		return boundaryPane;
 	}
 	
 	public Pane getPlayerPane() {
@@ -127,6 +142,10 @@ public class Component {
 	
 	public Pane getBulletPane() {
 		return bulletPane;
+	}
+	
+	public Pane getFoodPane() {
+		return foodPane;
 	}
 	
 	public Pane getHpBarPane() {
