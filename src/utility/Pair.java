@@ -1,14 +1,14 @@
 package utility;
 
 public class Pair {
-	public int first, second;
+	public double first, second;
 	
 	public Pair() {
 		first = 0;
 		second = 0;
 	}
 	
-	public Pair(int first, int second) {
+	public Pair(double first, double second) {
 		this.first = first;
 		this.second = second;
 	}
