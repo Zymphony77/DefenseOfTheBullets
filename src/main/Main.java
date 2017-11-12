@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import entity.*;
 import entity.bullet.*;
 import entity.job.*;
+import entity.tower.Tower;
 import utility.*;
 
 public class Main extends Application {
@@ -43,6 +44,7 @@ public class Main extends Application {
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / FRAME_RATE), event -> {
 			Handler.update();
+			Tower.update();
 		}));
 		timer.setCycleCount(Animation.INDEFINITE);
 		timer.play();

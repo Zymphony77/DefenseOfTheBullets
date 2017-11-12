@@ -1,22 +1,30 @@
 package utility;
 
-import entity.Entity;
-
 public class Grid {
 	private int x, y;
 	private double time;
 	private boolean chk;
+	private int firstDirection;
 	
 	public Grid() {
 		time = 0.0;
 		chk = false;
 	}
 	
-	public Grid(int x, int y, double time, boolean chk) {
+	public Grid(int x, int y, double time, boolean chk, int firstDirection) {
 		this.x = x;
 		this.y = y;
 		this.time = time;
 		this.chk = chk;
+		this.firstDirection = firstDirection;
+	}
+	
+	public Grid(Grid o) {
+		this.x = o.x;
+		this.y = o.y;
+		this.time = o.time;
+		this.chk = o.chk;
+		this.firstDirection = o.firstDirection;
 	}
 
 	public int getX() {
@@ -49,6 +57,14 @@ public class Grid {
 
 	public void setChk(boolean chk) {
 		this.chk = chk;
+	}
+	
+	public int getFirstDirection() {
+		return firstDirection;
+	}
+
+	public void setFirstDirection(int firstDirection) {
+		this.firstDirection = firstDirection;
 	}
 
 }

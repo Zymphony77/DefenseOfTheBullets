@@ -23,12 +23,33 @@ public class BotNovice extends Bot{
 		//update Grid
 		updateGrid();
 		
-		if(super.player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
+		if(destination != null && !isVision(destination)) {
+			destination = null;
+		}
+		
+		if(destination != null && canMoveWithDestination()) {
+			moveWithDestination();
+		}	
+		else if(player.getHp() < player.getMaxHp()*0.3) {
+			escape();
+		}
+		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
 			farm();
 		}
-		else {
-			
+		else if(player.getLevel() < 30){
+			escape();
 		}
+		else {
+			if(destination != null) {
+				
+			}
+		}
+		
+		///choose target to closest food
+		target = chooseClosestTarget();
+		
+		//change direction to target//
+		//////////////////////////////
 	}
 
 	
@@ -46,7 +67,7 @@ public class BotNovice extends Bot{
 	}
 
 	@Override
-	protected void upgradeClass() {
+	protected void upgradeJob() {
 		// TODO Auto-generated method stub
 		
 	}
