@@ -11,15 +11,19 @@ import entity.property.Shootable;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {
-	private static final int MAX_HP = 10000;
+	private static final int MAX_HP = 3000;
 	private static final int CANVAS_SIZE = 200;
 	private static final int RADIUS = 75;
+	private static final int RELOAD_DONE = 30;
 	
 	protected HpBar hpBar;
+	protected int reloadCount;
 	
 	public Tower(Pair refPoint, Side side) {
 		super(refPoint, MAX_HP, 0, side);
+		
 		attack = 100;
+		reloadCount = RELOAD_DONE;
 	}
 	
 	public void draw() {
@@ -74,11 +78,18 @@ public class Tower extends Entity implements Shootable {
 	}
 	
 	public void shoot() {
+		if(reloadCount < RELOAD_DONE) {
+			reload();
+			return;
+		}
+		
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 700, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 500, side);
 		Component.getInstance().addComponent(bullet);
+		
+		reloadCount = 0;
 	}
 	
 	public HpBar getHpBar() {
@@ -87,5 +98,9 @@ public class Tower extends Entity implements Shootable {
 	
 	public int getRadius() {
 		return RADIUS;
+	}
+	
+	public void reload() {
+		reloadCount = Math.min(reloadCount + 1, RELOAD_DONE);
 	}
 }

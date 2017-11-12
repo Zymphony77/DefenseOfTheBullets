@@ -10,7 +10,7 @@ import utility.*;
 
 public class Bullet extends Entity implements Movable {
 	private static int RADIUS = 7;
-	public static int MAX_LIFE_CYCLE = 5000 * Main.FRAME_RATE;
+	public static int MAX_LIFE_CYCLE = 2 * Main.FRAME_RATE;
 	
 	protected double speed;
 	protected Entity shooter;

@@ -22,7 +22,7 @@ public class Handler {
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
-			Component.getInstance().getPlayer().shoot();
+			activeKey.add(KeyCode.SPACE);
 		}
 		
 		if(event.getCode() == KeyCode.UP || event.getCode() == KeyCode.W) {
@@ -43,6 +43,10 @@ public class Handler {
 	}
 	
 	public static void keyReleased(KeyEvent event) {
+		if(event.getCode() == KeyCode.SPACE) {
+			activeKey.remove(KeyCode.SPACE);
+		}
+		
 		if(event.getCode() == KeyCode.UP || event.getCode() == KeyCode.W) {
 			activeKey.remove(KeyCode.UP);
 		}
@@ -69,6 +73,10 @@ public class Handler {
 	}
 	
 	public static void update() {
+		if(activeKey.contains(KeyCode.SPACE)) {
+			Component.getInstance().getPlayer().shoot();
+		}
+		
 		moveComponent();
 		movePlayer();
 		moveCenter(Component.getInstance().getPlayer().getRefPoint());

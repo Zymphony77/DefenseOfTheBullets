@@ -13,7 +13,7 @@ import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 500;
-	private static final double DEFAULT_SPEED = 200;
+	private static final double DEFAULT_SPEED = 50;
 	private static final int CANVAS_SIZE = 60;
 	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;
@@ -21,10 +21,12 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected boolean isMoving;
 	protected double moveDirection;
 	protected double speed;
+	protected int reloadDone;
 	
 	protected HpBar hpBar;
 	protected double exp;
 	protected int level;
+	protected int reloadCount;
 	
 	public Novice(Pair refPoint, Side side) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
@@ -33,6 +35,9 @@ public class Novice extends Entity implements Movable, Shootable {
 		attack = 50;
 		isMoving = false;
 		moveDirection = 0;
+		
+		reloadDone = 15;
+		reloadCount = 15;
 		
 		level = 1;
 	}
@@ -108,15 +113,30 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public void shoot() {
+		if(reloadCount < reloadDone) {
+			reload();
+			return;
+		}
+		
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 700, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 200, side);
 		Component.getInstance().addComponent(bullet);
+		
+		reloadCount = 0;
+	}
+	
+	public void reload() {
+		reloadCount = Math.min(reloadCount + 1, reloadDone);
 	}
 	
 	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+	
+	public void setReloadDone(int reloadDone) {
+		this.reloadDone = reloadDone;
 	}
 	
 	public int getRadius() {
