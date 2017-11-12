@@ -115,7 +115,6 @@ public class Handler {
 			player.getHpBar().changeCenter(player.getRefPoint());
 		}
 		// Tower and HpBar
-		System.out.println();
 		for(Tower tower: Component.getInstance().getTowerList()) {
 			tower.changeCenter(center);
 			tower.getHpBar().changeCenter(center);
