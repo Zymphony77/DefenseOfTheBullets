@@ -10,6 +10,7 @@ import java.util.HashSet;
 import entity.bullet.*;
 import entity.food.*;
 import entity.job.*;
+import entity.tower.*;
 import utility.*;
 
 public class Handler {
@@ -111,7 +112,13 @@ public class Handler {
 		// Player and HpBar
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.changeCenter(center);
-			player.getHpBar().changeCenter(center);
+			player.getHpBar().changeCenter(player.getRefPoint());
+		}
+		// Tower and HpBar
+		System.out.println();
+		for(Tower tower: Component.getInstance().getTowerList()) {
+			tower.changeCenter(center);
+			tower.getHpBar().changeCenter(center);
 		}
 		// Bullet
 		for(Bullet bullet: Component.getInstance().getBulletList()) {

@@ -29,7 +29,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		Component.getInstance().initialize(Side.NEUTRAL);
+		Component.getInstance().initialize(Side.BLUE);
 		
 		wholePane = new Pane();
 		
@@ -37,6 +37,7 @@ public class Main extends Application {
 		wholePane.getChildren().add(Component.getInstance().getBoundaryPane());
 		wholePane.getChildren().add(Component.getInstance().getBulletPane());
 		wholePane.getChildren().add(Component.getInstance().getFoodPane());
+		wholePane.getChildren().add(Component.getInstance().getTowerPane());
 		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
 		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
 		

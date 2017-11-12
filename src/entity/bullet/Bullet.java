@@ -1,22 +1,25 @@
 package entity.bullet;
 
 import javafx.scene.canvas.GraphicsContext;
-
+import javafx.scene.paint.Color;
 import entity.*;
 import entity.job.*;
+import entity.property.Movable;
 import main.*;
 import utility.*;
 
-public class Bullet extends Entity {
+public class Bullet extends Entity implements Movable {
 	private static int RADIUS = 7;
 	private static int MAX_LIFE_CYCLE = 5000 * Main.FRAME_RATE;
 	
-	private Novice shooter;
-	private int lifeCycleCount;
+	protected double speed;
+	protected Entity shooter;
+	protected int lifeCycleCount;
 	
-	public Bullet(Novice shooter, Pair refPoint, double maxHp, double direction, double speed, Side side) {
-		super(refPoint, maxHp, direction, speed, side);
+	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double speed, Side side) {
+		super(refPoint, maxHp, direction, side);
 		
+		this.speed = speed;
 		lifeCycleCount = 0;
 		this.shooter = shooter;
 	}
@@ -38,6 +41,15 @@ public class Bullet extends Entity {
 		canvas.setTranslateY(refPoint.second - RADIUS);
 		
 		GraphicsContext gc = this.getCanvas().getGraphicsContext2D();
+		
+		if(side == Side.RED) {
+			gc.setFill(Color.ORANGERED);
+		} else if(side == Side.BLUE) {
+			gc.setFill(Color.CORNFLOWERBLUE);
+		} else {
+			gc.setFill(Color.GOLD);
+		}
+		
 		gc.fillOval(0, 0, 2*RADIUS, 2*RADIUS);
 	}
 	
@@ -56,7 +68,15 @@ public class Bullet extends Entity {
 		canvas.setTranslateY(refPoint.second - RADIUS - center.second + Main.SCREEN_SIZE / 2);
 	}
 	
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
 	public int getRadius() {
 		return RADIUS;
+	}
+	
+	public double getSpeed() {
+		return speed;
 	}
 }

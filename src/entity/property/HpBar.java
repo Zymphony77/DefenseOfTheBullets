@@ -1,16 +1,19 @@
-package entity;
+package entity.property;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import entity.*;
 import entity.job.*;
+import entity.tower.*;
 import main.*;
 import utility.*;
 
 public class HpBar {
 	private Entity entity;
 	private double maxWidth;
+	private double space;
 	private double width;
 	private Canvas canvas;
 	
@@ -19,8 +22,10 @@ public class HpBar {
 		
 		if(entity instanceof Novice) {
 			maxWidth = 60;
+			space = 3;
 		} else {
 			maxWidth = 150;
+			space = 20;
 		}
 		
 		this.canvas = new Canvas();
@@ -34,7 +39,7 @@ public class HpBar {
 		canvas.setHeight(5);
 		
 		canvas.setTranslateX(entity.getRefPoint().first - maxWidth / 2);
-		canvas.setTranslateY(entity.getRefPoint().second + maxWidth / 2 + 5);
+		canvas.setTranslateY(entity.getRefPoint().second + maxWidth / 2 + space);
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		if(entity.getSide() == Side.RED) {
@@ -55,8 +60,10 @@ public class HpBar {
 	}
 	
 	public void changeCenter(Pair center) {
-		canvas.setTranslateX(Main.SCREEN_SIZE / 2 - maxWidth / 2);
-		canvas.setTranslateY(Main.SCREEN_SIZE / 2 + maxWidth / 2 + 5);
+		canvas.setTranslateX(entity.getRefPoint().first - center.first 
+				+ Main.SCREEN_SIZE / 2 - maxWidth / 2);
+		canvas.setTranslateY(entity.getRefPoint().second - center.second 
+				+ Main.SCREEN_SIZE / 2 + maxWidth / 2 + space);
 	}
 	
 	public Canvas getCanvas() {

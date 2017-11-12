@@ -10,7 +10,7 @@ public class Food extends Entity {
 	public static final int CANVAS_SIZE = 20; 
 	
 	public Food(Pair refPoint) {
-		super(refPoint, 10, 0, 0, Side.NEUTRAL);
+		super(refPoint, 10, 0, Side.NEUTRAL);
 	}
 	
 	public void draw() {

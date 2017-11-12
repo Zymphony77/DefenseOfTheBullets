@@ -7,9 +7,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import entity.*;
-import entity.bullet.Bullet;
-import entity.job.Novice;
+import entity.bullet.*;
+import entity.job.*;
+import entity.property.HpBar;
 import entity.food.*;
+import entity.tower.*;
 import utility.*;
 
 public class Component {
@@ -20,6 +22,7 @@ public class Component {
 	private static final Component instance = new Component();
 	
 	private LinkedList<Novice> playerList;
+	private LinkedList<Tower> towerList;
 	private LinkedList<Bullet> bulletList;
 	private LinkedList<Food> foodList;
 	private Canvas[] boundaryList;
@@ -30,11 +33,13 @@ public class Component {
 	private Pane boundaryPane;
 	private Pane bulletPane;
 	private Pane foodPane;
+	private Pane towerPane;
 	private Pane playerPane;
 	private Pane hpBarPane;
 	
 	public Component() {
 		playerPane = new Pane();
+		towerPane = new Pane();
 		boundaryPane = new Pane();
 		bulletPane = new Pane();
 		foodPane = new Pane();
@@ -43,6 +48,7 @@ public class Component {
 		playerList = new LinkedList<Novice>();
 		bulletList = new LinkedList<Bullet>();
 		foodList = new LinkedList<Food>();
+		towerList = new LinkedList<Tower>();
 		
 		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
 		grid.setTranslateX(-2 * GRID_SIZE);
@@ -102,6 +108,9 @@ public class Component {
 	public void initialize(Side side) {
 		player = new Novice(new Pair(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2), side);
 		addComponent(player);
+		
+		Tower tower = new Tower(new Pair(500, 500), Side.NEUTRAL);
+		addComponent(tower);
 	}
 	
 	public void addComponent(Object component) {
@@ -113,6 +122,9 @@ public class Component {
 			bulletPane.getChildren().add(((Entity) component).getCanvas());
 		} else if(component instanceof HpBar) {
 			hpBarPane.getChildren().add(((HpBar) component).getCanvas()); 
+		} else if(component instanceof Tower) {
+			towerList.add((Tower) component);
+			towerPane.getChildren().add(((Entity) component).getCanvas());
 		}
 	}
 	
@@ -144,6 +156,10 @@ public class Component {
 		return playerList;
 	}
 	
+	public LinkedList<Tower> getTowerList() {
+		return towerList;
+	}
+	
 	public LinkedList<Bullet> getBulletList() {
 		return bulletList;
 	}
@@ -152,20 +168,20 @@ public class Component {
 		return foodList;
 	}
 	
-	public Canvas[] getBoundaryList() {
-		return boundaryList;
-	}
-	
-	public Canvas getGrid() {
-		return grid;
-	}
-	
 	public Pane getBoundaryPane() {
 		return boundaryPane;
 	}
 	
+	public Pane getHpBarPane() {
+		return hpBarPane;
+	}
+	
 	public Pane getPlayerPane() {
 		return playerPane;
+	}
+	
+	public Pane getTowerPane() {
+		return towerPane;
 	}
 	
 	public Pane getBulletPane() {
@@ -176,7 +192,11 @@ public class Component {
 		return foodPane;
 	}
 	
-	public Pane getHpBarPane() {
-		return hpBarPane;
+	public Canvas[] getBoundaryList() {
+		return boundaryList;
+	}
+	
+	public Canvas getGrid() {
+		return grid;
 	}
 }

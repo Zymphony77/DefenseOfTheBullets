@@ -11,17 +11,14 @@ public abstract class Entity {
 	protected double hp;
 	protected double attack;
 	protected double direction;		// Angle against X-axis
-	protected double speed;
 	protected Side side;
 	
-	public Entity(Pair refPoint, double maxHp, double direction, double speed, Side side) {
+	public Entity(Pair refPoint, double maxHp, double direction, Side side) {
 		this.refPoint = new Pair(refPoint);
 		this.maxHp = maxHp;
 		this.hp = maxHp;
 		this.direction = direction;
-		this.speed = speed;
 		this.side = side;
-		
 		this.canvas = new Canvas();
 		
 		draw();
@@ -42,10 +39,6 @@ public abstract class Entity {
 	
 	public void setRefPoint(Pair refPoint) {
 		this.refPoint = new Pair(refPoint);
-	}
-	
-	public void setSpeed(double speed) {
-		this.speed = speed;
 	}
 	
 	public void setDirection(double direction) {
@@ -70,10 +63,6 @@ public abstract class Entity {
 	
 	public double getDirection() {
 		return direction;
-	}
-	
-	public double getSpeed() {
-		return speed;
 	}
 	
 	public Side getSide() {

@@ -6,9 +6,12 @@ import javafx.scene.paint.Color;
 import main.*;
 import entity.*;
 import entity.bullet.Bullet;
+import entity.property.HpBar;
+import entity.property.Movable;
+import entity.property.Shootable;
 import utility.*;
 
-public class Novice extends Entity {
+public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 100;
 	private static final double DEFAULT_SPEED = 200;
 	private static final int CANVAS_SIZE = 60;
@@ -17,14 +20,16 @@ public class Novice extends Entity {
 	
 	protected boolean isMoving;
 	protected double moveDirection;
+	protected double speed;
 	
 	protected HpBar hpBar;
 	protected double exp;
 	protected int level;
 	
 	public Novice(Pair refPoint, Side side) {
-		super(refPoint, DEFAULT_MAX_HP, 0, DEFAULT_SPEED, side);
+		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
+		speed = DEFAULT_SPEED;
 		isMoving = false;
 		moveDirection = 0;
 		
@@ -34,9 +39,6 @@ public class Novice extends Entity {
 	public void draw() {
 		canvas.setWidth(CANVAS_SIZE);
 		canvas.setHeight(CANVAS_SIZE);
-		
-		canvas.setTranslateX(refPoint.first - CANVAS_SIZE/2);
-		canvas.setTranslateY(refPoint.second - CANVAS_SIZE/2);
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
@@ -110,6 +112,10 @@ public class Novice extends Entity {
 		Component.getInstance().addComponent(bullet);
 	}
 	
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
 	public int getRadius() {
 		return 20;
 	}
@@ -120,5 +126,9 @@ public class Novice extends Entity {
 	
 	public int getLevel() {
 		return level;
+	}
+	
+	public double getSpeed() {
+		return speed;
 	}
 }
