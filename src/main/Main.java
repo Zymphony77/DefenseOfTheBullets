@@ -19,7 +19,7 @@ import utility.*;
 
 public class Main extends Application {
 	public static final int SCREEN_SIZE = 750;
-	public static final int FRAME_RATE = 120;
+	public static final int FRAME_RATE = 60;
 	
 	private Pane wholePane;
 	

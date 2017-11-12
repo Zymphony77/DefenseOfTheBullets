@@ -19,14 +19,15 @@ public class Bullet extends Entity implements Movable {
 	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double speed, Side side) {
 		super(refPoint, maxHp, direction, side);
 		
+		this.attack = 100;
 		this.speed = speed;
-		lifeCycleCount = 0;
+		this.lifeCycleCount = 0;
 		this.shooter = shooter;
 	}
 	
-	public void takeDamage(Entity entity, double damage) {
-		if(hp > damage) {
-			hp -= damage;
+	public void takeDamage(Entity entity) {
+		if(hp > entity.getAttack()) {
+			hp -= entity.getAttack();
 		} else {
 			hp = 0;
 			die();

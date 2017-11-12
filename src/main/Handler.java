@@ -5,11 +5,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.canvas.Canvas;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Predicate;
 
+import entity.*;
 import entity.bullet.*;
 import entity.food.*;
 import entity.job.*;
+import entity.property.*;
 import entity.tower.*;
 import utility.*;
 
@@ -65,15 +69,24 @@ public class Handler {
 	}
 	
 	public static void update() {
+		moveComponent();
+		movePlayer();
+		moveCenter(Component.getInstance().getPlayer().getRefPoint());
+		checkCollision();
+		clearDeadComponent();
+	}
+	
+	public static void moveComponent() {
 		// Move every component
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.move();
 		}
-		
 		for(Bullet bullet: Component.getInstance().getBulletList()) {
 			bullet.move();
 		}
-		
+	}
+	
+	public static void movePlayer() {
 		// Move player
 		double x = 0;
 		double y = 0;
@@ -105,14 +118,13 @@ public class Handler {
 		} else {
 			Component.getInstance().getPlayer().stopMoving();
 		}
-			
-		// Move center
-		Pair center = new Pair(Component.getInstance().getPlayer().getRefPoint());
-		
+	}
+	
+	public static void moveCenter(Pair center) {
 		// Player and HpBar
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.changeCenter(center);
-			player.getHpBar().changeCenter(player.getRefPoint());
+			player.getHpBar().changeCenter(center);
 		}
 		// Tower and HpBar
 		for(Tower tower: Component.getInstance().getTowerList()) {
@@ -135,5 +147,48 @@ public class Handler {
 		
 		Component.getInstance().getGrid().setTranslateX(translatex);
 		Component.getInstance().getGrid().setTranslateY(translatey);
+	}
+	
+	public static void checkCollision() {
+		ArrayList<Novice> playerList = Component.getInstance().getPlayerList();
+		ArrayList<Tower> towerList = Component.getInstance().getTowerList();
+		ArrayList<Bullet> bulletList = Component.getInstance().getBulletList();
+		ArrayList<Food> foodList = Component.getInstance().getFoodList();
+		
+		pairwiseCheckCollision(bulletList, bulletList);
+		pairwiseCheckCollision(bulletList, foodList);
+		pairwiseCheckCollision(bulletList, towerList);
+		pairwiseCheckCollision(bulletList, playerList);
+		pairwiseCheckCollision(playerList, foodList);
+		pairwiseCheckCollision(playerList, towerList);
+		pairwiseCheckCollision(playerList, playerList);
+	}
+	
+	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
+			ArrayList<? extends Entity> list2) {
+		for(int i = 0; i < list1.size(); ++i) {
+			for(int j = (list1 == list2? i + 1: 0); j < list2.size(); ++j) {
+				if(list1.get(i).getSide() == list2.get(j).getSide()) {
+					continue;
+				}
+				
+				if(list1.get(i).isCollided(list2.get(j))) {
+					list1.get(i).takeDamage(list2.get(j));
+					list2.get(j).takeDamage(list1.get(i));
+				}
+			}
+		}
+	}
+	
+	public static void clearDeadComponent() {
+		Predicate<Entity> deathPredicate = new Predicate<Entity>() {
+			public boolean test(Entity entity) {
+				return entity.isDead();
+			}
+		};
+		
+		Component.getInstance().getPlayerList().removeIf(deathPredicate);
+		Component.getInstance().getBulletList().removeIf(deathPredicate);
+		Component.getInstance().getFoodList().removeIf(deathPredicate);
 	}
 }

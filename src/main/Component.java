@@ -1,10 +1,11 @@
 package main;
 
-import java.util.LinkedList;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+
+import java.util.ArrayList;
 
 import entity.*;
 import entity.bullet.*;
@@ -21,10 +22,10 @@ public class Component {
 	
 	private static final Component instance = new Component();
 	
-	private LinkedList<Novice> playerList;
-	private LinkedList<Tower> towerList;
-	private LinkedList<Bullet> bulletList;
-	private LinkedList<Food> foodList;
+	private ArrayList<Novice> playerList;
+	private ArrayList<Tower> towerList;
+	private ArrayList<Bullet> bulletList;
+	private ArrayList<Food> foodList;
 	private Canvas[] boundaryList;
 	
 	private Novice player;
@@ -45,10 +46,10 @@ public class Component {
 		foodPane = new Pane();
 		hpBarPane = new Pane();
 		
-		playerList = new LinkedList<Novice>();
-		bulletList = new LinkedList<Bullet>();
-		foodList = new LinkedList<Food>();
-		towerList = new LinkedList<Tower>();
+		playerList = new ArrayList<Novice>();
+		bulletList = new ArrayList<Bullet>();
+		foodList = new ArrayList<Food>();
+		towerList = new ArrayList<Tower>();
 		
 		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
 		grid.setTranslateX(-2 * GRID_SIZE);
@@ -106,10 +107,13 @@ public class Component {
 	}
 	
 	public void initialize(Side side) {
-		player = new Novice(new Pair(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2), side);
+		player = new Novice(new Pair(200, 200), side);
 		addComponent(player);
 		
-		Tower tower = new Tower(new Pair(500, 500), Side.NEUTRAL);
+		Novice shootTest = new Novice(new Pair(400, 200), Side.RED);
+		addComponent(shootTest);
+		
+		Tower tower = new Tower(new Pair(500, 500), Side.RED);
 		addComponent(tower);
 	}
 	
@@ -129,6 +133,10 @@ public class Component {
 	}
 	
 	public void removeComponent(Object component) {
+		if(component == null) {
+			return;
+		}
+		
 		if(component instanceof Novice) {
 			playerList.remove((Novice) component);
 			playerPane.getChildren().remove(((Entity) component).getCanvas());
@@ -152,19 +160,19 @@ public class Component {
 		return player;
 	}
 	
-	public LinkedList<Novice> getPlayerList() {
+	public ArrayList<Novice> getPlayerList() {
 		return playerList;
 	}
 	
-	public LinkedList<Tower> getTowerList() {
+	public ArrayList<Tower> getTowerList() {
 		return towerList;
 	}
 	
-	public LinkedList<Bullet> getBulletList() {
+	public ArrayList<Bullet> getBulletList() {
 		return bulletList;
 	}
 	
-	public LinkedList<Food> getFoodList() {
+	public ArrayList<Food> getFoodList() {
 		return foodList;
 	}
 	

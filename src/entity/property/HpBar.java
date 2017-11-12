@@ -38,9 +38,6 @@ public class HpBar {
 		canvas.setWidth(maxWidth);
 		canvas.setHeight(5);
 		
-		canvas.setTranslateX(entity.getRefPoint().first - maxWidth / 2);
-		canvas.setTranslateY(entity.getRefPoint().second + maxWidth / 2 + space);
-		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		if(entity.getSide() == Side.RED) {
 			gc.setStroke(Color.ORANGERED);
@@ -72,5 +69,9 @@ public class HpBar {
 	
 	public void die() {
 		canvas.setOpacity(0);
+	}
+	
+	public Entity getEntity() {
+		return entity;
 	}
 }

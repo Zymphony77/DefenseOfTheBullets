@@ -31,9 +31,9 @@ public class Food extends Entity {
 		canvas.setTranslateY(refPoint.second - CANVAS_SIZE / 2 - center.second + Main.SCREEN_SIZE / 2);
 	}
 	
-	public void takeDamage(Entity entity, double damage) {
-		if(hp > damage) {
-			hp -= damage;
+	public void takeDamage(Entity entity) {
+		if(hp > entity.getAttack()) {
+			hp -= entity.getAttack();
 		} else {
 			hp = 0;
 			die();

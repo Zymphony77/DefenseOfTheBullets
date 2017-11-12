@@ -12,7 +12,7 @@ import entity.property.Shootable;
 import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
-	private static final double DEFAULT_MAX_HP = 100;
+	private static final double DEFAULT_MAX_HP = 500;
 	private static final double DEFAULT_SPEED = 200;
 	private static final int CANVAS_SIZE = 60;
 	private static final int MAX_LEVEL = 50;
@@ -30,6 +30,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
 		speed = DEFAULT_SPEED;
+		attack = 50;
 		isMoving = false;
 		moveDirection = 0;
 		
@@ -47,6 +48,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
+		Component.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		Component.getInstance().addComponent(hpBar);
 	}
@@ -87,9 +89,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		hp = Math.min(hp + amount, maxHp);
 	}
 	
-	public void takeDamage(Entity entity, double damage) {
-		if(hp > damage) {
-			hp -= damage;
+	public void takeDamage(Entity entity) {
+		if(hp > entity.getAttack()) {
+			hp -= entity.getAttack();
+			hpBar.draw();
 		} else {
 			hp = 0;
 			die();

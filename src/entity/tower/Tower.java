@@ -19,6 +19,7 @@ public class Tower extends Entity implements Shootable {
 	
 	public Tower(Pair refPoint, Side side) {
 		super(refPoint, MAX_HP, 0, side);
+		attack = 100;
 	}
 	
 	public void draw() {
@@ -40,6 +41,7 @@ public class Tower extends Entity implements Shootable {
 		}
 		gc.fillOval(25, 25, 2*RADIUS, 2*RADIUS);
 		
+		Component.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		Component.getInstance().addComponent(hpBar);
 	}
@@ -53,12 +55,21 @@ public class Tower extends Entity implements Shootable {
 		canvas.setRotate(direction);
 	}
 	
-	public void takeDamage(Entity entity, double damage) {
-		if(hp > damage) {
-			hp -= damage;
+	public void takeDamage(Entity entity) {
+		if(hp > entity.getAttack()) {
+			hp -= entity.getAttack();
+			hpBar.draw();
 		} else {
 			hp = maxHp;
-			side = entity.getSide();
+			
+			if(side == Side.NEUTRAL) {
+				side = entity.getSide();
+			} else {
+				side = Side.NEUTRAL;
+			}
+			
+			this.draw();
+			hpBar.draw();
 		}
 	}
 	
