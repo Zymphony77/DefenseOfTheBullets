@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import entity.job.*;
+import main.*;
 import utility.*;
 
 public class HpBar {
@@ -43,8 +44,8 @@ public class HpBar {
 			gc.setStroke(Color.CORNFLOWERBLUE);
 			gc.setFill(Color.CORNFLOWERBLUE);
 		} else {
-			gc.setStroke(Color.LIGHTYELLOW);
-			gc.setFill(Color.LIGHTYELLOW);
+			gc.setStroke(Color.GOLD);
+			gc.setFill(Color.GOLD);
 		}
 		
 		width = entity.getHp() / entity.getMaxHp() * maxWidth;
@@ -54,11 +55,15 @@ public class HpBar {
 	}
 	
 	public void changeCenter(Pair center) {
-		canvas.setTranslateX(center.first - maxWidth / 2);
-		canvas.setTranslateY(center.second + maxWidth / 2 + 5);
+		canvas.setTranslateX(Main.SCREEN_SIZE / 2 - maxWidth / 2);
+		canvas.setTranslateY(Main.SCREEN_SIZE / 2 + maxWidth / 2 + 5);
 	}
 	
 	public Canvas getCanvas() {
 		return canvas;
+	}
+	
+	public void die() {
+		canvas.setOpacity(0);
 	}
 }

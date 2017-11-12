@@ -2,7 +2,7 @@ package entity.food;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
+import main.Main;
 import entity.*;
 import utility.*;
 
@@ -27,8 +27,8 @@ public class Food extends Entity {
 	}
 	
 	public void changeCenter(Pair center) {
-		canvas.setTranslateX(refPoint.first - CANVAS_SIZE / 2 - center.first);
-		canvas.setTranslateY(refPoint.second - CANVAS_SIZE / 2 - center.second);
+		canvas.setTranslateX(refPoint.first - CANVAS_SIZE / 2 - center.first + Main.SCREEN_SIZE / 2);
+		canvas.setTranslateY(refPoint.second - CANVAS_SIZE / 2 - center.second + Main.SCREEN_SIZE / 2);
 	}
 	
 	public void takeDamage(Entity entity, double damage) {

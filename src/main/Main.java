@@ -2,6 +2,7 @@ package main;
 
 import javafx.application.Application;
 import javafx.animation.Timeline;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.scene.layout.Pane;
 import javafx.scene.Node;
@@ -18,6 +19,7 @@ import utility.*;
 
 public class Main extends Application {
 	public static final int SCREEN_SIZE = 750;
+	public static final int FRAME_RATE = 120;
 	
 	private Pane wholePane;
 	
@@ -27,6 +29,8 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		Component.getInstance().initialize(Side.NEUTRAL);
+		
 		wholePane = new Pane();
 		
 		wholePane.getChildren().add(Component.getInstance().getGrid());
@@ -36,16 +40,22 @@ public class Main extends Application {
 		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
 		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
 		
-		Component.getInstance().initialize(Side.BLUE);
+		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / FRAME_RATE), event -> {
+			Handler.update();
+		}));
+		timer.setCycleCount(Animation.INDEFINITE);
+		timer.play();
 		
 		Scene scene = new Scene(wholePane, SCREEN_SIZE, SCREEN_SIZE);
 		
 		scene.setOnKeyPressed(event -> Handler.keyPressed(event));
+		scene.setOnKeyReleased(event -> Handler.keyReleased(event));
 		scene.setOnMouseMoved(event -> Handler.changeDirection(event));
 		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("DotB: Defense of the Bullets");
 		primaryStage.setResizable(false);
+		primaryStage.setOnCloseRequest(event -> timer.stop());
 		primaryStage.show();
 	}
 }

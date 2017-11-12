@@ -13,7 +13,10 @@ import entity.food.*;
 import utility.*;
 
 public class Component {
-	private static final double MAX_SIZE = 15000;
+	public static final double MAX_SIZE = 10000;
+	public static final int GRID_SIZE = 25;
+	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
+	
 	private static final Component instance = new Component();
 	
 	private LinkedList<Novice> playerList;
@@ -36,21 +39,20 @@ public class Component {
 		bulletPane = new Pane();
 		foodPane = new Pane();
 		hpBarPane = new Pane();
-		boundaryPane = new Pane();
 		
 		playerList = new LinkedList<Novice>();
 		bulletList = new LinkedList<Bullet>();
 		foodList = new LinkedList<Food>();
 		
-		grid = new Canvas(Main.SCREEN_SIZE * 32 / 30, Main.SCREEN_SIZE * 32 / 30);
-		
+		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
+		grid.setTranslateX(-2 * GRID_SIZE);
+		grid.setTranslateY(-2 * GRID_SIZE);
 		GraphicsContext gc = grid.getGraphicsContext2D();
 		gc.setStroke(Color.gray(0.95));
 		gc.setLineWidth(1);
-		for(int i = 0; i < 32; ++i) {
-			for(int j = 0; j < 32; ++j) {
-				grid.getGraphicsContext2D().strokeRect(Main.SCREEN_SIZE * i / 30, 
-						Main.SCREEN_SIZE * j / 30, Main.SCREEN_SIZE / 30, Main.SCREEN_SIZE / 30);
+		for(int i = 0; i < GRID_NUMBER + 4; ++i) {
+			for(int j = 0; j < GRID_NUMBER + 4; ++j) {
+				grid.getGraphicsContext2D().strokeRect(GRID_SIZE * i, GRID_SIZE * j, GRID_SIZE, GRID_SIZE);
 			}
 		}
 		
@@ -63,32 +65,38 @@ public class Component {
 		// top canvas
 		boundaryList[0] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		boundaryList[0].getGraphicsContext2D().setFill(Color.gray(0.8));
-		boundaryList[0].getGraphicsContext2D().fillRect(0, -375, Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		boundaryList[0].getGraphicsContext2D().fillRect(0, 0, 
+				Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		
 		// bottom canvas
 		boundaryList[1] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		boundaryList[1].getGraphicsContext2D().setFill(Color.gray(0.8));
-		boundaryList[1].getGraphicsContext2D().fillRect(0, MAX_SIZE, Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
+		boundaryList[1].getGraphicsContext2D().fillRect(0, 0, 
+				Main.SCREEN_SIZE, Main.SCREEN_SIZE / 2);
 		
 		// left canvas
 		boundaryList[2] = new Canvas(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
 		boundaryList[2].getGraphicsContext2D().setFill(Color.gray(0.8));
-		boundaryList[2].getGraphicsContext2D().fillRect(-375, 0, Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		boundaryList[2].getGraphicsContext2D().fillRect(0, 0, 
+				Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
 		
 		// right canvas
 		boundaryList[3] = new Canvas(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
 		boundaryList[3].getGraphicsContext2D().setFill(Color.gray(0.8));
-		boundaryList[3].getGraphicsContext2D().fillRect(0, MAX_SIZE, Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		boundaryList[3].getGraphicsContext2D().fillRect(0, 0, 
+				Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE);
+		
+		shiftBoundary(new Pair(MAX_SIZE / 2, MAX_SIZE / 2));
 		
 		boundaryPane.getChildren().addAll(boundaryList[0], boundaryList[1], boundaryList[2], boundaryList[3]);
 	}
 	
-	public void moveBoundary() {
-		boundaryList[0].setTranslateX(getShift().first);
-		boundaryList[1].setTranslateX(getShift().first);
+	public void shiftBoundary(Pair center) {
+		boundaryList[0].setTranslateY(-center.second);
+		boundaryList[1].setTranslateY(MAX_SIZE - center.second + Main.SCREEN_SIZE / 2);
 		
-		boundaryList[2].setTranslateX(getShift().second);
-		boundaryList[3].setTranslateX(getShift().second);
+		boundaryList[2].setTranslateX(-center.first);
+		boundaryList[3].setTranslateX(MAX_SIZE - center.first + Main.SCREEN_SIZE / 2);
 	}
 	
 	public void initialize(Side side) {
@@ -142,6 +150,10 @@ public class Component {
 	
 	public LinkedList<Food> getFoodList() {
 		return foodList;
+	}
+	
+	public Canvas[] getBoundaryList() {
+		return boundaryList;
 	}
 	
 	public Canvas getGrid() {

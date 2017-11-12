@@ -13,7 +13,6 @@ public abstract class Entity {
 	protected double direction;		// Angle against X-axis
 	protected double speed;
 	protected Side side;
-	protected boolean isDead;
 	
 	public Entity(Pair refPoint, double maxHp, double direction, double speed, Side side) {
 		this.refPoint = new Pair(refPoint);
@@ -22,7 +21,6 @@ public abstract class Entity {
 		this.direction = direction;
 		this.speed = speed;
 		this.side = side;
-		this.isDead = false;
 		
 		this.canvas = new Canvas();
 		
@@ -39,7 +37,6 @@ public abstract class Entity {
 	public abstract void takeDamage(Entity entity, double damage);
 	
 	public void die() {
-		isDead = true;
 		canvas.setOpacity(0);
 	}
 	
@@ -81,10 +78,6 @@ public abstract class Entity {
 	
 	public Side getSide() {
 		return side;
-	}
-	
-	public boolean isDead() {
-		return isDead;
 	}
 	
 	public abstract int getRadius();

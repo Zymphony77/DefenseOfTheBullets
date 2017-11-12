@@ -10,10 +10,13 @@ import utility.*;
 
 public class Novice extends Entity {
 	private static final double DEFAULT_MAX_HP = 100;
-	private static final double DEFAULT_SPEED = 5;
+	private static final double DEFAULT_SPEED = 200;
 	private static final int CANVAS_SIZE = 60;
 	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;
+	
+	protected boolean isMoving;
+	protected double moveDirection;
 	
 	protected HpBar hpBar;
 	protected double exp;
@@ -21,6 +24,9 @@ public class Novice extends Entity {
 	
 	public Novice(Pair refPoint, Side side) {
 		super(refPoint, DEFAULT_MAX_HP, 0, DEFAULT_SPEED, side);
+		
+		isMoving = false;
+		moveDirection = 0;
 		
 		level = 1;
 	}
@@ -44,12 +50,35 @@ public class Novice extends Entity {
 	}
 	
 	public void changeCenter(Pair center) {
-		canvas.setTranslateX(refPoint.first - CANVAS_SIZE/2 - center.first);
-		canvas.setTranslateY(refPoint.second - CANVAS_SIZE/2 - center.second);
+		canvas.setTranslateX(refPoint.first - CANVAS_SIZE/2 - center.first + Main.SCREEN_SIZE / 2);
+		canvas.setTranslateY(refPoint.second - CANVAS_SIZE/2 - center.second + Main.SCREEN_SIZE / 2);
 	}
 	
 	public void rotate() {
 		canvas.setRotate(direction);
+	}
+	
+	public void setMoving(double moveDirection) {
+		this.moveDirection = moveDirection;
+		this.isMoving = true;
+	}
+	
+	public void stopMoving() {
+		this.isMoving = false;
+	}
+	
+	public void move() {
+		if(!isMoving) {
+			return;
+		}
+		
+		refPoint.first += Math.cos(Math.toRadians(moveDirection)) * speed / Main.FRAME_RATE;
+		refPoint.first = Math.min(refPoint.first, (double) Component.MAX_SIZE);
+		refPoint.first = Math.max(refPoint.first, (double) 0);
+		
+		refPoint.second += Math.sin(Math.toRadians(moveDirection)) * speed / Main.FRAME_RATE;
+		refPoint.second = Math.min(refPoint.second, (double) Component.MAX_SIZE);
+		refPoint.second = Math.max(refPoint.second, (double) 0);
 	}
 	
 	public void heal(double amount) {
@@ -60,7 +89,6 @@ public class Novice extends Entity {
 		if(hp > damage) {
 			hp -= damage;
 		} else {
-			isDead = true;
 			hp = 0;
 			die();
 		}
@@ -68,15 +96,29 @@ public class Novice extends Entity {
 		// Give EXP to shooter
 	}
 	
+	@Override
+	public void die() {
+		super.die();
+		hpBar.die();
+	}
+	
 	public void shoot() {
-		double x = refPoint.first + (int) (Math.cos(Math.toRadians(direction))*(RADIUS + 17));
-		double y = refPoint.second + (int) (Math.sin(Math.toRadians(direction))*(RADIUS + 17));
+		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
+		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 1, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 700, side);
 		Component.getInstance().addComponent(bullet);
 	}
 	
 	public int getRadius() {
 		return 20;
+	}
+	
+	public HpBar getHpBar() {
+		return hpBar;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 }
