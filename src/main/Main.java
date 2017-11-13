@@ -42,6 +42,7 @@ public class Main extends Application {
 		wholePane.getChildren().add(Component.getInstance().getTowerPane());
 		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
 		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
+		wholePane.getChildren().add(Component.getInstance().getMinimap());
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / FRAME_RATE), event -> {
 			Handler.update();

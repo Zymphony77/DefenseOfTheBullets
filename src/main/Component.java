@@ -15,6 +15,7 @@ import entity.job.*;
 import entity.property.HpBar;
 import entity.food.*;
 import entity.tower.*;
+import environment.*;
 import utility.*;
 
 public class Component {
@@ -34,27 +35,29 @@ public class Component {
 	
 	private Novice player;
 	
-	private Canvas grid;
-	private Pane boundaryPane;
+	private Minimap minimap;
+	private Pane hpBarPane;
+	private Pane playerPane;
+	private Pane towerPane;
 	private Pane bulletPane;
 	private Pane foodPane;
-	private Pane towerPane;
-	private Pane playerPane;
-	private Pane hpBarPane;
+	private Pane boundaryPane;
+	private Canvas grid;
 	
 	public Component() {
+		minimap = new Minimap();
+		hpBarPane = new Pane();
 		playerPane = new Pane();
 		towerPane = new Pane();
-		boundaryPane = new Pane();
 		bulletPane = new Pane();
 		foodPane = new Pane();
-		hpBarPane = new Pane();
+		boundaryPane = new Pane();
 		
 		playerList = new ArrayList<Novice>();
 		botList = new ArrayList<Bot>();
+		towerList = new ArrayList<Tower>();
 		bulletList = new ArrayList<Bullet>();
 		foodList = new ArrayList<Food>();
-		towerList = new ArrayList<Tower>();
 		
 		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
 		grid.setTranslateX(-2 * GRID_SIZE);
@@ -115,12 +118,13 @@ public class Component {
 		player = new Novice(new Pair(200, 200), Side.RED);
 		addComponent(player);
 		
-		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
-		addComponent(shootTest);
+//		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
+//		addComponent(shootTest);
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
 		addComponent(tower);
 		
+		minimap.drawViewBox();
 		generateFood();
 	}
 	
@@ -130,14 +134,12 @@ public class Component {
 		}
 		
 		Random random = new Random();
-		boolean positionPossible = true;
 		
 		while(foodList.size() < MAX_FOOD_COUNT) {
 			int posx = random.nextInt((int) MAX_SIZE);
 			int posy = random.nextInt((int) MAX_SIZE);
 			
 			Food food = new Food(new Pair(posx, posy));
-			positionPossible = true;
 			
 			if(collideWithList(food, playerList)) {
 				continue;
@@ -241,8 +243,8 @@ public class Component {
 		return foodList;
 	}
 	
-	public Pane getBoundaryPane() {
-		return boundaryPane;
+	public Minimap getMinimap() {
+		return minimap;
 	}
 	
 	public Pane getHpBarPane() {
@@ -263,6 +265,10 @@ public class Component {
 	
 	public Pane getFoodPane() {
 		return foodPane;
+	}
+	
+	public Pane getBoundaryPane() {
+		return boundaryPane;
 	}
 	
 	public Canvas[] getBoundaryList() {

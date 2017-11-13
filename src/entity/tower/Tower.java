@@ -92,8 +92,8 @@ public class Tower extends Entity implements Shootable {
 		
 		Random random = new Random();
 		
-		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32 + random.nextInt(25));
-		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32 + random.nextInt(25));
+		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32);
+		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32);
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction + random.nextInt(11) - 5, 
 				BULLET_DAMAGE, BULLET_SPEED, side);

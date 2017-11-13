@@ -172,6 +172,8 @@ public class Handler {
 		
 		Component.getInstance().getGrid().setTranslateX(translatex);
 		Component.getInstance().getGrid().setTranslateY(translatey);
+		
+		Component.getInstance().getMinimap().changeCenter(center);
 	}
 	
 	public static void checkCollision() {

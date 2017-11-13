@@ -32,7 +32,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
 		speed = DEFAULT_SPEED;
-		attack = 500;
+		attack = 5;
 		isMoving = false;
 		moveDirection = 0;
 		
