@@ -1,6 +1,9 @@
 package bot;
 
+import java.util.Random;
+
 import entity.Entity;
+import entity.bullet.Bullet;
 import entity.job.Novice;
 import main.Component;
 import main.Main;
@@ -9,19 +12,42 @@ import utility.Side;
 
 public class Utility{
 	Novice player;
+	Random rand = new Random();
 	
 	public Utility(Novice player) {
 		this.player = player;
 	}
 	
+	protected boolean willCollide(Entity entity, Pair position, double time) {
+		for(Bullet each: Component.getInstance().getBulletList()) {
+			if(each.getLifeCycleCount() + time * Main.FRAME_RATE > Bullet.MAX_LIFE_CYCLE) {
+				continue;
+			}
+			
+			if(each.getSide() == entity.getSide())
+				continue;
+			
+			double posx = getRef(player, each).first;
+			double posy = getRef(player, each).second;
+			
+			posx += Math.cos(Math.toRadians(each.getDirection())) * each.getSpeed() * time / 1000;
+			posy += Math.sin(Math.toRadians(each.getDirection())) * each.getSpeed() * time / 1000;
+			
+			if(entity.getRadius() + each.getRadius() > position.distance(new Pair(posx, posy))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected int positionXInGrid(double x) {
-		int shiftX = (int)Math.floor(getRef(player, player).first) - Main.SCREEN_SIZE/2;
-		return (int)(((int)x - shiftX)/Main.SCREEN_SIZE * Bot.SIZE_OF_GRID);
+		double shiftX = Math.floor(getRef(player, player).first) - (double)Main.SCREEN_SIZE / 2.0;
+		return (int)((x - shiftX) * (double)Bot.SIZE_OF_GRID / (double)Main.SCREEN_SIZE);
 	}
 	
 	protected int positionYInGrid(double y) {
-		int shiftY = (int)Math.floor(getRef(player, player).second) - Main.SCREEN_SIZE/2;
-		return (int)(((int)y - shiftY)/Main.SCREEN_SIZE * Bot.SIZE_OF_GRID);
+		double shiftY = Math.floor(getRef(player, player).second) - (double)Main.SCREEN_SIZE / 2.0;
+		return (int)((y - shiftY) * (double)Bot.SIZE_OF_GRID / (double)Main.SCREEN_SIZE);
 	}
 	
 	protected double positionXInReal(int x) {
@@ -111,16 +137,10 @@ public class Utility{
 			destination = null;
 			return -1;
 		}
-		if(Bot.grid[x][y] != null && Bot.grid[x][y].isChk()) {
+		if(Bot.grid[x][y] != null && Bot.grid[x][y].isChk() && rand.nextInt(200) != 0) {
 			prevDirection = Bot.grid[x][y].getFirstDirection();
-			destination = new Pair(positionXInReal(x), positionYInReal(y));
-			return prevDirection;
-		}
-		for(int i = 0; i < 8; i++) {
-			int newX = x + Bot.newPosition[i][0], newY = y + Bot.newPosition[i][1];
-			if(newX >= 0 && newX <= Bot.SIZE_OF_GRID && newY >= 0 && newY <= Bot.SIZE_OF_GRID && Bot.grid[newX][newY] != null && Bot.grid[newX][newY].isChk()) {
-				prevDirection = Bot.grid[newX][newY].getFirstDirection();
-				destination = new Pair(positionXInReal(newX), positionYInReal(newY));
+			destination = new Pair(Bot.grid[x][y].getX(), Bot.grid[x][y].getY());
+			if(!isHitTheWall(prevDirection)) {
 				return prevDirection;
 			}
 		}
@@ -134,25 +154,25 @@ public class Utility{
 	
 	protected boolean isHitTheWall(int dir) {
 		if(dir == 7 || dir == 0 || dir == 1) {
-			if(getRef(player, player).second <= 30) {
+			if(getRef(player, player).second < 0) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 5 && dir <= 7) {
-			if(getRef(player, player).first <= 30) {
+			if(getRef(player, player).first < 0) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 3 && dir <= 5) {
-			if(getRef(player, player).second >= Component.MAX_SIZE - 30) {
+			if(getRef(player, player).second >= Component.MAX_SIZE) {
 				return true;
 			}else {
 				return false;
 			}
 		}else{
-			if(getRef(player, player).first >= Component.MAX_SIZE - 30) {
+			if(getRef(player, player).first >= Component.MAX_SIZE) {
 				return true;
 			}else {
 				return false;

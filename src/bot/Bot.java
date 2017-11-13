@@ -37,7 +37,7 @@ public abstract class Bot {
 	protected abstract void upgradeJob();
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
-	protected static final int SIZE_OF_GRID = 50;
+	protected static final int SIZE_OF_GRID = 30;
 	protected static final int NUMBER_OF_CHANGE_POSITION = 300; // Expected Value is 5 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
@@ -63,68 +63,58 @@ public abstract class Bot {
 		utility = new Utility(player);
 	}
 	
-	protected boolean willCollide(Entity entity, Pair position, double time) {
-		for(Bullet each: Component.getInstance().getBulletList()) {
-			if(each.getLifeCycleCount() + time * Main.FRAME_RATE > Bullet.MAX_LIFE_CYCLE) {
-				continue;
-			}
-			
-			double posx = utility.getRef(player, each).first;
-			double posy = utility.getRef(player, each).second;
-			
-			posx += Math.cos(Math.toRadians(each.getDirection())) * each.getSpeed() * time / 1000;
-			posy += Math.sin(Math.toRadians(each.getDirection())) * each.getSpeed() * time / 1000;
-			
-			if(entity.getRadius() + each.getRadius() > position.distance(new Pair(posx, posy))) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	protected void updateGrid() {
 		double timeForOnePixel = 1.0/player.getSpeed() * Main.SCREEN_SIZE / SIZE_OF_GRID;
 		
-		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 0.0, true, -1);
-		Grid newTmp;
-		priorityQueue.add(tmp);
-		grid[utility.positionXInGrid(tmp.getX())][utility.positionYInGrid(tmp.getY())] = new Grid(tmp);
 		for(int i = 0; i <= SIZE_OF_GRID; i++) {
 			for(int j = 0; j <= SIZE_OF_GRID; j++) {
 				grid[i][j] = null;
 			}
 		}
 		
-		System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
+		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 15, 15, 0.0, true, -1);
+		Grid newTmp;
+		priorityQueue.add(tmp);
+		System.out.println(tmp.getX() + " " + tmp.getY() + " " + utility.positionXInGrid(tmp.getX()) + " " + utility.positionYInGrid(tmp.getY()));
+		grid[15][15] = new Grid(tmp);
+		
+		//System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
 		while(!priorityQueue.isEmpty()) {
 			tmp = priorityQueue.poll();
+			//System.out.println(" : == " +  tmp.getX() + " " + tmp.getY());
 			double time = timeForOnePixel + tmp.getTime();
 			for(int i = 0; i < 8; i++) {
-				if(tmp.getTime() == 0.0)
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getTime() + time, false, i);
+				if(tmp.getGridX() == 15 && tmp.getGridY() == 15)
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], tmp.getTime() + time, false, i);
 				else
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getTime() + time, false, tmp.getFirstDirection());
-				if(utility.positionXInGrid(newTmp.getX()) < 0 
-						|| utility.positionXInGrid(newTmp.getX()) > Main.SCREEN_SIZE
-						|| utility.positionYInGrid(newTmp.getY()) < 0 
-						|| utility.positionYInGrid(newTmp.getY()) > Main.SCREEN_SIZE) {
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], tmp.getTime() + time, false, tmp.getFirstDirection());
+	
+				if(newTmp.getGridX() < 0 
+						|| newTmp.getGridX() > SIZE_OF_GRID
+						|| newTmp.getGridY() < 0 
+						|| newTmp.getGridY() > SIZE_OF_GRID) {
 					continue;
 				}
-				if(newTmp.getX() < 0  || newTmp.getX() >= Component.GRID_SIZE
-						|| newTmp.getY() < 0 || newTmp.getY() >= Component.GRID_SIZE) {
+				if(newTmp.getX() < 0  || newTmp.getX() >= Component.MAX_SIZE
+						|| newTmp.getY() < 0 || newTmp.getY() >= Component.MAX_SIZE) {
 					continue;
 				}
-				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
-						|| grid[utility.positionXInGrid(newTmp.getX())][utility.positionYInGrid(newTmp.getY())] != null ) {
+				if(utility.willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
+						|| grid[newTmp.getGridX()][newTmp.getGridY()] != null ) {
 					continue;
 				}
 				newTmp.setChk(true);
-				grid[utility.positionXInGrid(newTmp.getX())][utility.positionYInGrid(newTmp.getY())] = new Grid(newTmp);
+				grid[newTmp.getGridX()][newTmp.getGridY()] = new Grid(newTmp);
 				priorityQueue.add(newTmp);
 			}
 		}
-	
-		System.out.println("-------------------------------");
+//		for(int i = 0; i <= SIZE_OF_GRID; i++) {
+//			for(int j = 0; j <= SIZE_OF_GRID; j++) {
+//				if(grid[i][j] != null)
+//					System.out.println(i + " " + j + " " + grid[i][j].getX() + " " + grid[i][j].getY());
+//			}
+		//}
+		//System.exit(0);
 	}
 	
 	protected void findEntityInRange()
@@ -315,7 +305,12 @@ public abstract class Bot {
 			}
 		}
 		else {
-			escapeWithBullet();
+			if(utility.isTowerInRange()) {  //check tower in range.
+				int tmp = utility.checkCoordinate(player, towerList.get(0));
+				move(oppositeDirection[tmp]);
+			}else {
+				escapeWithBullet();
+			}
 		}
 	}
 
@@ -370,6 +365,7 @@ public abstract class Bot {
 	}
 	
 	protected void escapeWithBullet() {
+		System.out.println("Escape With Bullet");
 		int[] bullet = new int[8];
 		
 		for(Bullet tmp : bulletList) {
@@ -393,6 +389,7 @@ public abstract class Bot {
 		}
 		
 		if(res != null) {
+			System.out.println("*** resssss ***");
 			destination = res;
 			int dir = utility.canMoveWithDestination(destination, prevDirection);
 			move(dir);

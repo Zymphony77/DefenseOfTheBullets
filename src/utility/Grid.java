@@ -2,6 +2,7 @@ package utility;
 
 public class Grid implements Comparable<Grid> {
 	private int x, y;
+	private int gridX, gridY;
 	private double time;
 	private boolean chk;
 	private int firstDirection;
@@ -11,9 +12,11 @@ public class Grid implements Comparable<Grid> {
 		chk = false;
 	}
 	
-	public Grid(int x, int y, double time, boolean chk, int firstDirection) {
+	public Grid(int x, int y, int gridX, int gridY, double time, boolean chk, int firstDirection) {
 		this.x = x;
 		this.y = y;
+		this.gridX = gridX;
+		this.gridY = gridY;
 		this.time = time;
 		this.chk = chk;
 		this.firstDirection = firstDirection;
@@ -22,6 +25,8 @@ public class Grid implements Comparable<Grid> {
 	public Grid(Grid o) {
 		this.x = o.x;
 		this.y = o.y;
+		this.gridX = o.gridX;
+		this.gridY = o.gridY;
 		this.time = o.time;
 		this.chk = o.chk;
 		this.firstDirection = o.firstDirection;
@@ -38,6 +43,22 @@ public class Grid implements Comparable<Grid> {
 
 	public void setX(int x) {
 		this.x = x;
+	}
+
+	public int getGridX() {
+		return gridX;
+	}
+
+	public void setGridX(int gridX) {
+		this.gridX = gridX;
+	}
+
+	public int getGridY() {
+		return gridY;
+	}
+
+	public void setGridY(int gridY) {
+		this.gridY = gridY;
 	}
 
 	public int getY() {
