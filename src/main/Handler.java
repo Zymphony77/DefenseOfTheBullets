@@ -99,6 +99,7 @@ public class Handler {
 		// Move every component
 		for(Bot bot: Component.getInstance().getBotList()) {
 			bot.move();
+			bot.getPlayer().move();
 		}
 		for(Bullet bullet: Component.getInstance().getBulletList()) {
 			bullet.move();
