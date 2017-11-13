@@ -95,7 +95,7 @@ public abstract class Bot {
 			}
 		}
 		
-		System.out.println(tmp.getX() + " " + tmp.getY());
+		System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
 		while(!priorityQueue.isEmpty()) {
 			tmp = priorityQueue.poll();
 			double time = timeForOnePixel + tmp.getTime();
@@ -108,6 +108,10 @@ public abstract class Bot {
 						|| utility.positionXInGrid(newTmp.getX()) > Main.SCREEN_SIZE
 						|| utility.positionYInGrid(newTmp.getY()) < 0 
 						|| utility.positionYInGrid(newTmp.getY()) > Main.SCREEN_SIZE) {
+					continue;
+				}
+				if(newTmp.getX() < 0  || newTmp.getX() >= Component.GRID_SIZE
+						|| newTmp.getY() < 0 || newTmp.getY() >= Component.GRID_SIZE) {
 					continue;
 				}
 				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
@@ -165,7 +169,7 @@ public abstract class Bot {
 		if(destination == null) {
 			System.out.println("null");
 		}else {
-			System.out.println(destination.first + " " + destination.second);
+			System.out.println("destination:" + destination.first + " " + destination.second);
 		}
 		
 		if(dir == -1) {
