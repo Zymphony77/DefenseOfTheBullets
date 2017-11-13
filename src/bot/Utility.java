@@ -15,22 +15,22 @@ public class Utility{
 	}
 	
 	protected int positionXInGrid(double x) {
-		int shiftX = (int)Math.floor(getRef(player, player).first) - Main.SCREEN_SIZE/2;
+		int shiftX = (int)Math.floor(getRef(player, player).first) - Bot.SIZE_OF_GRID/2;
 		return (int)x - shiftX;
 	}
 	
 	protected int positionYInGrid(double y) {
-		int shiftY = (int)Math.floor(getRef(player, player).second) - Main.SCREEN_SIZE/2;
+		int shiftY = (int)Math.floor(getRef(player, player).second) - Bot.SIZE_OF_GRID/2;
 		return (int)(y - shiftY);
 	}
 	
 	protected double positionXInReal(int x) {
-		int shiftX = (int)Math.floor(getRef(player, player).first) - Main.SCREEN_SIZE/2;
+		int shiftX = (int)Math.floor(getRef(player, player).first) - Bot.SIZE_OF_GRID/2;
 		return x + shiftX;
 	}
 	
 	protected double positionYInReal(int y) {
-		int shiftY = (int)Math.floor(getRef(player, player).second) - Main.SCREEN_SIZE/2;
+		int shiftY = (int)Math.floor(getRef(player, player).second) - Bot.SIZE_OF_GRID/2;
 		return y + shiftY;
 	}
 	
@@ -121,18 +121,21 @@ public class Utility{
 	
 	protected boolean canMoveWithDestination(Pair destination, int prevDirection) {
 		int x = positionXInGrid(destination.first), y = positionYInGrid(destination.second);
+		if(x < 0 || x > Bot.SIZE_OF_GRID || y < 0 || y > Bot.SIZE_OF_GRID) {
+			destination = null;
+			return false;
+		}
 		if(Bot.grid[x][y] != null && Bot.grid[x][y].isChk()) {
 			prevDirection = Bot.grid[x][y].getFirstDirection();
 			return true;
 		}
 		for(int i = 0; i < 8; i++) {
 			int newX = x + Bot.newPosition[i][0], newY = y + Bot.newPosition[i][1];
-			if(newX >= 0 && newX <= Main.SCREEN_SIZE && newY >= 0 && newY <= Main.SCREEN_SIZE && Bot.grid[newX][newY] != null && Bot.grid[newX][newY].isChk()) {
+			if(newX >= 0 && newX <= Bot.SIZE_OF_GRID && newY >= 0 && newY <= Bot.SIZE_OF_GRID && Bot.grid[newX][newY] != null && Bot.grid[newX][newY].isChk()) {
 				prevDirection = Bot.grid[newX][newY].getFirstDirection();
 				return true;
 			}
 		}
-		prevDirection = -1;
 		destination = null;
 		return false;
 	}
@@ -172,14 +175,18 @@ public class Utility{
 	protected int getDirectionAdjacent(int dir, int prevDirection) {
 		prevDirection = -1;
 		for(int i = 0; i < 8; i++) {
-			int newx = 375 + Bot.newPosition[i][0], newy = 375 + Bot.newPosition[i][1];
+			int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[i][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[i][1];
+			if(newx < 0 || newx > Bot.SIZE_OF_GRID || newy < 0 || newy > Bot.SIZE_OF_GRID)
+				continue;
 			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk()) {
 				prevDirection = Bot.grid[newx][newy].getFirstDirection();
 			}
 		}
-		int newx = 375 + Bot.newPosition[dir][0], newy = 375 + Bot.newPosition[dir][1];
-		if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk()) {
-			prevDirection = Bot.grid[newx][newy].getFirstDirection();
+		int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[dir][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[dir][1];
+		if(newx < 0 || newx > Bot.SIZE_OF_GRID || newy < 0 || newy > Bot.SIZE_OF_GRID) {
+			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk()) {
+				prevDirection = Bot.grid[newx][newy].getFirstDirection();
+			}
 		}
 		return prevDirection;
 	}

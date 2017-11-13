@@ -28,7 +28,6 @@ public abstract class Bot {
 	protected static ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
 	protected static ArrayList<Tower> towerList = new ArrayList<Tower>();
 	protected static ArrayList<Food> foodList = new ArrayList<Food>();
-	protected static Grid[][] grid = new Grid[Main.SCREEN_SIZE + 10][Main.SCREEN_SIZE + 10];
 	protected int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0};
 	protected int[] change4to8 = new int[] {7, 1, 3, 5};
 	
@@ -38,10 +37,12 @@ public abstract class Bot {
 	protected abstract void upgradeJob();
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
+	protected static final int SIZE_OF_GRID = 40;
 	protected static final int NUMBER_OF_CHANGE_POSITION = 300; // Expected Value is 5 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
+	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
 	
 	protected int prevDirection = -1;
 	protected Pair destination;
@@ -80,15 +81,15 @@ public abstract class Bot {
 		return false;
 	}
 	
-	protected void sGrid() {
+	protected void updateGrid() {
 		double timeForOnePixel = 1.0/player.getSpeed();
 		
 		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 0.0, true, -1);
 		Grid newTmp;
 		priorityQueue.add(tmp);
 		grid[utility.positionXInGrid(tmp.getX())][utility.positionYInGrid(tmp.getY())] = new Grid(tmp);
-		for(int i = 0; i <= Main.SCREEN_SIZE; i++) {
-			for(int j = 0; j <= Main.SCREEN_SIZE; j++) {
+		for(int i = 0; i <= SIZE_OF_GRID; i++) {
+			for(int j = 0; j <= SIZE_OF_GRID; j++) {
 				grid[i][j] = null;
 			}
 		}
@@ -103,9 +104,9 @@ public abstract class Bot {
 				else
 					newTmp = new Grid(tmp.getX() + newPosition[i][0], tmp.getY() + newPosition[i][1], tmp.getTime() + time, false, tmp.getFirstDirection());
 				if(utility.positionXInGrid(newTmp.getX()) < 0 
-						|| utility.positionXInGrid(newTmp.getX()) > Main.SCREEN_SIZE 
+						|| utility.positionXInGrid(newTmp.getX()) > SIZE_OF_GRID 
 						|| utility.positionYInGrid(newTmp.getY()) < 0 
-						|| utility.positionYInGrid(newTmp.getY()) > Main.SCREEN_SIZE) {
+						|| utility.positionYInGrid(newTmp.getY()) > SIZE_OF_GRID) {
 					continue;
 				}
 				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
@@ -309,47 +310,47 @@ public abstract class Bot {
 	protected Pair getDirectionWithArea(int area) {
 		//return Pair of Destination for move.
 		if(area == 0) {
-			for(int i = 0; i <= VISION; i++) {
+			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
 				if(grid[i][0] != null && grid[i][0].isChk()) {
 					return new Pair(utility.positionXInReal(i), utility.positionYInReal(0));
 				}
 			}
-			for(int j = 0; j <= VISION; j++) {
+			for(int j = 0; j <= SIZE_OF_GRID/2; j++) {
 				if(grid[0][j] != null && grid[0][j].isChk()) {
 					return new Pair(utility.positionXInReal(0), utility.positionYInReal(j));
 				}
 			}
 		}else if(area == 1) {
-			for(int i = (int) VISION ; i < Main.SCREEN_SIZE; i++) {
+			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
 				if(grid[i][0] != null && grid[i][0].isChk()) {
 					return new Pair(utility.positionXInReal(i), utility.positionYInReal(0));
 				}
 			}
-			for(int j = 0; j < VISION; j++) {
-				if(grid[Main.SCREEN_SIZE][j] != null && grid[Main.SCREEN_SIZE][j].isChk()) {
-					return new Pair(utility.positionXInReal(Main.SCREEN_SIZE), utility.positionYInReal(j));
+			for(int j = 0; j < SIZE_OF_GRID/2; j++) {
+				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
+					return new Pair(utility.positionXInReal(SIZE_OF_GRID), utility.positionYInReal(j));
 				}
 			}
 		}else if(area == 2) {
-			for(int i = 0; i <= VISION; i++) {
-				if(grid[i][Main.SCREEN_SIZE] != null && grid[i][Main.SCREEN_SIZE].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(Main.SCREEN_SIZE));
+			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
+				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
+					return new Pair(utility.positionXInReal(i), utility.positionYInReal(SIZE_OF_GRID));
 				}
 			}
-			for(int j = (int) VISION; j <= Main.SCREEN_SIZE; j++) {
+			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
 				if(grid[0][j] != null && grid[0][j].isChk()) {
 					return new Pair(utility.positionXInReal(0), utility.positionYInReal(j));
 				}
 			}
 		}else {
-			for(int i = (int) VISION ; i < Main.SCREEN_SIZE; i++) {
-				if(grid[i][Main.SCREEN_SIZE] != null && grid[i][Main.SCREEN_SIZE].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(Main.SCREEN_SIZE));
+			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
+				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
+					return new Pair(utility.positionXInReal(i), utility.positionYInReal(SIZE_OF_GRID));
 				}
 			}
-			for(int j = (int) VISION; j <= Main.SCREEN_SIZE; j++) {
-				if(grid[Main.SCREEN_SIZE][j] != null && grid[Main.SCREEN_SIZE][j].isChk()) {
-					return new Pair(utility.positionXInReal(Main.SCREEN_SIZE), utility.positionYInReal(j));
+			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
+				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
+					return new Pair(utility.positionXInReal(SIZE_OF_GRID), utility.positionYInReal(j));
 				}
 			}
 		}

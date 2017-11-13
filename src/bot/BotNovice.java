@@ -20,17 +20,17 @@ public class BotNovice extends Bot{
 		findEntityInRange();
 		
 		//update Grid
-		//updateGrid();
+		updateGrid();
 		
 		if(destination != null && !utility.isVisible(destination)) {
 			destination = null;
 		}
 		
 		if(destination != null && utility.canMoveWithDestination(destination, prevDirection)) {
-			//moveWithDestination();
+			moveWithDestination();
 		}	
 		else if(player.getHp() < player.getMaxHp() * 0.3) {
-			//escape();
+			escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
 			System.out.println("Farmmm");
@@ -40,21 +40,18 @@ public class BotNovice extends Bot{
 			
 		}
 		else {
-			//war();
+			war();
 		}
 		
 		///choose target to closest food
 		target = chooseClosestTarget();
 		
 		//change direction to target//
-		//////////////////////////////
 		if(target != null) {
 			utility.changeDirectionToTarget(utility.getRef(player, target));
 			player.rotate();
 			player.shoot();
 		}
-		
-		player.move();
 	}
 
 	
