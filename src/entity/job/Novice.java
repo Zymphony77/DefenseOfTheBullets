@@ -13,7 +13,7 @@ import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
-	private static final double DEFAULT_SPEED = 200;
+	private static final double DEFAULT_SPEED = 150;
 	private static final int CANVAS_SIZE = 60;
 	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;

@@ -1,7 +1,6 @@
 package entity.property;
 
-public interface Shootable {
-	public abstract void rotate();
+public interface Shootable extends Rotatable {
 	public abstract void shoot();
 	public abstract void reload();
 }

@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import bot.*;
 import entity.*;
@@ -20,6 +21,7 @@ public class Component {
 	public static final double MAX_SIZE = 1000;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
+	public static final int MAX_FOOD_COUNT = 25;
 	
 	private static final Component instance = new Component();
 	
@@ -118,6 +120,52 @@ public class Component {
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.RED);
 		addComponent(tower);
+		
+		generateFood();
+	}
+	
+	public void generateFood() {
+		if(foodList.size() == MAX_FOOD_COUNT) {
+			return;
+		}
+		
+		Random random = new Random();
+		boolean positionPossible = true;
+		
+		while(foodList.size() < MAX_FOOD_COUNT) {
+			int posx = random.nextInt((int) MAX_SIZE);
+			int posy = random.nextInt((int) MAX_SIZE);
+			
+			Food food = new Food(new Pair(posx, posy));
+			positionPossible = true;
+			
+			if(collideWithList(food, playerList)) {
+				continue;
+			}
+			
+			if(collideWithList(food, bulletList)) {
+				continue;
+			}
+			
+			if(collideWithList(food, towerList)) {
+				continue;
+			}
+			
+			if(collideWithList(food, foodList)) {
+				continue;
+			}
+			
+			addComponent(food);
+		}
+	}
+	
+	private boolean collideWithList(Entity entity, ArrayList<? extends Entity> list) {
+		for(Entity each: list) {
+			if(each.isCollided(entity)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void addComponent(Object component) {
@@ -136,6 +184,9 @@ public class Component {
 		} else if(component instanceof Tower) {
 			towerList.add((Tower) component);
 			towerPane.getChildren().add(((Entity) component).getCanvas());
+		} else if(component instanceof Food) {
+			foodList.add((Food) component);
+			foodPane.getChildren().add(((Food) component).getCanvas());
 		}
 	}
 	
@@ -152,6 +203,9 @@ public class Component {
 			bulletPane.getChildren().remove(((Entity) component).getCanvas());
 		} else if(component instanceof HpBar) {
 			hpBarPane.getChildren().remove(((HpBar) component).getCanvas()); 
+		} else if(component instanceof Food) {
+			foodList.remove((Food) component);
+			foodPane.getChildren().remove(((Food) component).getCanvas());
 		}
 	}
 	

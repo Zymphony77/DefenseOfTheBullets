@@ -84,6 +84,8 @@ public class Handler {
 		moveCenter(Component.getInstance().getPlayer().getRefPoint());
 		checkCollision();
 		clearDeadComponent();
+		
+		Component.getInstance().generateFood();
 	}
 	
 	public static void reloadAmmo() {
@@ -103,6 +105,9 @@ public class Handler {
 		}
 		for(Bullet bullet: Component.getInstance().getBulletList()) {
 			bullet.move();
+		}
+		for(Food food: Component.getInstance().getFoodList()) {
+			food.rotate();
 		}
 	}
 	
