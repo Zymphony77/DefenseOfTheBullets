@@ -28,19 +28,20 @@ public class BotNovice extends Bot{
 		}
 		
 		if(destination != null && canMoveWithDestination()) {
-			moveWithDestination();
+			//moveWithDestination();
 		}	
 		else if(player.getHp() < player.getMaxHp() * 0.3) {
-			escape();
+			//escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
+			System.out.println("Farmmm");
 			farm();
 		}
 		else if(player.getLevel() < 30){
 			
 		}
 		else {
-			war();
+			//war();
 		}
 		
 		///choose target to closest food

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import entity.job.Novice;
 import entity.tower.Tower;
+import entity.bullet.Bullet;
 import main.Component;
 import utility.Pair;
 

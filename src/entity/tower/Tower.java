@@ -19,7 +19,10 @@ public class Tower extends Entity implements Shootable {
 	private static final int MAX_HP = 3000;
 	private static final int CANVAS_SIZE = 200;
 	private static final int RADIUS = 75;
-	private static final int RELOAD_DONE = 30;
+	private static final int RELOAD_DONE = 5;
+	
+	public static final int BULLET_SPEED = 300;
+	public static final int BULLET_DAMAGE = 20;
 	
 	protected HpBar hpBar;
 	protected int reloadCount;
@@ -87,10 +90,13 @@ public class Tower extends Entity implements Shootable {
 			return;
 		}
 		
-		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32);
-		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32);
+		Random random = new Random();
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 500, side);
+		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32 + random.nextInt(25));
+		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32 + random.nextInt(25));
+		
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction + random.nextInt(11) - 5, 
+				BULLET_DAMAGE, BULLET_SPEED, side);
 		Component.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
@@ -106,5 +112,9 @@ public class Tower extends Entity implements Shootable {
 	
 	public void reload() {
 		reloadCount = Math.min(reloadCount + 1, RELOAD_DONE);
+	}
+	
+	public static int getBulletSpeed() {
+		return BULLET_SPEED;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
+import bot.*;
 import entity.*;
 import entity.bullet.*;
 import entity.food.*;
@@ -96,8 +97,8 @@ public class Handler {
 	
 	public static void moveComponent() {
 		// Move every component
-		for(Novice player: Component.getInstance().getPlayerList()) {
-			player.move();
+		for(Bot bot: Component.getInstance().getBotList()) {
+			bot.move();
 		}
 		for(Bullet bullet: Component.getInstance().getBulletList()) {
 			bullet.move();

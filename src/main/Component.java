@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
 
+import bot.*;
 import entity.*;
 import entity.bullet.*;
 import entity.job.*;
@@ -16,13 +17,14 @@ import entity.tower.*;
 import utility.*;
 
 public class Component {
-	public static final double MAX_SIZE = 10000;
+	public static final double MAX_SIZE = 1000;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
 	
 	private static final Component instance = new Component();
 	
 	private ArrayList<Novice> playerList;
+	private ArrayList<Bot> botList;
 	private ArrayList<Tower> towerList;
 	private ArrayList<Bullet> bulletList;
 	private ArrayList<Food> foodList;
@@ -47,6 +49,7 @@ public class Component {
 		hpBarPane = new Pane();
 		
 		playerList = new ArrayList<Novice>();
+		botList = new ArrayList<Bot>();
 		bulletList = new ArrayList<Bullet>();
 		foodList = new ArrayList<Food>();
 		towerList = new ArrayList<Tower>();
@@ -121,6 +124,10 @@ public class Component {
 		if(component instanceof Novice) {
 			playerList.add((Novice) component);
 			playerPane.getChildren().add(((Entity) component).getCanvas());
+			
+			if((Novice) component != player) {
+				botList.add(new BotNovice((Novice) component));
+			}
 		} else if(component instanceof Bullet) {
 			bulletList.add((Bullet) component);
 			bulletPane.getChildren().add(((Entity) component).getCanvas());
@@ -162,6 +169,10 @@ public class Component {
 	
 	public ArrayList<Novice> getPlayerList() {
 		return playerList;
+	}
+	
+	public ArrayList<Bot> getBotList() {
+		return botList;
 	}
 	
 	public ArrayList<Tower> getTowerList() {

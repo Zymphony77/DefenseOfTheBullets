@@ -1,6 +1,6 @@
 package utility;
 
-public class Grid {
+public class Grid implements Comparable<Grid> {
 	private int x, y;
 	private double time;
 	private boolean chk;
@@ -26,6 +26,11 @@ public class Grid {
 		this.chk = o.chk;
 		this.firstDirection = o.firstDirection;
 	}
+	
+	@Override
+	public int compareTo(Grid other) {
+		return (int) (this.getTime() - other.getTime());
+    }
 
 	public int getX() {
 		return x;

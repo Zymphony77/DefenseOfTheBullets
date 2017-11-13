@@ -10,16 +10,18 @@ import utility.*;
 
 public class Bullet extends Entity implements Movable {
 	private static int RADIUS = 7;
-	public static int MAX_LIFE_CYCLE = 2 * Main.FRAME_RATE;
+	public static int LIFE_DURATION = 2;
+	public static int MAX_LIFE_CYCLE = LIFE_DURATION * Main.FRAME_RATE;
 	
 	protected double speed;
 	protected Entity shooter;
 	protected int lifeCycleCount;
 	
-	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double speed, Side side) {
+	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, 
+			double speed, Side side) {
 		super(refPoint, maxHp, direction, side);
 		
-		this.attack = 100;
+		this.attack = attack;
 		this.speed = speed;
 		this.lifeCycleCount = 0;
 		this.shooter = shooter;
@@ -56,6 +58,14 @@ public class Bullet extends Entity implements Movable {
 	public void move() {
 		refPoint.first += Math.cos(Math.toRadians(direction)) * speed / Main.FRAME_RATE;
 		refPoint.second += Math.sin(Math.toRadians(direction)) * speed / Main.FRAME_RATE;
+		
+		if(refPoint.first < -50 || refPoint.first > Component.MAX_SIZE + 50) {
+			die();
+		}
+		
+		if(refPoint.second < -50 || refPoint.second > Component.MAX_SIZE + 50) {
+			die();
+		}
 		
 		++lifeCycleCount;
 		if(lifeCycleCount > MAX_LIFE_CYCLE) {

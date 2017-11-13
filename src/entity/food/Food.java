@@ -8,7 +8,7 @@ import entity.*;
 import utility.*;
 
 public class Food extends Entity {
-	public static final int CANVAS_SIZE = 20; 
+	public static final int CANVAS_SIZE = 20;
 	
 	public Food(Pair refPoint) {
 		super(refPoint, 10, 0, Side.NEUTRAL);
@@ -22,7 +22,7 @@ public class Food extends Entity {
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
-		gc.setFill(Color.LIGHTYELLOW);
+		gc.setFill(Color.GOLD);
 		gc.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 	}
 	

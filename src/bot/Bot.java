@@ -1,6 +1,7 @@
 package bot;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -52,13 +53,13 @@ public abstract class Bot {
 	
 	Random rand = new Random();
 	
-	protected static Comparator<Grid> idComparator = new Comparator<Grid>(){
-		
-		@Override
-		public int compare(Grid c1, Grid c2) {
-			return (int) (c1.getTime() - c2.getTime());
-        }
-	};
+//	protected static Comparator<Grid> idComparator = new Comparator<Grid>(){
+//		
+//		@Override
+//		public int compare(Grid c1, Grid c2) {
+//			return (int) (c1.getTime() - c2.getTime());
+//        }
+//	};
 	
 	protected boolean willCollide(Entity entity, Pair position, double time) {
 		for(Bullet each: Component.getInstance().getBulletList()) {
@@ -112,6 +113,14 @@ public abstract class Bot {
 		Grid newTmp;
 		priorityQueue.add(tmp);
 		grid[positionXInGrid(tmp.getX())][positionYInGrid(tmp.getY())] = new Grid(tmp);
+		
+		for(int i = 0; i <= Main.SCREEN_SIZE; i++) {
+			for(int j = 0; j <= Main.SCREEN_SIZE; j++) {
+				grid[i][j] = null;
+			}
+		}
+		
+		System.out.println(tmp.getX() + " " + tmp.getY());
 		while(!priorityQueue.isEmpty()) {
 			tmp = priorityQueue.poll();
 			double time = timeForOnePixel + tmp.getTime();
@@ -120,17 +129,23 @@ public abstract class Bot {
 					newTmp = new Grid(tmp.getX() + newPosition[i][0], tmp.getY() + newPosition[i][1], tmp.getTime() + time, false, i);
 				else
 					newTmp = new Grid(tmp.getX() + newPosition[i][0], tmp.getY() + newPosition[i][1], tmp.getTime() + time, false, tmp.getFirstDirection());
-				if(newTmp.getX() < 0 || newTmp.getX() > Main.SCREEN_SIZE || newTmp.getY() < 0 || newTmp.getY() > Main.SCREEN_SIZE) {
+				if(positionXInGrid(newTmp.getX()) < 0 
+						|| positionXInGrid(newTmp.getX()) > Main.SCREEN_SIZE 
+						|| positionYInGrid(newTmp.getY()) < 0 
+						|| positionYInGrid(newTmp.getY()) > Main.SCREEN_SIZE) {
 					continue;
 				}
-				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) || (grid[positionXInGrid(newTmp.getX())][positionYInGrid(newTmp.getY())] != null && grid[positionXInGrid(newTmp.getX())][positionYInGrid(newTmp.getY())].isChk() == true)) {
+				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
+						|| grid[positionXInGrid(newTmp.getX())][positionYInGrid(newTmp.getY())] != null ) {
 					continue;
 				}
 				newTmp.setChk(true);
-				grid[newTmp.getX()][newTmp.getY()] = new Grid(newTmp);
+				grid[positionXInGrid(newTmp.getX())][positionYInGrid(newTmp.getY())] = new Grid(newTmp);
+				//System.out.println(newTmp.getX() + " " + newTmp.getY());
 				priorityQueue.add(newTmp);
 			}
 		}
+		System.out.println("-------------------------------");
 	}
 	
 	protected void findEntityInRange()
@@ -167,6 +182,7 @@ public abstract class Bot {
 		
 		if(dir == -1) {
 			System.out.println(" Bug move(dir)!!!! ");
+			return;
 		}
 		
 		if(player.getSide() == Side.BLUE) {
@@ -338,8 +354,7 @@ public abstract class Bot {
 		}
 		
 		if(foodList.isEmpty() && bulletList.isEmpty() && playerEnemiesList.isEmpty()) {
-			
-			int tmpForMove; //Random direction for move novice.
+			int tmpForMove = rand.nextInt(8); //Random direction for move novice.
 			if(isTowerInRange()) {
 				int tmp = checkCoordinate(player, towerList.get(0));
 				move(oppositeDirection[tmp]);

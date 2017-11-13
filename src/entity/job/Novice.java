@@ -12,8 +12,8 @@ import entity.property.Shootable;
 import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
-	private static final double DEFAULT_MAX_HP = 500;
-	private static final double DEFAULT_SPEED = 50;
+	private static final double DEFAULT_MAX_HP = 5000;
+	private static final double DEFAULT_SPEED = 200;
 	private static final int CANVAS_SIZE = 60;
 	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;
@@ -114,6 +114,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	public void die() {
 		super.die();
 		hpBar.die();
+		reloadCount = 0;
 	}
 	
 	public void shoot() {
@@ -124,7 +125,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 200, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 100, 200, side);
 		Component.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
