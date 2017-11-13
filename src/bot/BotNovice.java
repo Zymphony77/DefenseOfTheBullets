@@ -37,10 +37,10 @@ public class BotNovice extends Bot{
 			farm();
 		}
 		else if(player.getLevel() < 30){
-			escape();
+			
 		}
 		else {
-			
+			war();
 		}
 		
 		///choose target to closest food

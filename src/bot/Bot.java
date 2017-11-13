@@ -40,7 +40,7 @@ public abstract class Bot {
 	private static final double VISION = Main.SCREEN_SIZE/2.0;
 	private static final int NUMBER_OF_CHANGE_POSITION = 300; // Expected Value is 5 seconds to change;
 	private static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
-	private static final double MOVE_HEURISTIC = 3.5; //move heuristic number
+	private static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	
 	protected int prevDirection = -1;
 	protected Pair destination;
@@ -107,6 +107,7 @@ public abstract class Bot {
 	
 	protected void updateGrid() {
 		double timeForOnePixel = 1.0/player.getSpeed();
+		
 		Grid tmp = new Grid((int) Math.floor(player.getRefPoint().first), (int) Math.floor(player.getRefPoint().second), 0.0, true, -1);
 		Grid newTmp;
 		priorityQueue.add(tmp);
@@ -172,17 +173,19 @@ public abstract class Bot {
 			// 7.0.1
 			// 6...2
 			// 5.4.3
-			
-			//don't forget to check isHitTheWall before move
-			
+			while(isHitTheWall(dir)) {
+				dir = rand.nextInt(8);
+			}
+			player.setMoving((dir + 6)%8 * 45);
 		}
 		else {
 			// 3.4.5
 			// 2...6
 			// 1.0.7
-			
-			//don't forget to check isHitTheWall before move
-			
+			while(isHitTheWall(dir)) {
+				dir = rand.nextInt(8);
+			}
+			player.setMoving((oppositeDirection[dir] + 6)%8 * 45);
 		}
 		
 		prevDirection = dir;
@@ -192,7 +195,7 @@ public abstract class Bot {
 		if(player.getSide() == Side.BLUE) {
 			return dir;
 		}else {
-			return 3 - dir;
+			return oppositeDirection[dir];
 		}
 	}
 	
@@ -310,6 +313,13 @@ public abstract class Bot {
 		return ans; 
 	}
 	
+	protected void hueristicFood(int[] food) {
+		food[7] += food[0] + food[6];
+		food[7] *= MOVE_HEURISTIC * MOVE_HEURISTIC;
+		food[1] *= MOVE_HEURISTIC;
+		food[5] *= MOVE_HEURISTIC;
+	}
+	
 	protected void farm() {
 
 		int[] food = new int[8];
@@ -319,6 +329,8 @@ public abstract class Bot {
 			int chk = checkCoordinate(player, tmp);
 			food[chk]++;
 		}
+		
+		hueristicFood(food);
 		
 		for(Novice tmp : playerEnemiesList) {
 			int chk = checkCoordinate(player, tmp);
@@ -347,17 +359,11 @@ public abstract class Bot {
 			
 			//if x-coordinate > 60% and y-coordinate > 60% and 0 isn't player.Side >> LT
 			//player will not move if RT have many foods. it can go to LT and then go to RT in next move.
+			if(player.getRefPoint().first >= Main.SCREEN_SIZE * 0.6 && player.getRefPoint().second >= Main.SCREEN_SIZE * 0.6) {
+				food[3] = 0;
+			}
 			
-			
-			//if x-coordinate > 60% and 0 isn't player.Side >> check(LT, LB)
-			//player will not move if R have many foods.
-			
-			
-			//if y-coordinate > 60% and 0 isn't player.Side >> check(LT, RT)
-			//player will not move if B have many foods.
-			
-			if(isTowerInRange()) { 
-				//tower in range.
+			if(isTowerInRange()) {  //check tower in range.
 				int tmp = checkCoordinate(player, towerList.get(0));
 				move(oppositeDirection[tmp]);
 			}
@@ -372,11 +378,10 @@ public abstract class Bot {
 						}
 					}
 					if(chk == true) {
-						tmpForMove = checkDirection(i);
+						tmpForMove = i;
 					}
 				}
 				
-				///move to direction tmpForMove
 				move(tmpForMove);
 			}
 		}
@@ -485,7 +490,7 @@ public abstract class Bot {
 		}
 	}
 	
-	private int getPositionInMap() {
+	protected int getPositionInMap() {
 		if(player.getRefPoint().first <= Component.MAX_SIZE/2.0 && player.getRefPoint().second <= Component.MAX_SIZE/2.0)
 			return 0;
 		else if(player.getRefPoint().first > Component.MAX_SIZE/2.0 && player.getRefPoint().second <= Component.MAX_SIZE/2.0)
@@ -563,11 +568,62 @@ public abstract class Bot {
 	}
 
 	protected void defenceTower() {
-		///not done not done not done;
+		Tower tmp = null;
+		double distance = Double.MAX_VALUE;
+		for(Tower tower : Component.getInstance().getTowerList()) {
+			if(tower.getSide() == player.getSide() && distance > player.getRefPoint().distance(tower.getRefPoint())) {
+				distance = player.getRefPoint().distance(tower.getRefPoint());
+				tmp = tower;
+			}
+		}
+		if(tmp == null) {
+			attackTower();
+		}
+		
+		if(!isVisible(tmp.getRefPoint())) {
+			int res = checkCoordinate(player, tmp);
+			move(res);
+		}else {
+			///not done not done not done;
+			int newX = positionXInGrid(tmp.getRefPoint().first), newY = positionYInGrid(tmp.getRefPoint().second);
+			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
+				prevDirection = grid[newX][newY].getFirstDirection();
+				destination = tmp.getRefPoint();
+				move(prevDirection);
+			}
+		}
 	}
 
 	protected void attackTower() {
-		///not done not done not done;
+		///not done not done not done :)
+		Tower tmp = null;
+		double distance = Double.MAX_VALUE;
+		for(Tower tower : Component.getInstance().getTowerList()) {
+			if(tower.getSide() == player.getSide() && distance > player.getRefPoint().distance(tower.getRefPoint())) {
+				distance = player.getRefPoint().distance(tower.getRefPoint());
+				tmp = tower;
+			}
+		}
+		if(tmp == null) {
+			attackTower();
+		}
+		
+		if(!isVisible(tmp.getRefPoint())) {
+			int res = checkCoordinate(player, tmp);
+			
+			
+		}else {
+			///not done not done not done;
+			
+		}
+	}
+	
+	protected void war() {
+		if(rand.nextInt(2) == 0) {
+			attackTower();
+		}else {
+			defenceTower();
+		}
 	}
 	
 	protected void changeDirectionToTarget(Pair target) {

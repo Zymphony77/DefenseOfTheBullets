@@ -21,7 +21,8 @@ public class BotTower {
 		
 		for(Novice novice : Component.getInstance().getPlayerList()) {
 			//check range of bullet
-			if(distance > tower.getRefPoint().distance(novice.getRefPoint()) && novice.getSide() != tower.getSide()) {
+			if(distance > tower.getRefPoint().distance(novice.getRefPoint()) && novice.getSide() != tower.getSide() 
+					&& tower.getRefPoint().distance(novice.getRefPoint()) <= Tower.BULLET_SPEED * Bullet.LIFE_DURATION) {
 				distance = tower.getRefPoint().distance(novice.getRefPoint());
 				res = novice.getRefPoint();
 			}
