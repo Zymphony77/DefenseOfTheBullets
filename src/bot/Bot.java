@@ -37,13 +37,14 @@ public abstract class Bot {
 	protected abstract void upgradeJob();
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
-	protected static final int SIZE_OF_GRID = 40;
+	protected static final int SIZE_OF_GRID = 50;
 	protected static final int NUMBER_OF_CHANGE_POSITION = 300; // Expected Value is 5 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
 	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
 	
+	protected int status = 0;
 	protected int prevDirection = -1;
 	protected Pair destination;
 	protected boolean chkDestination = false;
@@ -82,7 +83,7 @@ public abstract class Bot {
 	}
 	
 	protected void updateGrid() {
-		double timeForOnePixel = 1.0/player.getSpeed();
+		double timeForOnePixel = 1.0/player.getSpeed() * Main.SCREEN_SIZE / SIZE_OF_GRID;
 		
 		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 0.0, true, -1);
 		Grid newTmp;
@@ -100,13 +101,13 @@ public abstract class Bot {
 			double time = timeForOnePixel + tmp.getTime();
 			for(int i = 0; i < 8; i++) {
 				if(tmp.getTime() == 0.0)
-					newTmp = new Grid(tmp.getX() + newPosition[i][0], tmp.getY() + newPosition[i][1], tmp.getTime() + time, false, i);
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getTime() + time, false, i);
 				else
-					newTmp = new Grid(tmp.getX() + newPosition[i][0], tmp.getY() + newPosition[i][1], tmp.getTime() + time, false, tmp.getFirstDirection());
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getTime() + time, false, tmp.getFirstDirection());
 				if(utility.positionXInGrid(newTmp.getX()) < 0 
-						|| utility.positionXInGrid(newTmp.getX()) > SIZE_OF_GRID 
+						|| utility.positionXInGrid(newTmp.getX()) > Main.SCREEN_SIZE
 						|| utility.positionYInGrid(newTmp.getY()) < 0 
-						|| utility.positionYInGrid(newTmp.getY()) > SIZE_OF_GRID) {
+						|| utility.positionYInGrid(newTmp.getY()) > Main.SCREEN_SIZE) {
 					continue;
 				}
 				if(willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
@@ -115,10 +116,10 @@ public abstract class Bot {
 				}
 				newTmp.setChk(true);
 				grid[utility.positionXInGrid(newTmp.getX())][utility.positionYInGrid(newTmp.getY())] = new Grid(newTmp);
-				//System.out.println(newTmp.getX() + " " + newTmp.getY());
 				priorityQueue.add(newTmp);
 			}
 		}
+	
 		System.out.println("-------------------------------");
 	}
 	
@@ -159,6 +160,13 @@ public abstract class Bot {
 	}
 	
 	protected void move(int dir) {
+		
+		////// DEBUG ////////
+		if(destination == null) {
+			System.out.println("null");
+		}else {
+			System.out.println(destination.first + " " + destination.second);
+		}
 		
 		if(dir == -1) {
 			System.out.println(" Bug move(dir)!!!! ");
@@ -382,9 +390,8 @@ public abstract class Bot {
 		
 		if(res != null) {
 			destination = res;
-			if(utility.canMoveWithDestination(destination, prevDirection)) {
-				move(prevDirection);
-			}
+			int dir = utility.canMoveWithDestination(destination, prevDirection);
+			move(dir);
 		}
 		else {
 			int dir = utility.getDirectionAdjacent(min, prevDirection);
@@ -429,19 +436,20 @@ public abstract class Bot {
 						res = getDirectionWithArea(2);
 					}
 					destination = res;
-					if(utility.canMoveWithDestination(destination, prevDirection)) {
-						move(prevDirection);
-					}
+					int dir = utility.canMoveWithDestination(destination, prevDirection);
+					move(dir);
 				}
 			}
 		}
 	}
 	
-	protected void moveWithDestination() {
-		move(prevDirection);
+	protected void moveWithDestination(int dir) {
+		move(dir);
 	}
 
 	protected void defenceTower() {
+		System.out.println("----");
+		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
 		for(Tower tower : Component.getInstance().getTowerList()) {
@@ -454,6 +462,8 @@ public abstract class Bot {
 			attackTower();
 		}
 		
+		System.out.println("tower: " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
+		
 		if(!utility.isVisible(utility.getRef(player, tmp))) {
 			int res = utility.checkCoordinate(player, tmp);
 			move(res);
@@ -465,6 +475,9 @@ public abstract class Bot {
 				destination = utility.getRef(player, tmp);
 				move(res);
 			}
+//			int res = utility.checkCoordinate(player, tmp);
+//			System.out.println("direction: " + res);
+//			move(res);
 		}
 	}
 
@@ -493,10 +506,13 @@ public abstract class Bot {
 	}
 	
 	protected void war() {
-		if(rand.nextInt(2) == 0) {
-			attackTower();
-		}else {
+		if(status == 0) {
+			status = rand.nextInt(2) + 1; 
+		}
+		if(status == 1){
 			defenceTower();
+		}else {
+			attackTower();
 		}
 	}
 	

@@ -26,8 +26,10 @@ public class BotNovice extends Bot{
 			destination = null;
 		}
 		
-		if(destination != null && utility.canMoveWithDestination(destination, prevDirection)) {
-			moveWithDestination();
+		int dir = utility.canMoveWithDestination(destination, prevDirection);
+		
+		if(destination != null && dir != -1) {
+			moveWithDestination(dir);
 		}	
 		else if(player.getHp() < player.getMaxHp() * 0.3) {
 			escape();
@@ -37,7 +39,7 @@ public class BotNovice extends Bot{
 			farm();
 		}
 		else if(player.getLevel() < 30){
-			
+			farm();
 		}
 		else {
 			war();

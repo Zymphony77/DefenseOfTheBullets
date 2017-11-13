@@ -15,23 +15,23 @@ public class Utility{
 	}
 	
 	protected int positionXInGrid(double x) {
-		int shiftX = (int)Math.floor(getRef(player, player).first) - Bot.SIZE_OF_GRID/2;
-		return (int)x - shiftX;
+		int shiftX = (int)Math.floor(getRef(player, player).first) - Main.SCREEN_SIZE/2;
+		return (int)(((int)x - shiftX)/Main.SCREEN_SIZE * Bot.SIZE_OF_GRID);
 	}
 	
 	protected int positionYInGrid(double y) {
-		int shiftY = (int)Math.floor(getRef(player, player).second) - Bot.SIZE_OF_GRID/2;
-		return (int)(y - shiftY);
+		int shiftY = (int)Math.floor(getRef(player, player).second) - Main.SCREEN_SIZE/2;
+		return (int)(((int)y - shiftY)/Main.SCREEN_SIZE * Bot.SIZE_OF_GRID);
 	}
 	
 	protected double positionXInReal(int x) {
-		int shiftX = (int)Math.floor(getRef(player, player).first) - Bot.SIZE_OF_GRID/2;
-		return x + shiftX;
+		int shiftX = (int)Math.floor(getRef(player, player).first) - Main.SCREEN_SIZE/2;
+		return x * Main.SCREEN_SIZE / Bot.SIZE_OF_GRID + shiftX;
 	}
 	
 	protected double positionYInReal(int y) {
-		int shiftY = (int)Math.floor(getRef(player, player).second) - Bot.SIZE_OF_GRID/2;
-		return y + shiftY;
+		int shiftY = (int)Math.floor(getRef(player, player).second) - Main.SCREEN_SIZE/2;
+		return y * Main.SCREEN_SIZE / Bot.SIZE_OF_GRID + shiftY;
 	}
 	
 	protected Pair nextFrame(double direction) {
@@ -78,66 +78,54 @@ public class Utility{
 	}
 	
 	protected int checkCoordinate(Entity a, Entity b) {
-		if(a.getSide() == Side.BLUE) {
-			double x = a.getRefPoint().first - b.getRefPoint().first;
-			double y = a.getRefPoint().second - b.getRefPoint().second;
-			
-			int tmp;
-			if(x > 0 && y > 0){
-				tmp = 7;
-			}else if(y > 0 && x == 0) {
-				tmp = 0;
-			}else if(x < 0 && y > 0) {
-				tmp = 1;
-			}else if(x < 0 && y == 0) {
-				tmp = 2;
-			}else if(x < 0 && y < 0) {
-				tmp = 3;
-			}else if(x == 0 && y < 0) {
-				tmp = 4;
-			}else if(x > 0 && y < 0){
-				tmp = 5;
-			}else {
-				tmp = 6;
-			}
-			
-			return tmp;
+		double x = getRef(player, a).first - getRef(player, b).first;
+		double y = getRef(player, a).second - getRef(player, b).second;
+		
+		int tmp;
+		if(x > 0 && y > 0){
+			tmp = 7;
+		}else if(y > 0 && x == 0) {
+			tmp = 0;
+		}else if(x < 0 && y > 0) {
+			tmp = 1;
+		}else if(x < 0 && y == 0) {
+			tmp = 2;
+		}else if(x < 0 && y < 0) {
+			tmp = 3;
+		}else if(x == 0 && y < 0) {
+			tmp = 4;
+		}else if(x > 0 && y < 0){
+			tmp = 5;
+		}else {
+			tmp = 6;
 		}
-		else {
-			// rotate map 180 degree
-			double x = a.getRefPoint().first - b.getRefPoint().first;
-			double y = a.getRefPoint().second - b.getRefPoint().second;
-			if(x >= 0 && y >= 0){
-				return 3;
-			}else if(x < 0 && y >= 0) {
-				return 2;
-			}else if(x >= 0 && y < 0) {
-				return 1;
-			}else {
-				return 0;
-			}
-		}
+		
+		return tmp;
 	}
 	
-	protected boolean canMoveWithDestination(Pair destination, int prevDirection) {
+	protected int canMoveWithDestination(Pair destination, int prevDirection) {
+		if(destination == null)
+			return -1;
 		int x = positionXInGrid(destination.first), y = positionYInGrid(destination.second);
-		if(x < 0 || x > Bot.SIZE_OF_GRID || y < 0 || y > Bot.SIZE_OF_GRID) {
+		if(x < 0 || x > Main.SCREEN_SIZE || y < 0 || y > Main.SCREEN_SIZE) {
 			destination = null;
-			return false;
+			return -1;
 		}
 		if(Bot.grid[x][y] != null && Bot.grid[x][y].isChk()) {
 			prevDirection = Bot.grid[x][y].getFirstDirection();
-			return true;
+			destination = new Pair(positionXInReal(x), positionYInReal(y));
+			return prevDirection;
 		}
 		for(int i = 0; i < 8; i++) {
 			int newX = x + Bot.newPosition[i][0], newY = y + Bot.newPosition[i][1];
 			if(newX >= 0 && newX <= Bot.SIZE_OF_GRID && newY >= 0 && newY <= Bot.SIZE_OF_GRID && Bot.grid[newX][newY] != null && Bot.grid[newX][newY].isChk()) {
 				prevDirection = Bot.grid[newX][newY].getFirstDirection();
-				return true;
+				destination = new Pair(positionXInReal(newX), positionYInReal(newY));
+				return prevDirection;
 			}
 		}
 		destination = null;
-		return false;
+		return -1;
 	}
 	
 	protected boolean isTowerInRange() {
