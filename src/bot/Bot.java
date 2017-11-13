@@ -28,6 +28,9 @@ public abstract class Bot {
 	protected ArrayList<Tower> towerList = new ArrayList<Tower>();
 	protected ArrayList<Food> foodList = new ArrayList<Food>();
 	protected Grid[][] grid = new Grid[Main.SCREEN_SIZE + 10][Main.SCREEN_SIZE + 10];
+	protected int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
+	protected int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0};
+	protected int[] change4to8 = new int[] {7, 1, 3, 5};
 	
 	public abstract void move();
 	protected abstract void upgradeSkill();
@@ -76,7 +79,7 @@ public abstract class Bot {
 		return false;
 	}
 	
-	protected boolean isVision(Pair tmp) {
+	protected boolean isVisible(Pair tmp) {
 		double x = Math.abs(tmp.first - player.getRefPoint().first);
 		double y = Math.abs(tmp.second - player.getRefPoint().second);
 		return (x <= VISION && y <= VISION);
@@ -132,7 +135,7 @@ public abstract class Bot {
 	protected void findEntityInRange()
 	{
 		for (Novice tmp : Component.getInstance().getPlayerList()) {
-		    if(isVision(tmp.getRefPoint()) && tmp.getSide() != player.getSide()){
+		    if(isVisible(tmp.getRefPoint()) && tmp.getSide() != player.getSide()){
 		    		playerEnemiesList.add(tmp);
 		    }
 		    else {
@@ -141,19 +144,19 @@ public abstract class Bot {
 		}
 		
 		for (Bullet tmp : Component.getInstance().getBulletList()) {
-			if(isVision(tmp.getRefPoint()) && tmp.getSide() != player.getSide()){
+			if(isVisible(tmp.getRefPoint()) && tmp.getSide() != player.getSide()){
 		    		bulletList.add(tmp);
 		    }
 		}
 		
 		for (Food tmp : Component.getInstance().getFoodList()) {
-			if(isVision(tmp.getRefPoint())) {
+			if(isVisible(tmp.getRefPoint())) {
 				foodList.add(tmp);
 			}
 		}
 		
 		for (Tower tmp : Component.getInstance().getTowerList()) {
-			if(isVision(tmp.getRefPoint())) {
+			if(isVisible(tmp.getRefPoint()) && tmp.getSide() != player.getSide()) {
 				towerList.add(tmp);
 			}
 		}
@@ -197,14 +200,30 @@ public abstract class Bot {
 		if(a.getSide() == Side.BLUE) {
 			double x = a.getRefPoint().first - b.getRefPoint().first;
 			double y = a.getRefPoint().second - b.getRefPoint().second;
-			if(x >= 0 && y >= 0){
-				return 0;
-			}else if(x < 0 && y >= 0) {
-				return 1;
-			}else if(x >= 0 && y < 0) {
-				return 2;
+			
+			int tmp;
+			if(x > 0 && y > 0){
+				tmp = 7;
+			}else if(y > 0 && x == 0) {
+				tmp = 0;
+			}else if(x < 0 && y > 0) {
+				tmp = 1;
+			}else if(x < 0 && y == 0) {
+				tmp = 2;
+			}else if(x < 0 && y < 0) {
+				tmp = 3;
+			}else if(x == 0 && y < 0) {
+				tmp = 4;
+			}else if(x > 0 && y < 0){
+				tmp = 5;
 			}else {
-				return 3;
+				tmp = 6;
+			}
+			
+			if(player.getSide() == Side.BLUE) {
+				return tmp;
+			}else {
+				return oppositeDirection[tmp];
 			}
 		}
 		else {
@@ -293,9 +312,8 @@ public abstract class Bot {
 	
 	protected void farm() {
 
-		// 0 = LeftTop 1 = RightTop 2 = LeftBottom 3 = RightBottom
-		int[] food = new int[4];
-		int[] enemies = new int[4];
+		int[] food = new int[8];
+		int[] enemies = new int[8];
 		
 		for(Food tmp : foodList) {
 			int chk = checkCoordinate(player, tmp);
@@ -312,10 +330,7 @@ public abstract class Bot {
 			int tmpForMove; //Random direction for move novice.
 			if(isTowerInRange()) {
 				int tmp = checkCoordinate(player, towerList.get(0));
-				if(tmp == 0) move(3);
-				else if(tmp == 1) move(5);
-				else if(tmp == 2) move(1);
-				else move(7);
+				move(oppositeDirection[tmp]);
 			}else {
 				if(prevDirection == -1 || rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
 					tmpForMove = rand.nextInt(8);
@@ -344,29 +359,25 @@ public abstract class Bot {
 			if(isTowerInRange()) { 
 				//tower in range.
 				int tmp = checkCoordinate(player, towerList.get(0));
-				if(tmp == 0) move(3);
-				else if(tmp == 1) move(5);
-				else if(tmp == 2) move(1);
-				else move(7);
+				move(oppositeDirection[tmp]);
 			}
 			else {
-				int tmpForMove = 0;
-				for(int i = 0; i < 4; i++){
+				int tmpForMove = 7;
+				for(int i = 0; i < 8; i++){
 					boolean chk = true;
-					for(int j = 0; j < 4; j++) {
+					for(int j = 0; j < 8; j++) {
 						if(food[i] < food[j]){
 							chk = false;
 							break;
 						}
 					}
 					if(chk == true) {
-							tmpForMove = checkDirection(i);
+						tmpForMove = checkDirection(i);
 					}
 				}
 				
 				///move to direction tmpForMove
 				move(tmpForMove);
-				
 			}
 		}
 		else {
@@ -374,13 +385,103 @@ public abstract class Bot {
 		}
 	}
 
-	private void escapeWithBullet() {
-		/// Not done :)
-		int[] bullet = new int[4];
+	protected Pair getDirectionWithArea(int area) {
+		//return Pair of Destination for move.
+		if(area == 0) {
+			for(int i = 0; i <= VISION; i++) {
+				if(grid[i][0] != null && grid[i][0].isChk()) {
+					return new Pair(positionXInReal(i), positionYInReal(0));
+				}
+			}
+			for(int j = 0; j <= VISION; j++) {
+				if(grid[0][j] != null && grid[0][j].isChk()) {
+					return new Pair(positionXInReal(0), positionYInReal(j));
+				}
+			}
+		}else if(area == 1) {
+			for(int i = (int) VISION ; i < Main.SCREEN_SIZE; i++) {
+				if(grid[i][0] != null && grid[i][0].isChk()) {
+					return new Pair(positionXInReal(i), positionYInReal(0));
+				}
+			}
+			for(int j = 0; j < VISION; j++) {
+				if(grid[Main.SCREEN_SIZE][j] != null && grid[Main.SCREEN_SIZE][j].isChk()) {
+					return new Pair(positionXInReal(Main.SCREEN_SIZE), positionYInReal(j));
+				}
+			}
+		}else if(area == 2) {
+			for(int i = 0; i <= VISION; i++) {
+				if(grid[i][Main.SCREEN_SIZE] != null && grid[i][Main.SCREEN_SIZE].isChk()) {
+					return new Pair(positionXInReal(i), positionYInReal(Main.SCREEN_SIZE));
+				}
+			}
+			for(int j = (int) VISION; j <= Main.SCREEN_SIZE; j++) {
+				if(grid[0][j] != null && grid[0][j].isChk()) {
+					return new Pair(positionXInReal(0), positionYInReal(j));
+				}
+			}
+		}else {
+			for(int i = (int) VISION ; i < Main.SCREEN_SIZE; i++) {
+				if(grid[i][Main.SCREEN_SIZE] != null && grid[i][Main.SCREEN_SIZE].isChk()) {
+					return new Pair(positionXInReal(i), positionYInReal(Main.SCREEN_SIZE));
+				}
+			}
+			for(int j = (int) VISION; j <= Main.SCREEN_SIZE; j++) {
+				if(grid[Main.SCREEN_SIZE][j] != null && grid[Main.SCREEN_SIZE][j].isChk()) {
+					return new Pair(positionXInReal(Main.SCREEN_SIZE), positionYInReal(j));
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected int getDirectionAdjacent(int dir) {
+		prevDirection = -1;
+		for(int i = 0; i < 8; i++) {
+			int newx = 375 + newPosition[i][0], newy = 375 + newPosition[i][1];
+			if(grid[newx][newy] != null && grid[newx][newy].isChk()) {
+				prevDirection = grid[newx][newy].getFirstDirection();
+			}
+		}
+		int newx = 375 + newPosition[dir][0], newy = 375 + newPosition[dir][1];
+		if(grid[newx][newy] != null && grid[newx][newy].isChk()) {
+			prevDirection = grid[newx][newy].getFirstDirection();
+		}
+		return prevDirection;
+	}
+	
+	protected void escapeWithBullet() {
+		int[] bullet = new int[8];
 		
 		for(Bullet tmp : bulletList) {
 			int chk = checkCoordinate(player, tmp);
 			bullet[chk]++;
+		}
+		
+		int min = Integer.MAX_VALUE;
+		
+		for(int i = 0; i < 8; i++) {
+			if(min > bullet[i])
+				min = i;
+		}
+		
+		Pair res = getDirectionWithArea(change8to4[min]);
+		
+		for(int i = 0; i < 4; i++) {
+			if(res == null) {
+				res = getDirectionWithArea(change8to4[i]);
+			}
+		}
+		
+		if(res != null) {
+			destination = res;
+			if(canMoveWithDestination()) {
+				move(prevDirection);
+			}
+		}
+		else {
+			prevDirection = getDirectionAdjacent(min);
+			move(prevDirection);
 		}
 	}
 	
@@ -400,8 +501,7 @@ public abstract class Bot {
 		}
 		else {
 			if(player.getRefPoint().first < SAFETY_ZONE && player.getRefPoint().second < SAFETY_ZONE) {
-				/// do something
-				
+				farm();
 			}
 			else if(player.getRefPoint().first < SAFETY_ZONE) {
 				move(0);
@@ -421,8 +521,20 @@ public abstract class Bot {
 					move(6);
 				}
 				else {
-					///Not Done :)
-					move(7);
+					Pair res = getDirectionWithArea(0);
+					if(res == null) {
+						res = getDirectionWithArea(3);
+					}
+					if(res == null) {
+						res = getDirectionWithArea(1);
+					}
+					if(res == null) {
+						res = getDirectionWithArea(2);
+					}
+					destination = res;
+					if(canMoveWithDestination()) {
+						move(prevDirection);
+					}
 				}
 			}
 		}
@@ -451,11 +563,19 @@ public abstract class Bot {
 	}
 
 	protected void defenceTower() {
-		
+		///not done not done not done;
 	}
 
 	protected void attackTower() {
+		///not done not done not done;
+	}
+	
+	protected void changeDirectionToTarget(Pair target) {
+		double dir = Math.atan2(target.second - player.getRefPoint().second, target.first - player.getRefPoint().first);
 		
+		dir = dir * 180.0 / Math.PI;
+		
+		player.setDirection(dir);
 	}
 	
 }

@@ -12,6 +12,7 @@ import javafx.util.Duration;
 
 import java.util.LinkedList;
 
+import bot.BotTower;
 import entity.*;
 import entity.bullet.*;
 import entity.job.*;
@@ -44,7 +45,7 @@ public class Main extends Application {
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / FRAME_RATE), event -> {
 			Handler.update();
-			Tower.update();
+			BotTower.update();
 		}));
 		timer.setCycleCount(Animation.INDEFINITE);
 		timer.play();

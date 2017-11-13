@@ -23,14 +23,14 @@ public class BotNovice extends Bot{
 		//update Grid
 		updateGrid();
 		
-		if(destination != null && !isVision(destination)) {
+		if(destination != null && !isVisible(destination)) {
 			destination = null;
 		}
 		
 		if(destination != null && canMoveWithDestination()) {
 			moveWithDestination();
 		}	
-		else if(player.getHp() < player.getMaxHp()*0.3) {
+		else if(player.getHp() < player.getMaxHp() * 0.3) {
 			escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
@@ -40,9 +40,7 @@ public class BotNovice extends Bot{
 			escape();
 		}
 		else {
-			if(destination != null) {
-				
-			}
+			
 		}
 		
 		///choose target to closest food
@@ -50,6 +48,12 @@ public class BotNovice extends Bot{
 		
 		//change direction to target//
 		//////////////////////////////
+		if(target != null) {
+			changeDirectionToTarget(target.getRefPoint());
+		}
+		
+		player.rotate();
+		player.shoot();
 	}
 
 	

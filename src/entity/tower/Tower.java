@@ -107,33 +107,4 @@ public class Tower extends Entity implements Shootable {
 	public void reload() {
 		reloadCount = Math.min(reloadCount + 1, RELOAD_DONE);
 	}
-	
-	public static void update() {
-		for(Tower tower : Component.getInstance().getTowerList()) {
-			tower.eachUpdate();
-		}
-	}
-	
-	protected void eachUpdate() {
-		Random rand = new Random();
-		double distance = Double.MAX_VALUE;
-		Pair res = null;
-		
-		for(Novice novice : Component.getInstance().getPlayerList()) {
-			if(distance > super.getRefPoint().distance(novice.getRefPoint()) && novice.getSide() != super.getSide()) {
-				distance = super.getRefPoint().distance(novice.getRefPoint());
-				res = novice.getRefPoint();
-			}
-		}
-		
-		if(res != null) {
-			double dir = Math.atan2(res.second - super.getRefPoint().second, res.first - super.getRefPoint().first);
-			
-			dir = dir * 180.0 / Math.PI;
-			
-			direction = dir + (rand.nextDouble() - 0.5) * 30.0;
-			rotate();
-			shoot();
-		}
-	}
 }
