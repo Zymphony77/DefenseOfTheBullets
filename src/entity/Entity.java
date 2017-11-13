@@ -1,6 +1,7 @@
 package entity;
 
 import javafx.scene.canvas.Canvas;
+import main.Component;
 import utility.Pair;
 import utility.Side;
 

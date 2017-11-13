@@ -7,10 +7,9 @@ public class BotNovice extends Bot{
 	
 	public BotNovice(Novice player)
 	{
-		super.player = player;
-		chkMove = false;
+		super(player);
 		job = Job.NOVICE; //job will change if it have other jobs.
-		prevDirection = 3;
+		prevDirection = 7;
 	}
 
 	@Override
@@ -21,13 +20,13 @@ public class BotNovice extends Bot{
 		findEntityInRange();
 		
 		//update Grid
-		updateGrid();
+		//updateGrid();
 		
-		if(destination != null && !isVisible(destination)) {
+		if(destination != null && !utility.isVisible(destination)) {
 			destination = null;
 		}
 		
-		if(destination != null && canMoveWithDestination()) {
+		if(destination != null && utility.canMoveWithDestination(destination, prevDirection)) {
 			//moveWithDestination();
 		}	
 		else if(player.getHp() < player.getMaxHp() * 0.3) {
@@ -50,11 +49,12 @@ public class BotNovice extends Bot{
 		//change direction to target//
 		//////////////////////////////
 		if(target != null) {
-			changeDirectionToTarget(target.getRefPoint());
+			utility.changeDirectionToTarget(utility.getRef(player, target));
+			player.rotate();
+			player.shoot();
 		}
 		
-		player.rotate();
-		player.shoot();
+		player.move();
 	}
 
 	
