@@ -38,8 +38,7 @@ public class Bullet extends Entity implements Movable {
 		canvas.setWidth(2*RADIUS);
 		canvas.setHeight(2*RADIUS);
 		
-		canvas.setTranslateX(refPoint.first - RADIUS);
-		canvas.setTranslateY(refPoint.second - RADIUS);
+		changeCenter(Component.getInstance().getPlayer().getRefPoint());
 		
 		GraphicsContext gc = this.getCanvas().getGraphicsContext2D();
 		

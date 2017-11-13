@@ -32,7 +32,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
 		speed = DEFAULT_SPEED;
-		attack = 50;
+		attack = 500;
 		isMoving = false;
 		moveDirection = 0;
 		
@@ -47,6 +47,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		canvas.setHeight(CANVAS_SIZE);
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		if(Component.getInstance().getPlayer() != null) {
+			changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		}
 		
 		gc.setFill(Color.DARKGRAY);
 		gc.fillRect(2*RADIUS, 25, RADIUS, 10);
@@ -114,7 +118,6 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public void shoot() {
 		if(reloadCount < reloadDone) {
-			reload();
 			return;
 		}
 		

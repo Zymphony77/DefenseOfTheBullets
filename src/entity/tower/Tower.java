@@ -84,7 +84,6 @@ public class Tower extends Entity implements Shootable {
 	
 	public void shoot() {
 		if(reloadCount < RELOAD_DONE) {
-			reload();
 			return;
 		}
 		

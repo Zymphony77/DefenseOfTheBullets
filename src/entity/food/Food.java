@@ -2,6 +2,7 @@ package entity.food;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import main.Component;
 import main.Main;
 import entity.*;
 import utility.*;
@@ -17,8 +18,7 @@ public class Food extends Entity {
 		canvas.setWidth(CANVAS_SIZE);
 		canvas.setHeight(CANVAS_SIZE);
 		
-		canvas.setTranslateX(refPoint.first - CANVAS_SIZE/2);
-		canvas.setTranslateY(refPoint.second - CANVAS_SIZE/2);
+		changeCenter(Component.getInstance().getPlayer().getRefPoint());
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		

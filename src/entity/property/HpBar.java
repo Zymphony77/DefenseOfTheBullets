@@ -38,6 +38,10 @@ public class HpBar {
 		canvas.setWidth(maxWidth);
 		canvas.setHeight(5);
 		
+		if(Component.getInstance().getPlayer() != null) {
+			changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		}
+		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		if(entity.getSide() == Side.RED) {
 			gc.setStroke(Color.ORANGERED);

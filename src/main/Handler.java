@@ -77,11 +77,21 @@ public class Handler {
 			Component.getInstance().getPlayer().shoot();
 		}
 		
+		reloadAmmo();
 		moveComponent();
 		movePlayer();
 		moveCenter(Component.getInstance().getPlayer().getRefPoint());
 		checkCollision();
 		clearDeadComponent();
+	}
+	
+	public static void reloadAmmo() {
+		for(Novice player: Component.getInstance().getPlayerList()) {
+			player.reload();
+		}
+		for(Tower tower: Component.getInstance().getTowerList()) {
+			tower.reload();
+		}
 	}
 	
 	public static void moveComponent() {
