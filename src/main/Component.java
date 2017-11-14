@@ -118,8 +118,8 @@ public class Component {
 		player = new Novice(new Pair(200, 200), Side.RED);
 		addComponent(player);
 		
-//		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
-//		addComponent(shootTest);
+		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
+		addComponent(shootTest);
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
 		addComponent(tower);

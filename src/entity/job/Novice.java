@@ -5,17 +5,14 @@ import javafx.scene.paint.Color;
 
 import main.*;
 import entity.*;
-import entity.bullet.Bullet;
-import entity.property.HpBar;
-import entity.property.Movable;
-import entity.property.Shootable;
+import entity.bullet.*;
+import entity.property.*;
 import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_SPEED = 150;
 	private static final int CANVAS_SIZE = 60;
-	private static final int MAX_LEVEL = 50;
 	private static final int RADIUS = 20;
 	
 	protected boolean isMoving;
@@ -24,22 +21,21 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected int reloadDone;
 	
 	protected HpBar hpBar;
-	protected double exp;
-	protected int level;
+	protected Experience experience;
 	protected int reloadCount;
 	
 	public Novice(Pair refPoint, Side side) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
 		speed = DEFAULT_SPEED;
-		attack = 5;
+		attack = 100;
 		isMoving = false;
 		moveDirection = 0;
 		
 		reloadDone = 15;
 		reloadCount = 15;
 		
-		level = 1;
+		experience = new Experience(1, 0);
 	}
 	
 	public void draw() {
@@ -104,17 +100,29 @@ public class Novice extends Entity implements Movable, Shootable {
 			hpBar.draw();
 		} else {
 			hp = 0;
-			die();
+			die(entity);
+			// Give EXP to shooter
 		}
-		
-		// Give EXP to shooter
 	}
 	
-	@Override
-	public void die() {
+	public void die(Entity killer) {
 		super.die();
 		hpBar.die();
 		reloadCount = 0;
+		
+		Novice realKiller = null;
+		
+		if(killer instanceof Bullet) {
+			if(((Bullet) killer).getShooter() instanceof Novice) {
+				realKiller = (Novice) ((Bullet) killer).getShooter();
+			}
+		} else if(killer instanceof Novice) {
+			realKiller = (Novice) killer;
+		}
+		
+		if(realKiller != null) {
+			realKiller.gainExp(experience.getGainedExperience() / 3);
+		}
 	}
 	
 	public void shoot() {
@@ -135,6 +143,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		reloadCount = Math.min(reloadCount + 1, reloadDone);
 	}
 	
+	public void gainExp(double exp) {
+		experience.addExp(exp);
+	}
+	
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
@@ -147,12 +159,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		return 20;
 	}
 	
-	public HpBar getHpBar() {
-		return hpBar;
+	public int getLevel() {
+		return experience.getLevel();
 	}
 	
-	public int getLevel() {
-		return level;
+	public HpBar getHpBar() {
+		return hpBar;
 	}
 	
 	public double getSpeed() {

@@ -93,4 +93,8 @@ public class Bullet extends Entity implements Movable {
 	public double getLifeCycleCount() {
 		return lifeCycleCount;
 	}
+	
+	public Entity getShooter() {
+		return shooter;
+	}
 }
