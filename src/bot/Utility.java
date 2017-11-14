@@ -73,7 +73,9 @@ public class Utility{
 	protected boolean isVisible(Pair tmp) {
 		double x = Math.abs(tmp.first - getRef(player, player).first);
 		double y = Math.abs(tmp.second - getRef(player, player).second);
-		return (x <= Bot.VISION && y <= Bot.VISION);
+		if(x <= Bot.VISION && y <= Bot.VISION)
+			return true;
+		return false;
 	}
 	
 	protected void changeDirectionToTarget(Pair target) {
@@ -130,9 +132,15 @@ public class Utility{
 	}
 	
 	protected int canMoveWithDestination(Pair destination, int prevDirection) {
-		if(destination == null)
+		System.out.println("canMoveWithDestination");
+		
+		if(destination == null) {
+			System.out.println("Destination is null.");
 			return -1;
+		}
+		
 		int x = positionXInGrid(destination.first), y = positionYInGrid(destination.second);
+		System.out.println("Position In GRID: " + x + " " + y);
 		if(x < 0 || x > Main.SCREEN_SIZE || y < 0 || y > Main.SCREEN_SIZE) {
 			destination = null;
 			return -1;
@@ -141,6 +149,7 @@ public class Utility{
 			prevDirection = Bot.grid[x][y].getFirstDirection();
 			destination = new Pair(Bot.grid[x][y].getX(), Bot.grid[x][y].getY());
 			if(!isHitTheWall(prevDirection)) {
+				System.out.println("canMoveWithDestination = true");
 				return prevDirection;
 			}
 		}
@@ -154,25 +163,25 @@ public class Utility{
 	
 	protected boolean isHitTheWall(int dir) {
 		if(dir == 7 || dir == 0 || dir == 1) {
-			if(getRef(player, player).second < 0) {
+			if(getRef(player, player).second <= 2) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 5 && dir <= 7) {
-			if(getRef(player, player).first < 0) {
+			if(getRef(player, player).first <= 2) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 3 && dir <= 5) {
-			if(getRef(player, player).second >= Component.MAX_SIZE) {
+			if(getRef(player, player).second >= Component.MAX_SIZE - 2) {
 				return true;
 			}else {
 				return false;
 			}
 		}else{
-			if(getRef(player, player).first >= Component.MAX_SIZE) {
+			if(getRef(player, player).first >= Component.MAX_SIZE - 2) {
 				return true;
 			}else {
 				return false;
@@ -180,23 +189,15 @@ public class Utility{
 		}
 	}
 	
-	protected int getDirectionAdjacent(int dir, int prevDirection) {
-		prevDirection = -1;
-		for(int i = 0; i < 8; i++) {
-			int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[i][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[i][1];
-			if(newx < 0 || newx > Bot.SIZE_OF_GRID || newy < 0 || newy > Bot.SIZE_OF_GRID)
-				continue;
-			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk()) {
-				prevDirection = Bot.grid[newx][newy].getFirstDirection();
-			}
-		}
-		int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[dir][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[dir][1];
+	protected int getDirectionAdjacent(int prevDirection) {
+		System.out.println("getDirectionAdjacent");
+		int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[prevDirection][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[prevDirection][1];
 		if(newx < 0 || newx > Bot.SIZE_OF_GRID || newy < 0 || newy > Bot.SIZE_OF_GRID) {
-			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk()) {
-				prevDirection = Bot.grid[newx][newy].getFirstDirection();
+			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk() && !isHitTheWall(prevDirection)) {
+				return prevDirection;
 			}
 		}
-		return prevDirection;
+		return -1;
 	}
 	
 	protected int getPositionInMap() {

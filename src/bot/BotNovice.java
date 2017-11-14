@@ -23,20 +23,24 @@ public class BotNovice extends Bot{
 		updateGrid();
 		
 		if(destination != null && !utility.isVisible(destination)) {
+			System.out.println("desitnation can't be visible" + utility.isVisible(destination));
 			destination = null;
 		}
+		else if(destination != null){
+			int dir = utility.canMoveWithDestination(destination, prevDirection);
+			
+			if(destination != null && dir != -1) {
+				moveWithDestination(dir);
+				return;
+			}
+		}
 		
-		int dir = utility.canMoveWithDestination(destination, prevDirection);
-		
-		if(destination != null && dir != -1) {
-			moveWithDestination(dir);
-		}	
-		else if(player.getHp() < player.getMaxHp() * 0.3) {
+		if(player.getHp() < player.getMaxHp() * 0.3) {
 			escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
-			System.out.println("Farmmm");
-			farm();
+			//farm();
+			defenseTower();
 		}
 		else if(player.getLevel() < 30){
 			farm();

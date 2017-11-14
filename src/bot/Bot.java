@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import entity.Entity;
 import entity.bullet.Bullet;
@@ -44,14 +45,14 @@ public abstract class Bot {
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
 	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
 	
-	protected int status = 0;
+	protected int status = 0; //none = 0, defense = 1, attack = 2, escape = 3, escape with bullet = 4, farm = 5; 
 	protected int prevDirection = -1;
 	protected Pair destination;
 	protected boolean chkDestination = false;
 	protected Entity target = null;
 
-	protected Queue<Grid> priorityQueue = new PriorityQueue<>();
-	protected static int[][] newPosition = new int[][] {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1} ,{-1, -1}};
+	protected Queue<Grid> queue = new LinkedBlockingQueue<Grid>();
+	protected static int[][] newPosition = new int[][] {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0} ,{-1, -1}};
 	
 	Random rand = new Random();
 	
@@ -74,20 +75,20 @@ public abstract class Bot {
 		
 		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 15, 15, 0.0, true, -1);
 		Grid newTmp;
-		priorityQueue.add(tmp);
-		System.out.println(tmp.getX() + " " + tmp.getY() + " " + utility.positionXInGrid(tmp.getX()) + " " + utility.positionYInGrid(tmp.getY()));
+		queue.add(tmp);
+		//System.out.println(tmp.getX() + " " + tmp.getY() + " " + utility.positionXInGrid(tmp.getX()) + " " + utility.positionYInGrid(tmp.getY()));
 		grid[15][15] = new Grid(tmp);
 		
 		//System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
-		while(!priorityQueue.isEmpty()) {
-			tmp = priorityQueue.poll();
-			//System.out.println(" : == " +  tmp.getX() + " " + tmp.getY());
+		while(!queue.isEmpty()) {
+			tmp = queue.poll();
+			//System.out.println(" : == " +  tmp.getGridX() + " " + tmp.getGridY() + " time : " + tmp.getTime() + " First : "+  tmp.getFirstDirection());
 			double time = timeForOnePixel + tmp.getTime();
 			for(int i = 0; i < 8; i++) {
-				if(tmp.getGridX() == 15 && tmp.getGridY() == 15)
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], tmp.getTime() + time, false, i);
+				if(tmp.getGridX() == 15 && tmp.getGridY() == 15) 
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, i);
 				else
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], tmp.getTime() + time, false, tmp.getFirstDirection());
+					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, tmp.getFirstDirection());
 	
 				if(newTmp.getGridX() < 0 
 						|| newTmp.getGridX() > SIZE_OF_GRID
@@ -105,16 +106,19 @@ public abstract class Bot {
 				}
 				newTmp.setChk(true);
 				grid[newTmp.getGridX()][newTmp.getGridY()] = new Grid(newTmp);
-				priorityQueue.add(newTmp);
+				queue.add(newTmp);
 			}
 		}
 //		for(int i = 0; i <= SIZE_OF_GRID; i++) {
 //			for(int j = 0; j <= SIZE_OF_GRID; j++) {
-//				if(grid[i][j] != null)
-//					System.out.println(i + " " + j + " " + grid[i][j].getX() + " " + grid[i][j].getY());
+//				if(grid[i][j] != null && grid[i][j].getFirstDirection() >= 0)
+//					System.out.print(grid[i][j].getFirstDirection() + " ");
+//				else
+//					System.out.print("- ");
 //			}
-		//}
-		//System.exit(0);
+//			System.out.println();
+//		}
+//		System.exit(0);
 	}
 	
 	protected void findEntityInRange()
@@ -159,7 +163,7 @@ public abstract class Bot {
 		if(destination == null) {
 			System.out.println("null");
 		}else {
-			System.out.println("destination:" + destination.first + " " + destination.second);
+			System.out.println("destination:" + destination.first + " " + destination.second + " " + dir);
 		}
 		
 		if(dir == -1) {
@@ -182,6 +186,7 @@ public abstract class Bot {
 			while(utility.isHitTheWall(dir)) {
 				dir = rand.nextInt(8);
 			}
+			System.out.println("Direction in this turn: " + dir);
 			player.setMoving((dir + 6)%8 * 45);
 		}
 		else {
@@ -196,6 +201,7 @@ public abstract class Bot {
 		}
 		
 		prevDirection = dir;
+		System.out.println("------------------------");
 	}
 	
 	protected Entity chooseClosestTarget() {
@@ -258,10 +264,16 @@ public abstract class Bot {
 			enemies[chk]++;
 		}
 		
-		if(foodList.isEmpty() && bulletList.isEmpty()) {
+		if(foodList.isEmpty()) {
+			if(!bulletList.isEmpty()) {
+				escapeWithBullet();
+				return;
+			}
+			
 			int tmpForMove = prevDirection; //Random direction for move novice.
 			if(utility.isTowerInRange()) {
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
+				status = 5;
 				move(oppositeDirection[tmp]);
 			}else {
 				if(tmpForMove == -1 || rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0 || utility.isHitTheWall(tmpForMove)) {
@@ -270,20 +282,22 @@ public abstract class Bot {
 						tmpForMove = rand.nextInt(8);
 					}
 				}
+				status = 5;
 				move(tmpForMove);
 			}
 		}
-		else if(bulletList.isEmpty() && playerEnemiesList.isEmpty()) {
+		else {
 			//check tower in range if tower in range, then Novice shouldn't be here.
 			
 			//if x-coordinate > 60% and y-coordinate > 60% and 0 isn't player.Side >> LT
 			//player will not move if RT have many foods. it can go to LT and then go to RT in next move.
-			if(utility.getRef(player, player).first >= Main.SCREEN_SIZE * 0.6 && utility.getRef(player, player).second >= Main.SCREEN_SIZE * 0.6) {
+			if(utility.getRef(player, player).first >= Main.SCREEN_SIZE * 0.75 && utility.getRef(player, player).second >= Main.SCREEN_SIZE * 0.75) {
 				food[3] = 0;
 			}
 			
 			if(utility.isTowerInRange()) {  //check tower in range.
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
+				status = 3;
 				move(oppositeDirection[tmp]);
 			}
 			else {
@@ -291,7 +305,7 @@ public abstract class Bot {
 				for(int i = 0; i < 8; i++){
 					boolean chk = true;
 					for(int j = 0; j < 8; j++) {
-						if(food[i] < food[j]){
+						if(food[i] <= food[j]){
 							chk = false;
 							break;
 						}
@@ -300,16 +314,9 @@ public abstract class Bot {
 						tmpForMove = i;
 					}
 				}
-				
+				System.out.println("farm dir : " + tmpForMove);
+				status = 5;
 				move(tmpForMove);
-			}
-		}
-		else {
-			if(utility.isTowerInRange()) {  //check tower in range.
-				int tmp = utility.checkCoordinate(player, towerList.get(0));
-				move(oppositeDirection[tmp]);
-			}else {
-				escapeWithBullet();
 			}
 		}
 	}
@@ -365,7 +372,13 @@ public abstract class Bot {
 	}
 	
 	protected void escapeWithBullet() {
+
+		if(status == 4 && rand.nextInt(NUMBER_OF_CHANGE_POSITION) != 0) {
+			return;
+		}
+
 		System.out.println("Escape With Bullet");
+		
 		int[] bullet = new int[8];
 		
 		for(Bullet tmp : bulletList) {
@@ -373,30 +386,31 @@ public abstract class Bot {
 			bullet[chk]++;
 		}
 		
-		int min = Integer.MAX_VALUE;
-		
-		for(int i = 0; i < 8; i++) {
-			if(min > bullet[i])
-				min = i;
+		for(Novice tmp : playerEnemiesList) {
+			int chk = utility.checkCoordinate(player, tmp);
+			bullet[chk] += 5;
 		}
 		
-		Pair res = getDirectionWithArea(change8to4[min]);
-		
-		for(int i = 0; i < 4; i++) {
-			if(res == null) {
-				res = getDirectionWithArea(change8to4[i]);
+		int max = 0;
+		int tmpDir = rand.nextInt(8);
+		for(int i = 0; i < 16; i++) {
+			int j = rand.nextInt(8);
+			if(max < bullet[j]) {
+				max = bullet[j];
+				tmpDir = j;
 			}
 		}
 		
-		if(res != null) {
-			System.out.println("*** resssss ***");
-			destination = res;
-			int dir = utility.canMoveWithDestination(destination, prevDirection);
-			move(dir);
-		}
-		else {
-			int dir = utility.getDirectionAdjacent(min, prevDirection);
-			move(dir);
+		tmpDir = oppositeDirection[tmpDir];
+		
+		System.out.println("Min direction with escape bullet: " + tmpDir);
+		
+		if(!utility.isHitTheWall(tmpDir)) {
+			System.out.println("Direction with escape bullet: " + tmpDir);
+			status = 4;
+			move(tmpDir);
+		}else {
+			move(-1);
 		}
 	}
 
@@ -448,8 +462,8 @@ public abstract class Bot {
 		move(dir);
 	}
 
-	protected void defenceTower() {
-		System.out.println("----");
+	protected void defenseTower() {
+		System.out.println("-- Defense Tower --");
 		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
@@ -474,6 +488,7 @@ public abstract class Bot {
 			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
 				int res = grid[newX][newY].getFirstDirection();
 				destination = utility.getRef(player, tmp);
+				System.out.println("x : " + newX + " y : " + newY + " get direction in defense: " + res);
 				move(res);
 			}
 //			int res = utility.checkCoordinate(player, tmp);
@@ -511,7 +526,7 @@ public abstract class Bot {
 			status = rand.nextInt(2) + 1; 
 		}
 		if(status == 1){
-			defenceTower();
+			defenseTower();
 		}else {
 			attackTower();
 		}
