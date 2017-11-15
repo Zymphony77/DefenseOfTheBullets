@@ -8,17 +8,22 @@ import main.Main;
 import java.util.Random;
 
 import entity.*;
+import entity.bullet.*;
+import entity.job.*;
 import entity.property.*;
 import utility.*;
 
 public class Food extends Entity implements Rotatable {
 	public static final int CANVAS_SIZE = 20;
+	public static final int FOOD_EXP = 10;
 	
 	private int rotateDirection;
+	private int foodExp;
 	
 	public Food(Pair refPoint) {
 		super(refPoint, 10, (new Random()).nextInt(360), Side.NEUTRAL);
 		
+		foodExp = FOOD_EXP;
 		rotateDirection = ((new Random()).nextInt(2) * 2) - 1;
 	}
 	
@@ -55,8 +60,25 @@ public class Food extends Entity implements Rotatable {
 			hp -= entity.getAttack();
 		} else {
 			hp = 0;
-			die();
-			// Give EXP to shooter
+			die(entity);
+		}
+	}
+
+	public void die(Entity killer) {
+		super.die();
+		
+		Novice realKiller = null;
+		
+		if(killer instanceof Bullet) {
+			if(((Bullet) killer).getShooter() instanceof Novice) {
+				realKiller = (Novice) ((Bullet) killer).getShooter();
+			}
+		} else if(killer instanceof Novice) {
+			realKiller = (Novice) killer;
+		}
+		
+		if(realKiller != null) {
+			realKiller.gainExp(foodExp);
 		}
 	}
 	
