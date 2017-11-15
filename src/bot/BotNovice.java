@@ -39,8 +39,7 @@ public class BotNovice extends Bot{
 			escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
-			//farm();
-			attackTower();
+			farm();
 		}
 		else if(player.getLevel() < 30){
 			farm();

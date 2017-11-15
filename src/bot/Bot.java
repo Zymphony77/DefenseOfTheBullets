@@ -39,7 +39,7 @@ public abstract class Bot {
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
 	protected static final int SIZE_OF_GRID = 30;
-	protected static final int NUMBER_OF_CHANGE_POSITION = 300; // Expected Value is 5 seconds to change;
+	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 20; // Expected Value is 20 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
@@ -179,6 +179,7 @@ public abstract class Bot {
 				dir = tmpForMove;
 			}
 			if(rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
+				System.out.println("change direction 2");
 				if(rand.nextInt(2) == 0) {
 					if(!utility.isHitTheWall((dir + 3)%8)){
 						dir = (dir + 2) % 8;
@@ -217,7 +218,7 @@ public abstract class Bot {
 		}
 		
 		prevDirection = dir;
-		System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+		System.out.println("-*-*-*-*-*-*-*-*-*-*" + prevDirection + "-*-*-*-*-*-*-*-*-*-*-*-");
 	}
 	
 	protected Entity chooseClosestTarget() {
@@ -288,22 +289,23 @@ public abstract class Bot {
 				return;
 			}
 			
-			int tmpForMove = prevDirection; //Random direction for move novice.
+			int tmpForMove = prevDirection;
+			System.out.println("tmpForMove = " + prevDirection);
 			if(utility.isTowerInRange()) {
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
 				status = 5;
 				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move1 = " + tmpForMove);
 				move(oppositeDirection[tmp]);
 			}else {
-				if(tmpForMove == -1 || rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0 || utility.isHitTheWall(tmpForMove)) {
+				if(tmpForMove == -1) {
 					tmpForMove = rand.nextInt(8);
+					System.out.println("change direction 1");
 					while(utility.isHitTheWall(tmpForMove)) {
 						tmpForMove = rand.nextInt(8);
 					}
 				}
-				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move2 = " + tmpForMove);
-				
 				status = 5;
+				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + " Move2 = " + tmpForMove);
 				move(tmpForMove);
 			}
 		}

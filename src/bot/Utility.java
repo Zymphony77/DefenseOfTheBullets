@@ -173,28 +173,24 @@ public class Utility{
 		if(dir == 7 || dir == 0 || dir == 1) {
 			if(getRef(player, player).second <= 0) {
 				return true;
-			}else {
-				return false;
-			}
-		}else if(dir >= 5 && dir <= 7) {
-			if(getRef(player, player).first <= 0) {
-				return true;
-			}else {
-				return false;
-			}
-		}else if(dir >= 3 && dir <= 5) {
-			if(getRef(player, player).second >= Component.MAX_SIZE) {
-				return true;
-			}else {
-				return false;
-			}
-		}else{
-			if(getRef(player, player).first >= Component.MAX_SIZE) {
-				return true;
-			}else {
-				return false;
 			}
 		}
+		if(dir >= 5 && dir <= 7) {
+			if(getRef(player, player).first <= 0) {
+				return true;
+			}
+		}
+		if(dir >= 3 && dir <= 5) {
+			if(getRef(player, player).second >= Component.MAX_SIZE) {
+				return true;
+			}
+		}
+		if(dir >= 1 && dir <= 3){
+			if(getRef(player, player).first >= Component.MAX_SIZE) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	protected int getDirectionAdjacent(int prevDirection) {
