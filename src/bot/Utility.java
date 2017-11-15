@@ -97,6 +97,14 @@ public class Utility{
 				Component.MAX_SIZE - entity.getRefPoint().second);
 	}
 	
+	protected Pair getRef(Entity reference, Pair pair) {
+		if(reference.getSide() == Side.BLUE) {
+			return pair;
+		}
+		return new Pair(Component.MAX_SIZE - pair.first, 
+				Component.MAX_SIZE - pair.second);
+	}
+	
 	protected static Pair flip(Pair pair) {
 		return new Pair(Component.MAX_SIZE - pair.first, Component.MAX_SIZE - pair.second);
 	}
@@ -163,25 +171,25 @@ public class Utility{
 	
 	protected boolean isHitTheWall(int dir) {
 		if(dir == 7 || dir == 0 || dir == 1) {
-			if(getRef(player, player).second <= 2) {
+			if(getRef(player, player).second <= 0) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 5 && dir <= 7) {
-			if(getRef(player, player).first <= 2) {
+			if(getRef(player, player).first <= 0) {
 				return true;
 			}else {
 				return false;
 			}
 		}else if(dir >= 3 && dir <= 5) {
-			if(getRef(player, player).second >= Component.MAX_SIZE - 2) {
+			if(getRef(player, player).second >= Component.MAX_SIZE) {
 				return true;
 			}else {
 				return false;
 			}
 		}else{
-			if(getRef(player, player).first >= Component.MAX_SIZE - 2) {
+			if(getRef(player, player).first >= Component.MAX_SIZE) {
 				return true;
 			}else {
 				return false;

@@ -44,6 +44,7 @@ public abstract class Bot {
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
 	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
+	protected static final int GAP_WHEN_ATTACK_TOWER = 300;
 	
 	protected int status = 0; //none = 0, defense = 1, attack = 2, escape = 3, escape with bullet = 4, farm = 5; 
 	protected int prevDirection = -1;
@@ -169,13 +170,28 @@ public abstract class Bot {
 		if(dir == -1) {
 			System.out.println(" Bug move(dir)!!!! ");
 			dir = prevDirection;
-			if(prevDirection == -1 || rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
+			if(prevDirection == -1) {
 				System.out.println("Bugg" + prevDirection);
 				int tmpForMove = rand.nextInt(8);
 				while(utility.isHitTheWall(tmpForMove)) {
 					tmpForMove = rand.nextInt(8);
 				}
 				dir = tmpForMove;
+			}
+			if(rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
+				if(rand.nextInt(2) == 0) {
+					if(!utility.isHitTheWall((dir + 3)%8)){
+						dir = (dir + 2) % 8;
+					}else if(!utility.isHitTheWall((dir + 6) % 8)){
+						dir = (dir + 6) % 8;
+					}
+				}else{
+					if(!utility.isHitTheWall((dir + 6) % 8)){
+						dir = (dir + 6) % 8;
+					}else if(!utility.isHitTheWall((dir + 2) % 8)){
+						dir = (dir + 2) % 8;
+					}
+				}
 			}
 		}
 		
@@ -201,7 +217,7 @@ public abstract class Bot {
 		}
 		
 		prevDirection = dir;
-		System.out.println("------------------------");
+		System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 	}
 	
 	protected Entity chooseClosestTarget() {
@@ -248,6 +264,8 @@ public abstract class Bot {
 	}
 	
 	protected void farm() {
+		
+		System.out.println("Farm!!!!");
 
 		int[] food = new int[8];
 		int[] enemies = new int[8];
@@ -274,6 +292,7 @@ public abstract class Bot {
 			if(utility.isTowerInRange()) {
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
 				status = 5;
+				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move1 = " + tmpForMove);
 				move(oppositeDirection[tmp]);
 			}else {
 				if(tmpForMove == -1 || rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0 || utility.isHitTheWall(tmpForMove)) {
@@ -282,6 +301,8 @@ public abstract class Bot {
 						tmpForMove = rand.nextInt(8);
 					}
 				}
+				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move2 = " + tmpForMove);
+				
 				status = 5;
 				move(tmpForMove);
 			}
@@ -298,6 +319,7 @@ public abstract class Bot {
 			if(utility.isTowerInRange()) {  //check tower in range.
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
 				status = 3;
+				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move3 = " + oppositeDirection[tmp]);
 				move(oppositeDirection[tmp]);
 			}
 			else {
@@ -316,68 +338,72 @@ public abstract class Bot {
 				}
 				System.out.println("farm dir : " + tmpForMove);
 				status = 5;
+				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move4 = " + tmpForMove);
 				move(tmpForMove);
 			}
 		}
 	}
 
-	protected Pair getDirectionWithArea(int area) {
+	protected int getDirectionWithArea(int area) {
 		//return Pair of Destination for move.
 		if(area == 0) {
 			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
 				if(grid[i][0] != null && grid[i][0].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(0));
+					return grid[i][0].getFirstDirection();
 				}
 			}
 			for(int j = 0; j <= SIZE_OF_GRID/2; j++) {
 				if(grid[0][j] != null && grid[0][j].isChk()) {
-					return new Pair(utility.positionXInReal(0), utility.positionYInReal(j));
+					return grid[0][j].getFirstDirection();
 				}
 			}
 		}else if(area == 1) {
 			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
 				if(grid[i][0] != null && grid[i][0].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(0));
+					return grid[i][0].getFirstDirection();
 				}
 			}
 			for(int j = 0; j < SIZE_OF_GRID/2; j++) {
 				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
-					return new Pair(utility.positionXInReal(SIZE_OF_GRID), utility.positionYInReal(j));
+					return grid[SIZE_OF_GRID][j].getFirstDirection();
 				}
 			}
 		}else if(area == 2) {
 			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
 				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(SIZE_OF_GRID));
+					return grid[i][SIZE_OF_GRID].getFirstDirection();
 				}
 			}
 			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
 				if(grid[0][j] != null && grid[0][j].isChk()) {
-					return new Pair(utility.positionXInReal(0), utility.positionYInReal(j));
+					return grid[0][j].getFirstDirection();
 				}
 			}
 		}else {
 			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
 				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
-					return new Pair(utility.positionXInReal(i), utility.positionYInReal(SIZE_OF_GRID));
+					return grid[i][SIZE_OF_GRID].getFirstDirection();
 				}
 			}
 			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
 				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
-					return new Pair(utility.positionXInReal(SIZE_OF_GRID), utility.positionYInReal(j));
+					return grid[SIZE_OF_GRID][j].getFirstDirection();
 				}
 			}
 		}
-		return null;
+		return -1;
 	}
 	
 	protected void escapeWithBullet() {
 
-		if(status == 4 && rand.nextInt(NUMBER_OF_CHANGE_POSITION) != 0) {
-			return;
-		}
-
 		System.out.println("Escape With Bullet");
+		
+		/// if you don't want to change direction many time.
+//		if(status == 4 && rand.nextInt(30) != 0) {
+//			return;
+//		}
+
+		System.out.println("Escape With Bullet Nowwww");
 		
 		int[] bullet = new int[8];
 		
@@ -401,21 +427,22 @@ public abstract class Bot {
 			}
 		}
 		
-		tmpDir = oppositeDirection[tmpDir];
+		System.out.println("Direction to escape : " + oppositeDirection[tmpDir]);
+		int tmp = getDirectionWithArea(change8to4[oppositeDirection[tmpDir]]);
 		
-		System.out.println("Min direction with escape bullet: " + tmpDir);
 		
-		if(!utility.isHitTheWall(tmpDir)) {
-			System.out.println("Direction with escape bullet: " + tmpDir);
+		if(!utility.isHitTheWall(tmp) && tmp != -1) {
+			System.out.println("Direction with escape bullet: " + tmp);
 			status = 4;
-			move(tmpDir);
+			move(tmp);
 		}else {
-			move(-1);
+			move(oppositeDirection[tmpDir]);
 		}
 	}
 
 	protected void escape() {
 		if(!bulletList.isEmpty()) {
+			System.out.println("EscapeWithBullet in Escape");
 			escapeWithBullet();
 		}
 		else {
@@ -440,19 +467,17 @@ public abstract class Bot {
 					move(6);
 				}
 				else {
-					Pair res = getDirectionWithArea(0);
-					if(res == null) {
+					int res = getDirectionWithArea(0);
+					if(res == -1) {
 						res = getDirectionWithArea(3);
 					}
-					if(res == null) {
+					if(res == -1) {
 						res = getDirectionWithArea(1);
 					}
-					if(res == null) {
+					if(res == -1) {
 						res = getDirectionWithArea(2);
 					}
-					destination = res;
-					int dir = utility.canMoveWithDestination(destination, prevDirection);
-					move(dir);
+					move(res);
 				}
 			}
 		}
@@ -475,15 +500,15 @@ public abstract class Bot {
 		}
 		if(tmp == null) {
 			attackTower();
+			return;
 		}
 		
 		System.out.println("tower: " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
 		
 		if(!utility.isVisible(utility.getRef(player, tmp))) {
-			int res = utility.checkCoordinate(player, tmp);
+			int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
 			move(res);
 		}else {
-			///not done not done not done;
 			int newX = utility.positionXInGrid(utility.getRef(player, tmp).first), newY = utility.positionYInGrid(utility.getRef(player, tmp).second);
 			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
 				int res = grid[newX][newY].getFirstDirection();
@@ -491,33 +516,48 @@ public abstract class Bot {
 				System.out.println("x : " + newX + " y : " + newY + " get direction in defense: " + res);
 				move(res);
 			}
-//			int res = utility.checkCoordinate(player, tmp);
-//			System.out.println("direction: " + res);
-//			move(res);
 		}
 	}
 
 	protected void attackTower() {
 		///not done not done not done :)
+		System.out.println("-- Attack Tower --");
+		
+		if(player.getHp() < player.getMaxHp() * 0.7) {
+			destination = null;
+			escape();
+		}
+		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
 		for(Tower tower : Component.getInstance().getTowerList()) {
-			if(tower.getSide() == player.getSide() && distance > utility.getRef(player, player).distance(utility.getRef(player, tower))) {
+			if(tower.getSide() != player.getSide() && distance > utility.getRef(player, player).distance(utility.getRef(player, tower))) {
 				distance = utility.getRef(player, player).distance(utility.getRef(player, tower));
 				tmp = tower;
 			}
 		}
 		if(tmp == null) {
-			attackTower();
+			farm();
+			return;
 		}
 		
+		System.out.println("tower: " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
+		
 		if(!utility.isVisible(utility.getRef(player, tmp))) {
-			int res = utility.checkCoordinate(player, tmp);
-			
-			
+			int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
+			move(res);
 		}else {
-			///not done not done not done;
-			
+			int newX = utility.positionXInGrid(utility.getRef(player, tmp).first) - 10, newY = utility.positionYInGrid(utility.getRef(player, tmp).second) - 10;
+			if(newX < 0)
+				newX = 0;
+			if(newY < 0)
+				newY = 0;
+			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
+				int res = grid[newX][newY].getFirstDirection();
+				destination = utility.getRef(player, utility.getRef(player, new Pair(grid[newX][newY].getX(), grid[newX][newY].getY())));
+				System.out.println("x : " + newX + " y : " + newY + " get direction in defense: " + res);
+				move(res);
+			}
 		}
 	}
 	
