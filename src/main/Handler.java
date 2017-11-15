@@ -189,6 +189,8 @@ public class Handler {
 		pairwiseCheckCollision(playerList, foodList);
 		pairwiseCheckCollision(playerList, towerList);
 		pairwiseCheckCollision(playerList, playerList);
+		
+		Component.getInstance().getExperienceBar().draw();
 	}
 	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 

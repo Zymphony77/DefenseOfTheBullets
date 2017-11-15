@@ -21,7 +21,7 @@ import utility.*;
 
 public class Main extends Application {
 	public static final int SCREEN_SIZE = 750;
-	public static final int FRAME_RATE = 40;
+	public static final int FRAME_RATE = 60;
 	
 	private Pane wholePane;
 	
@@ -43,6 +43,7 @@ public class Main extends Application {
 		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
 		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
 		wholePane.getChildren().add(Component.getInstance().getMinimap());
+		wholePane.getChildren().add(Component.getInstance().getExperienceBar());
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / FRAME_RATE), event -> {
 			Handler.update();

@@ -19,10 +19,10 @@ import environment.*;
 import utility.*;
 
 public class Component {
-	public static final double MAX_SIZE = 1000;
+	public static final double MAX_SIZE = 10000;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
-	public static final int MAX_FOOD_COUNT = 25;
+	public static final int MAX_FOOD_COUNT = 1500;
 	
 	private static final Component instance = new Component();
 	
@@ -36,6 +36,7 @@ public class Component {
 	private Novice player;
 	
 	private Minimap minimap;
+	private ExperienceBar expBar;
 	private Pane hpBarPane;
 	private Pane playerPane;
 	private Pane towerPane;
@@ -45,6 +46,7 @@ public class Component {
 	private Canvas grid;
 	
 	public Component() {
+		expBar = new ExperienceBar();
 		minimap = new Minimap();
 		hpBarPane = new Pane();
 		playerPane = new Pane();
@@ -116,6 +118,7 @@ public class Component {
 	
 	public void initialize(Side side) {
 		player = new Novice(new Pair(200, 200), Side.RED);
+		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
 		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
@@ -241,6 +244,10 @@ public class Component {
 	
 	public ArrayList<Food> getFoodList() {
 		return foodList;
+	}
+	
+	public ExperienceBar getExperienceBar() {
+		return expBar;
 	}
 	
 	public Minimap getMinimap() {

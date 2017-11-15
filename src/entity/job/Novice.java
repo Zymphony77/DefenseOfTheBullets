@@ -147,6 +147,11 @@ public class Novice extends Entity implements Movable, Shootable {
 		experience.addExp(exp);
 	}
 	
+	@Override
+	public String toString() {
+		return "Novice";
+	}
+	
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
@@ -157,6 +162,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public int getRadius() {
 		return 20;
+	}
+	
+	public Experience getExperience() {
+		return experience;
 	}
 	
 	public int getLevel() {

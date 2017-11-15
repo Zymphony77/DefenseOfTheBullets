@@ -54,6 +54,6 @@ public class Experience {
 	}
 	
 	private static double getMaxExp(int level) {
-		return 258.08 * Math.pow(1.04, level) - 248.40;
+		return 258.08 * Math.pow(1.04, level) - 248.41;
 	}
 }
