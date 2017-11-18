@@ -39,7 +39,7 @@ public abstract class Bot {
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
 	protected static final int SIZE_OF_GRID = 30;
-	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 20; // Expected Value is 20 seconds to change;
+	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 30; // Expected Value is 20 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
@@ -117,7 +117,7 @@ public abstract class Bot {
 //				else
 //					System.out.print("- ");
 //			}
-//			System.out.println();
+//			System.out.println(); 
 //		}
 //		System.exit(0);
 	}
@@ -180,18 +180,9 @@ public abstract class Bot {
 			}
 			if(rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
 				System.out.println("change direction 2");
-				if(rand.nextInt(2) == 0) {
-					if(!utility.isHitTheWall((dir + 3)%8)){
-						dir = (dir + 2) % 8;
-					}else if(!utility.isHitTheWall((dir + 6) % 8)){
-						dir = (dir + 6) % 8;
-					}
-				}else{
-					if(!utility.isHitTheWall((dir + 6) % 8)){
-						dir = (dir + 6) % 8;
-					}else if(!utility.isHitTheWall((dir + 2) % 8)){
-						dir = (dir + 2) % 8;
-					}
+				dir = rand.nextInt(8);
+				while(utility.isHitTheWall(dir)) {
+					dir = rand.nextInt(8);
 				}
 			}
 		}
@@ -258,10 +249,13 @@ public abstract class Bot {
 	}
 	
 	protected void hueristicFood(int[] food) {
-		food[7] += food[0] + food[6];
-		food[7] *= MOVE_HEURISTIC * MOVE_HEURISTIC;
-		food[1] *= MOVE_HEURISTIC;
-		food[5] *= MOVE_HEURISTIC;
+		if(utility.getPositionInMap() == 0) {
+			food[3] = (int) (food[3] * MOVE_HEURISTIC + 2);
+		}else {
+			food[7] *= MOVE_HEURISTIC;
+			food[1] *= MOVE_HEURISTIC;
+			food[5] *= MOVE_HEURISTIC;
+		}
 	}
 	
 	protected void farm() {
@@ -325,11 +319,11 @@ public abstract class Bot {
 				move(oppositeDirection[tmp]);
 			}
 			else {
-				int tmpForMove = 7;
+				int tmpForMove = rand.nextInt(8);
 				for(int i = 0; i < 8; i++){
 					boolean chk = true;
 					for(int j = 0; j < 8; j++) {
-						if(food[i] <= food[j]){
+						if(food[i] < food[j]){
 							chk = false;
 							break;
 						}
