@@ -25,6 +25,7 @@ public class SkillIcon extends Canvas {
 		
 		setTranslateX(getIconShift().first);
 		setTranslateY(getIconShift().second);
+		setOpacity(0.75);
 		
 		drawIcon();
 	}
@@ -53,7 +54,7 @@ public class SkillIcon extends Canvas {
 		}
 		
 		gc.setFill(Color.BLACK);
-		gc.setFont(new Font("Telugu MN", 8));
+		gc.setFont(new Font("Telugu MN", 10));
 		gc.setTextBaseline(VPos.TOP);
 		gc.setTextAlign(TextAlignment.LEFT);
 		gc.fillText("" + skill.getPosition(), 0, 0);

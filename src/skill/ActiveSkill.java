@@ -49,7 +49,7 @@ public abstract class ActiveSkill extends Skill {
 		activateEffect();
 	}
 	
-	public void deactivateSkill() {
+	protected void deactivateSkill() {
 		remainingDuration = 0;
 		isActive = false;
 		undrawEffect();

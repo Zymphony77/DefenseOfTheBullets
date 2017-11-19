@@ -3,7 +3,7 @@ package entity.job;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import main.*;
 import entity.*;
@@ -18,7 +18,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final int CANVAS_SIZE = 60;
 	private static final int RADIUS = 20;
 	
-	protected LinkedList<Skill> skillList;
+	protected ArrayList<Skill> skillList;
 	
 	protected boolean isMoving;
 	protected double moveDirection;
@@ -38,11 +38,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		isMoving = false;
 		moveDirection = 0;
 		
-		skillList = new LinkedList<Skill>();
+		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
+		skillList.add(new Frenzy());
 		
-		reloadDone = 15;
-		reloadCount = 15;
+		reloadDone = 20;
+		reloadCount = 20;
 		
 		experience = new Experience(1, 0);
 	}
@@ -99,6 +100,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		refPoint.second += Math.sin(Math.toRadians(moveDirection)) * speed / Main.FRAME_RATE;
 		refPoint.second = Math.min(refPoint.second, (double) Component.MAX_SIZE);
 		refPoint.second = Math.max(refPoint.second, (double) 0);
+		
+		for(Skill skill: skillList) {
+			if(skill instanceof Frenzy && ((Frenzy) skill).isActive()) {
+				((Frenzy) skill).deactivateSkill();
+			}
+		}
 	}
 	
 	public void heal(double amount) {
@@ -106,8 +113,16 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public void takeDamage(Entity entity) {
-		if(hp > entity.getAttack()) {
-			hp -= entity.getAttack();
+		takeDamage(entity, entity.getAttack());
+	}
+	
+	protected void takeDamage(Entity entity, double damage) {
+		if(((Frenzy) skillList.get(1)).isActive()) {
+			damage *= 1.25;
+		}
+		
+		if(hp > damage) {
+			hp -= damage;
 			hpBar.draw();
 		} else {
 			hp = 0;
@@ -158,18 +173,22 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	/* ------------------- Skill ------------------- */
-	public void useHaste() {
-		Haste haste = null;
-		for(Skill each: skillList) {
-			if(each instanceof Haste) {
-				haste = (Haste) each;
-				break;
-			}
+	public void useSkill(int position) {
+		if(position > skillList.size()) {
+			return;
 		}
 		
-		if(haste.isReady()) {
-			haste.activateSkill(this);
+		Skill skill = skillList.get(position);
+		
+		if(!(skill instanceof ActiveSkill)) {
+			return;
 		}
+		
+		if(((ActiveSkill) skill).isActive() || !skill.isReady()) {
+			return;
+		}
+		
+		((ActiveSkill) skill).activateSkill(this);
 	}
 	
 	/* ------------------- Getters&Setters ------------------- */	
@@ -185,7 +204,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		return 20;
 	}
 	
-	public LinkedList<Skill> getSkillList() {
+	public ArrayList<Skill> getSkillList() {
 		return skillList;
 	}
 	
@@ -203,6 +222,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public int getReloadDone() {
+		return reloadDone;
 	}
 	
 	public Job getJob() {

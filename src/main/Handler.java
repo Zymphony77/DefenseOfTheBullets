@@ -16,7 +16,7 @@ import entity.food.*;
 import entity.job.*;
 import entity.property.*;
 import entity.tower.*;
-import environment.SkillIcon;
+import environment.*;
 import skill.*;
 import utility.*;
 
@@ -45,8 +45,12 @@ public class Handler {
 			activeKey.add(KeyCode.RIGHT);
 		}
 		
-		if(event.getCode() == KeyCode.DIGIT1) {
-			Component.getInstance().getPlayer().useHaste();
+		if(event.getCode().isDigitKey()) {
+			String keyName = event.getCode().toString();
+			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1)) - 1;
+			if(skillNumber <= Component.getInstance().getPlayer().getSkillList().size()) {
+				Component.getInstance().getPlayer().useSkill(skillNumber);
+			}
 		}
 		
 		if(event.getCode() == KeyCode.E && !activeKey.contains(KeyCode.E)) {
@@ -74,6 +78,10 @@ public class Handler {
 		
 		if(event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
 			activeKey.remove(KeyCode.RIGHT);
+		}
+		
+		if(event.getCode() == KeyCode.E ) {
+			activeKey.remove(KeyCode.E);
 		}
 	}
 	
