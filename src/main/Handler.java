@@ -23,6 +23,7 @@ import utility.*;
 public class Handler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
 	private static boolean autoshoot = false;
+	private static boolean skillUpgradable = false;
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
@@ -47,7 +48,7 @@ public class Handler {
 		
 		if(event.getCode().isDigitKey()) {
 			String keyName = event.getCode().toString();
-			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1)) - 1;
+			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1));
 			if(skillNumber <= Component.getInstance().getPlayer().getSkillList().size()) {
 				Component.getInstance().getPlayer().useSkill(skillNumber);
 			}
@@ -98,6 +99,7 @@ public class Handler {
 			Component.getInstance().getPlayer().shoot();
 		}
 		
+		checkPlayerUpgrade();
 		updateReloadAndSkill();
 		moveComponent();
 		movePlayer();
@@ -106,6 +108,26 @@ public class Handler {
 		clearDeadComponent();
 		
 		Component.getInstance().generateFood();
+	}
+	
+	private static void checkPlayerUpgrade() {
+		// Status
+		// Skill
+//		System.out.println("POINT: " + Component.getInstance().getPlayer().getExperience().getSkillPoint());
+//		System.out.println("UPGRADABLE: " + skillUpgradable);
+		if(Component.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
+			skillUpgradable = true;
+			for(SkillIcon icon: Component.getInstance().getSkillPanel().getIconList()) {
+				if(icon.isUpgradable()) {
+					icon.drawUpgrade();
+				}
+			}
+		} else if(Component.getInstance().getPlayer().getExperience().getSkillPoint() == 0 && skillUpgradable){
+			skillUpgradable = false;
+			for(SkillIcon icon: Component.getInstance().getSkillPanel().getIconList()) {
+				icon.undrawUpgrade();
+			}
+		}
 	}
 	
 	private static void updateReloadAndSkill() {
@@ -250,5 +272,6 @@ public class Handler {
 	
 	public static void reset() {
 		autoshoot = false;
+		skillUpgradable = false;
 	}
 }

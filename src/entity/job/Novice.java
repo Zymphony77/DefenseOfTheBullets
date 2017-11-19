@@ -60,7 +60,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
-		
+
 		experience = new Experience(1, 0);
 	}
 	
@@ -194,7 +194,7 @@ public class Novice extends Entity implements Movable, Shootable {
 			return;
 		}
 		
-		Skill skill = skillList.get(position);
+		Skill skill = skillList.get(position - 1);
 		
 		if(!(skill instanceof ActiveSkill)) {
 			return;
@@ -207,6 +207,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		((ActiveSkill) skill).activateSkill(this);
 	}
 	
+	public void upgradeSkill(int position) {
+		experience.decreaseSkillPoint();
+		skillList.get(position - 1).upgrade();
+	}
 	/* ------------------- Status ------------------- */
 	public void upgradeAbility() {
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getSTR();

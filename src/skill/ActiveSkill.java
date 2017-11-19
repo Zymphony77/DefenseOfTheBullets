@@ -23,9 +23,6 @@ public abstract class ActiveSkill extends Skill {
 	
 	public void update() {
 		remainingCooldown = Math.max(remainingCooldown - 1, 0);
-		drawCooldown();
-		
-		// drawDuration();
 		
 		if(isActive) {
 			--remainingDuration;
@@ -33,10 +30,6 @@ public abstract class ActiveSkill extends Skill {
 				deactivateSkill();
 			}
 		}
-	}
-	
-	public void drawCooldown() {
-		
 	}
 	
 	public void activateSkill(Novice caster) {

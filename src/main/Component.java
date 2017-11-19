@@ -131,9 +131,7 @@ public class Component {
 		addComponent(tower);
 		
 		minimap.drawViewBox();
-		for(Skill skill: player.getSkillList()) {
-			skillPanel.addSkill(skill);
-		}
+		skillPanel.setPlayer(player);
 		generateFood();
 	}
 	

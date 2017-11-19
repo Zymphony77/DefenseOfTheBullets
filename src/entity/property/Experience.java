@@ -5,11 +5,13 @@ public class Experience {
 	
 	private int level;
 	private double currentExp;
+	private int skillPoint;
 	private int pointStatus;
 	
 	public Experience(int level, double currentExp) {
 		this.level = level;
 		this.currentExp = currentExp;
+		this.skillPoint = 1;
 		this.pointStatus = 0;
 		
 		updateLevel();
@@ -19,6 +21,7 @@ public class Experience {
 		while(level < MAX_LEVEL && currentExp >= getMaxExp()) {
 			currentExp -= getMaxExp();
 			pointStatus++;
+			++skillPoint;
 			++level;
 		}
 	}
@@ -64,11 +67,19 @@ public class Experience {
 		return pointStatus;
 	}
 	
+	public int getSkillPoint() {
+		return skillPoint;
+	}
+	
 	public boolean decreasePointStatus() {
 		if(pointStatus > 0) {
 			pointStatus--;
 			return true;
 		}
 		return false;
+	}
+	
+	public void decreaseSkillPoint() {
+		--skillPoint;
 	}
 }
