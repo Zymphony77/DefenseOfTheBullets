@@ -3,10 +3,13 @@ package entity.job;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.LinkedList;
+
 import main.*;
 import entity.*;
 import entity.bullet.*;
 import entity.property.*;
+import skill.*;
 import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
@@ -14,6 +17,8 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_SPEED = 150;
 	private static final int CANVAS_SIZE = 60;
 	private static final int RADIUS = 20;
+	
+	protected LinkedList<Skill> skillList;
 	
 	protected boolean isMoving;
 	protected double moveDirection;
@@ -24,6 +29,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected Experience experience;
 	protected int reloadCount;
 	
+	/* ------------------- Constructor ------------------- */
 	public Novice(Pair refPoint, Side side) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
@@ -32,12 +38,16 @@ public class Novice extends Entity implements Movable, Shootable {
 		isMoving = false;
 		moveDirection = 0;
 		
+		skillList = new LinkedList<Skill>();
+		skillList.add(new Haste());
+		
 		reloadDone = 15;
 		reloadCount = 15;
 		
 		experience = new Experience(1, 0);
 	}
 	
+	/* ------------------- UI ------------------- */
 	public void draw() {
 		canvas.setWidth(CANVAS_SIZE);
 		canvas.setHeight(CANVAS_SIZE);
@@ -67,6 +77,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		canvas.setRotate(direction);
 	}
 	
+	/* ------------------- Game Function ------------------- */
 	public void setMoving(double moveDirection) {
 		this.moveDirection = moveDirection;
 		this.isMoving = true;
@@ -101,7 +112,6 @@ public class Novice extends Entity implements Movable, Shootable {
 		} else {
 			hp = 0;
 			die(entity);
-			// Give EXP to shooter
 		}
 	}
 	
@@ -121,7 +131,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		if(realKiller != null) {
-			realKiller.gainExp(experience.getGainedExperience() / 3);
+			realKiller.gainExp(experience.getGainedExperience() / 3);		// Adjust given EXP here
 		}
 	}
 	
@@ -147,11 +157,22 @@ public class Novice extends Entity implements Movable, Shootable {
 		experience.addExp(exp);
 	}
 	
-	@Override
-	public String toString() {
-		return "Novice";
+	/* ------------------- Skill ------------------- */
+	public void useHaste() {
+		Haste haste = null;
+		for(Skill each: skillList) {
+			if(each instanceof Haste) {
+				haste = (Haste) each;
+				break;
+			}
+		}
+		
+		if(haste.isReady()) {
+			haste.activateSkill(this);
+		}
 	}
 	
+	/* ------------------- Getters&Setters ------------------- */	
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
@@ -162,6 +183,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public int getRadius() {
 		return 20;
+	}
+	
+	public LinkedList<Skill> getSkillList() {
+		return skillList;
 	}
 	
 	public Experience getExperience() {
@@ -178,5 +203,14 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public Job getJob() {
+		return Job.NOVICE;
+	}
+	
+	@Override
+	public String toString() {
+		return "Novice";
 	}
 }

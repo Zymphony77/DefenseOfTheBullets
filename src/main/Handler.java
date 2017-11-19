@@ -16,10 +16,13 @@ import entity.food.*;
 import entity.job.*;
 import entity.property.*;
 import entity.tower.*;
+import environment.SkillIcon;
+import skill.*;
 import utility.*;
 
 public class Handler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
+	private static boolean autoshoot = false;
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
@@ -40,6 +43,15 @@ public class Handler {
 		
 		if(event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.D) {
 			activeKey.add(KeyCode.RIGHT);
+		}
+		
+		if(event.getCode() == KeyCode.DIGIT1) {
+			Component.getInstance().getPlayer().useHaste();
+		}
+		
+		if(event.getCode() == KeyCode.E && !activeKey.contains(KeyCode.E)) {
+			activeKey.add(KeyCode.E);
+			autoshoot = !autoshoot;
 		}
 	}
 	
@@ -74,11 +86,11 @@ public class Handler {
 	}
 	
 	public static void update() {
-		if(activeKey.contains(KeyCode.SPACE)) {
+		if(activeKey.contains(KeyCode.SPACE) || autoshoot) {
 			Component.getInstance().getPlayer().shoot();
 		}
 		
-		reloadAmmo();
+		updateReloadAndSkill();
 		moveComponent();
 		movePlayer();
 		moveCenter(Component.getInstance().getPlayer().getRefPoint());
@@ -88,17 +100,25 @@ public class Handler {
 		Component.getInstance().generateFood();
 	}
 	
-	public static void reloadAmmo() {
+	private static void updateReloadAndSkill() {
+		// Player
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.reload();
+			for(Skill skill: player.getSkillList()) {
+				if(skill instanceof ActiveSkill) {
+					((ActiveSkill) skill).update();
+				}
+			}
 		}
+		// Tower
 		for(Tower tower: Component.getInstance().getTowerList()) {
 			tower.reload();
 		}
+		// SkillPanel
+		Component.getInstance().getSkillPanel().update();
 	}
 	
-	public static void moveComponent() {
-		// Move every component
+	private static void moveComponent() {
 		for(Bot bot: Component.getInstance().getBotList()) {
 			bot.move();
 			bot.getPlayer().move();
@@ -111,8 +131,7 @@ public class Handler {
 		}
 	}
 	
-	public static void movePlayer() {
-		// Move player
+	private static void movePlayer() {
 		double x = 0;
 		double y = 0;
 		double sz;
@@ -145,7 +164,7 @@ public class Handler {
 		}
 	}
 	
-	public static void moveCenter(Pair center) {
+	private static void moveCenter(Pair center) {
 		// Player and HpBar
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.changeCenter(center);
@@ -176,7 +195,7 @@ public class Handler {
 		Component.getInstance().getMinimap().changeCenter(center);
 	}
 	
-	public static void checkCollision() {
+	private static void checkCollision() {
 		ArrayList<Novice> playerList = Component.getInstance().getPlayerList();
 		ArrayList<Tower> towerList = Component.getInstance().getTowerList();
 		ArrayList<Bullet> bulletList = Component.getInstance().getBulletList();
@@ -209,7 +228,7 @@ public class Handler {
 		}
 	}
 	
-	public static void clearDeadComponent() {
+	private static void clearDeadComponent() {
 		Predicate<Entity> deathPredicate = new Predicate<Entity>() {
 			public boolean test(Entity entity) {
 				return entity.isDead();
@@ -219,5 +238,9 @@ public class Handler {
 		Component.getInstance().getPlayerList().removeIf(deathPredicate);
 		Component.getInstance().getBulletList().removeIf(deathPredicate);
 		Component.getInstance().getFoodList().removeIf(deathPredicate);
+	}
+	
+	public static void reset() {
+		autoshoot = false;
 	}
 }

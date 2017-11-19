@@ -16,6 +16,7 @@ import entity.property.HpBar;
 import entity.food.*;
 import entity.tower.*;
 import environment.*;
+import skill.*;
 import utility.*;
 
 public class Component {
@@ -35,8 +36,9 @@ public class Component {
 	
 	private Novice player;
 	
-	private Minimap minimap;
+	private SkillPanel skillPanel;
 	private ExperienceBar expBar;
+	private Minimap minimap;
 	private Pane hpBarPane;
 	private Pane playerPane;
 	private Pane towerPane;
@@ -46,6 +48,7 @@ public class Component {
 	private Canvas grid;
 	
 	public Component() {
+		skillPanel = new SkillPanel();
 		expBar = new ExperienceBar();
 		minimap = new Minimap();
 		hpBarPane = new Pane();
@@ -128,6 +131,9 @@ public class Component {
 		addComponent(tower);
 		
 		minimap.drawViewBox();
+		for(Skill skill: player.getSkillList()) {
+			skillPanel.addSkill(skill);
+		}
 		generateFood();
 	}
 	
@@ -244,6 +250,10 @@ public class Component {
 	
 	public ArrayList<Food> getFoodList() {
 		return foodList;
+	}
+	
+	public SkillPanel getSkillPanel() {
+		return skillPanel;
 	}
 	
 	public ExperienceBar getExperienceBar() {
