@@ -1,32 +1,60 @@
 package entity.property;
 
-import entity.job.Novice;
-
 public class Status {
-	private static final int MAX_STATUS = 12;
+	public static final int MAX_STATUS = 12;
 	
 	private int STR, VIT, DEX, INT, AGI, LUK;
-	private int minAttack, maxAttack, criticalDamage, criticalChance, healthRegen, 
-		maxHealth, bodyDamage, bulletSpeed, bulletPenetration, reload, movementSpeed;
 	
-	/// STR -> minAttack, maxAttack, bodyDamage
-	/// VIT -> healtRegen, maxHealth
+	/// STR -> bulletDamage, attack
+	/// VIT -> healtRegen, hp
 	/// DEX -> bulletPenetration
-	/// INT -> nothing
-	/// AGI -> bulletSpeed, reload, movementSpeed
+	/// AGI -> bulletSpeed, reload, speed
 	/// LUK -> criticalDamage, criticalChance
 	
-	public Status(Novice player) {
+	public Status() {
 		STR = VIT = DEX = INT = AGI = LUK = 1;
-		updateStatus();
-		update(player);
 	}
 	
-	public void update(Novice player) {
-		//change any property in this *_*
+	public void updateStatus(int status) {
+		switch (status) {
+			case 1:
+				STR++; break;
+			case 2:
+				VIT++; break;
+			case 3:
+				DEX++; break;
+			case 4:
+				INT++; break;
+			case 5:
+				AGI++; break;
+			case 6:
+				LUK++; break;
+		}
+	}
+
+	public int getSTR() {
+		return STR;
+	}
+
+	public int getVIT() {
+		return VIT;
+	}
+
+	public int getDEX() {
+		return DEX;
+	}
+
+	public int getINT() {
+		return INT;
+	}
+
+	public int getAGI() {
+		return AGI;
+	}
+
+	public int getLUK() {
+		return LUK;
 	}
 	
-	public void updateStatus() {
-		
-	}
+	
 }

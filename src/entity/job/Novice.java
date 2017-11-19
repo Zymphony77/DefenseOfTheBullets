@@ -15,15 +15,27 @@ import utility.*;
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_SPEED = 150;
+	private static final double DEFAULT_BULLET_DAMAGE = 100;
+	private static final double DEFAULT_BULLET_SPEED = 200;
+	private static final double DEFAULT_BULLET_HP = 10;
+	private static final double DEFAULT_HEALTH_REGEN = 10;
+	private static final int DEFAULT_RELOAD = 20;
 	private static final int CANVAS_SIZE = 60;
 	private static final int RADIUS = 20;
 	
 	protected ArrayList<Skill> skillList;
 	
+	protected double bulletDamage;
+	protected double healthRegen;
+	protected double bulletHP;
+	protected double bulletSpeed, speed;
+	protected int reloadDone;
+	protected int criticalDamage;
+	protected double criticalChance;
+	Status status;
+	
 	protected boolean isMoving;
 	protected double moveDirection;
-	protected double speed;
-	protected int reloadDone;
 	
 	protected HpBar hpBar;
 	protected Experience experience;
@@ -37,13 +49,17 @@ public class Novice extends Entity implements Movable, Shootable {
 		attack = 100;
 		isMoving = false;
 		moveDirection = 0;
+		bulletDamage = DEFAULT_BULLET_DAMAGE;
+		bulletHP = DEFAULT_BULLET_HP;
+		bulletSpeed = DEFAULT_BULLET_SPEED;
+		healthRegen = DEFAULT_HEALTH_REGEN;
 		
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
 		skillList.add(new Frenzy());
 		
-		reloadDone = 20;
-		reloadCount = 20;
+		reloadDone = DEFAULT_RELOAD;
+		reloadCount = DEFAULT_RELOAD;
 		
 		experience = new Experience(1, 0);
 	}
@@ -158,7 +174,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction, 100, 200, side);
+		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, bulletDamage, bulletSpeed, side);
 		Component.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
@@ -189,6 +205,44 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		((ActiveSkill) skill).activateSkill(this);
+	}
+	
+	/* ------------------- Status ------------------- */
+	public void upgradeAbility() {
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getSTR();
+		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getVIT();
+		bulletHP = DEFAULT_BULLET_HP + 1.5 * status.getDEX();
+		bulletSpeed = DEFAULT_BULLET_SPEED + 10 * status.getDEX();
+		speed = DEFAULT_SPEED + 10 * status.getAGI();
+		reloadDone = DEFAULT_RELOAD - status.getAGI();
+//		criticalDamage;
+//		criticalChance;
+	}
+	
+	public void upgradeStatus(int status) {
+		switch (status) {
+			case 1:
+				if(this.status.getSTR() == Status.MAX_STATUS) return;
+				break;
+			case 2:
+				if(this.status.getVIT() == Status.MAX_STATUS) return;
+				break;
+			case 3:
+				if(this.status.getDEX() == Status.MAX_STATUS) return;
+				break;
+			case 4:
+				if(this.status.getINT() == Status.MAX_STATUS) return;
+				break;			
+			case 5:
+				if(this.status.getAGI() == Status.MAX_STATUS) return;
+				break;
+			case 6:
+				if(this.status.getLUK() == Status.MAX_STATUS) return;
+				break;
+		}
+		if(experience.decreasePointStatus()) {
+			this.status.updateStatus(status);
+		}
 	}
 	
 	/* ------------------- Getters&Setters ------------------- */	
@@ -236,4 +290,6 @@ public class Novice extends Entity implements Movable, Shootable {
 	public String toString() {
 		return "Novice";
 	}
+	
+	
 }
