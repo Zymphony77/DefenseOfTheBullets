@@ -194,7 +194,7 @@ public abstract class Bot {
 			while(utility.isHitTheWall(dir)) {
 				dir = rand.nextInt(8);
 			}
-			System.out.println("Direction in this turn: " + dir);
+			System.out.println("Direction in this turn: " + dir + " Level: " + player.getLevel());
 			player.setMoving((dir + 6)%8 * 45);
 		}
 		else {
@@ -308,7 +308,8 @@ public abstract class Bot {
 			
 			//if x-coordinate > 60% and y-coordinate > 60% and 0 isn't player.Side >> LT
 			//player will not move if RT have many foods. it can go to LT and then go to RT in next move.
-			if(utility.getRef(player, player).first >= Main.SCREEN_SIZE * 0.75 && utility.getRef(player, player).second >= Main.SCREEN_SIZE * 0.75) {
+			if(utility.getRef(player, player).first >= Component.MAX_SIZE * 0.75 && utility.getRef(player, player).second >= Component.MAX_SIZE * 0.75) {
+				System.out.println("Back!!!!");
 				food[3] = 0;
 			}
 			
@@ -319,18 +320,10 @@ public abstract class Bot {
 				move(oppositeDirection[tmp]);
 			}
 			else {
-				int tmpForMove = rand.nextInt(8);
+				int tmpForMove = prevDirection;
 				for(int i = 0; i < 8; i++){
-					boolean chk = true;
-					for(int j = 0; j < 8; j++) {
-						if(food[i] < food[j]){
-							chk = false;
-							break;
-						}
-					}
-					if(chk == true) {
+					if(food[i] > food[tmpForMove])
 						tmpForMove = i;
-					}
 				}
 				System.out.println("farm dir : " + tmpForMove);
 				status = 5;
@@ -437,6 +430,7 @@ public abstract class Bot {
 	}
 
 	protected void escape() {
+		status = 3;
 		if(!bulletList.isEmpty()) {
 			System.out.println("EscapeWithBullet in Escape");
 			escapeWithBullet();
@@ -485,6 +479,7 @@ public abstract class Bot {
 
 	protected void defenseTower() {
 		System.out.println("-- Defense Tower --");
+		status = 1;
 		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
@@ -523,6 +518,8 @@ public abstract class Bot {
 			destination = null;
 			escape();
 		}
+		
+		status = 2;
 		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
