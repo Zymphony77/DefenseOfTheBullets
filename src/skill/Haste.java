@@ -11,7 +11,7 @@ public class Haste extends ActiveSkill {
 	private static final int DEFAULT_DURATION = 2 * Main.FRAME_RATE;
 	private static final int POSITION = 1;
 	private static final int MAX_LEVEL = 5;
-	private static final Image IMAGE = new Image("resource/HasteIcon.png");
+	private static final Image IMAGE = new Image("resource/image/HasteIcon.png");
 	
 	public Haste() {
 		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN, DEFAULT_DURATION);

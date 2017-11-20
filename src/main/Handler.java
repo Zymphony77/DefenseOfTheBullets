@@ -113,8 +113,6 @@ public class Handler {
 	private static void checkPlayerUpgrade() {
 		// Status
 		// Skill
-//		System.out.println("POINT: " + Component.getInstance().getPlayer().getExperience().getSkillPoint());
-//		System.out.println("UPGRADABLE: " + skillUpgradable);
 		if(Component.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
 			skillUpgradable = true;
 			for(SkillIcon icon: Component.getInstance().getSkillPanel().getIconList()) {
