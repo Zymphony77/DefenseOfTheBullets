@@ -5,6 +5,11 @@ import utility.Job;
 
 public class BotNovice extends Bot{
 	
+	//STR = 1 VIT = 2 DEX = 3 INT = 4 AGI = 5 LUK = 6
+	
+	private final int[] upStatus = new int[] {3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 6, 6};
+	private int cnt = 0;
+	
 	public BotNovice(Novice player)
 	{
 		super(player);
@@ -15,6 +20,9 @@ public class BotNovice extends Bot{
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
+		
+		//upgrade
+		upgradeStatus();
 		
 		//find everything in range of bot
 		findEntityInRange();
@@ -70,7 +78,9 @@ public class BotNovice extends Bot{
 	@Override
 	protected void upgradeStatus() {
 		// TODO Auto-generated method stub
-		
+		if(player.getExperience().getPointStatus() > 0) {
+			player.upgradeStatus(upStatus[cnt++]);
+		}
 	}
 
 	@Override

@@ -54,6 +54,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		bulletSpeed = DEFAULT_BULLET_SPEED;
 		healthRegen = DEFAULT_HEALTH_REGEN;
 		
+		status = new Status();
+		
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
 		skillList.add(new Frenzy());
@@ -246,10 +248,15 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		if(experience.decreasePointStatus()) {
 			this.status.updateStatus(status);
+			upgradeAbility();
 		}
 	}
 	
-	/* ------------------- Getters&Setters ------------------- */	
+	/* ------------------- Getters&Setters ------------------- */
+	public Status getStatus() {
+		return status;
+	}
+	
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}

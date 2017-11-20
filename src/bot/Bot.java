@@ -12,6 +12,7 @@ import entity.Entity;
 import entity.bullet.Bullet;
 import entity.food.Food;
 import entity.job.Novice;
+import entity.property.Status;
 import entity.tower.Tower;
 import main.Component;
 import main.Main;
@@ -209,6 +210,8 @@ public abstract class Bot {
 		}
 		
 		prevDirection = dir;
+		Status status = player.getStatus();
+		System.out.println(status.getSTR() + " " + status.getVIT() + " " + status.getDEX() + " " + status.getAGI() + " ");
 		System.out.println("-*-*-*-*-*-*-*-*-*-*" + prevDirection + "-*-*-*-*-*-*-*-*-*-*-*-");
 	}
 	
