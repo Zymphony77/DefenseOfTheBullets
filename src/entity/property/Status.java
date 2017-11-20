@@ -3,7 +3,9 @@ package entity.property;
 public class Status {
 	public static final int MAX_STATUS = 12;
 	
-	private int STR, VIT, DEX, INT, AGI, LUK;
+	private int[] stat = new int[6];
+	
+	/// STR = 0, VIT = 1, DEX = 2, INT = 3, AGI = 4, LUK = 5
 	
 	/// STR -> bulletDamage, attack
 	/// VIT -> healtRegen, hp
@@ -12,49 +14,28 @@ public class Status {
 	/// LUK -> criticalDamage, criticalChance
 	
 	public Status() {
-		STR = VIT = DEX = INT = AGI = LUK = 1;
+		for(int i = 0; i< 6; i++) {
+			stat[i] = 1;
+		}
 	}
 	
 	public void updateStatus(int status) {
-		switch (status) {
-			case 1:
-				STR++; break;
-			case 2:
-				VIT++; break;
-			case 3:
-				DEX++; break;
-			case 4:
-				INT++; break;
-			case 5:
-				AGI++; break;
-			case 6:
-				LUK++; break;
+		if(stat[status] < MAX_STATUS) {
+			stat[status]++;
 		}
 	}
-
-	public int getSTR() {
-		return STR;
-	}
-
-	public int getVIT() {
-		return VIT;
-	}
-
-	public int getDEX() {
-		return DEX;
-	}
-
-	public int getINT() {
-		return INT;
-	}
-
-	public int getAGI() {
-		return AGI;
-	}
-
-	public int getLUK() {
-		return LUK;
+	
+	public int getStatus(int status) {
+		if(status < 0 || status > 6)
+			return 0;
+		return stat[status];
 	}
 	
-	
+	public boolean canUpgradeStatus(int status) {
+		if(status < 0 || status > 6)
+			return false;
+		if(stat[status] < MAX_STATUS)
+			return true;
+		return false;
+	}
 }

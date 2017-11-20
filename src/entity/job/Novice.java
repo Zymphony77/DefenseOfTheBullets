@@ -215,36 +215,20 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	/* ------------------- Status ------------------- */
 	public void upgradeAbility() {
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getSTR();
-		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getVIT();
-		bulletHP = DEFAULT_BULLET_HP + 1.5 * status.getDEX();
-		bulletSpeed = DEFAULT_BULLET_SPEED + 10 * status.getDEX();
-		speed = DEFAULT_SPEED + 10 * status.getAGI();
-		reloadDone = DEFAULT_RELOAD - status.getAGI();
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getStatus(0);
+		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
+		bulletHP = DEFAULT_BULLET_HP + 1.5 * status.getStatus(2);
+		bulletSpeed = DEFAULT_BULLET_SPEED + 10 * status.getStatus(2);
+		maxHp = 
+		speed = DEFAULT_SPEED + 10 * status.getStatus(4);
+		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
 //		criticalDamage;
 //		criticalChance;
 	}
 	
 	public void upgradeStatus(int status) {
-		switch (status) {
-			case 1:
-				if(this.status.getSTR() == Status.MAX_STATUS) return;
-				break;
-			case 2:
-				if(this.status.getVIT() == Status.MAX_STATUS) return;
-				break;
-			case 3:
-				if(this.status.getDEX() == Status.MAX_STATUS) return;
-				break;
-			case 4:
-				if(this.status.getINT() == Status.MAX_STATUS) return;
-				break;			
-			case 5:
-				if(this.status.getAGI() == Status.MAX_STATUS) return;
-				break;
-			case 6:
-				if(this.status.getLUK() == Status.MAX_STATUS) return;
-				break;
+		if(this.status.canUpgradeStatus(status) == false) {
+			return;
 		}
 		if(experience.decreasePointStatus()) {
 			this.status.updateStatus(status);

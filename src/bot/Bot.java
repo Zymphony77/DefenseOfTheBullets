@@ -211,8 +211,10 @@ public abstract class Bot {
 		
 		prevDirection = dir;
 		Status status = player.getStatus();
-		System.out.println(status.getSTR() + " " + status.getVIT() + " " + status.getDEX() + " " + status.getAGI() + " ");
-		System.out.println("-*-*-*-*-*-*-*-*-*-*" + prevDirection + "-*-*-*-*-*-*-*-*-*-*-*-");
+		for(int i = 0; i < 6; i++) {
+			System.out.print(status.getStatus(i) + " ");
+		}
+		System.out.println("\n-*-*-*-*-*-*-*-*-*-*" + prevDirection + "-*-*-*-*-*-*-*-*-*-*-*-");
 	}
 	
 	protected Entity chooseClosestTarget() {

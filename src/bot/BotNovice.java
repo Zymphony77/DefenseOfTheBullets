@@ -7,7 +7,7 @@ public class BotNovice extends Bot{
 	
 	//STR = 1 VIT = 2 DEX = 3 INT = 4 AGI = 5 LUK = 6
 	
-	private final int[] upStatus = new int[] {3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 3, 3, 2, 2, 1, 1, 5, 5, 6, 6};
+	private final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5};
 	private int cnt = 0;
 	
 	public BotNovice(Novice player)
