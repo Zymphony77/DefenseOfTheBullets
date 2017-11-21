@@ -20,7 +20,7 @@ import skill.*;
 import utility.*;
 
 public class Component {
-	public static final double MAX_SIZE = 10000;
+	public static final double MAX_SIZE = 7500;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
 	public static final int MAX_FOOD_COUNT = 1500;
@@ -36,7 +36,8 @@ public class Component {
 	
 	private Novice player;
 	
-	private SkillPanel skillPanel;
+	private StatusPane statusPane;
+	private SkillPane skillPane;
 	private ExperienceBar expBar;
 	private Minimap minimap;
 	private Pane hpBarPane;
@@ -48,7 +49,8 @@ public class Component {
 	private Canvas grid;
 	
 	public Component() {
-		skillPanel = new SkillPanel();
+		statusPane = new StatusPane();
+		skillPane = new SkillPane();
 		expBar = new ExperienceBar();
 		minimap = new Minimap();
 		hpBarPane = new Pane();
@@ -124,14 +126,15 @@ public class Component {
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
-		addComponent(shootTest);
+//		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
+//		addComponent(shootTest);
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
 		addComponent(tower);
 		
 		minimap.drawViewBox();
-		skillPanel.setPlayer(player);
+		skillPane.setPlayer(player);
+		statusPane.setPlayer(player);
 		generateFood();
 	}
 	
@@ -250,8 +253,12 @@ public class Component {
 		return foodList;
 	}
 	
-	public SkillPanel getSkillPanel() {
-		return skillPanel;
+	public StatusPane getStatusPane() {
+		return statusPane;
+	}
+	
+	public SkillPane getSkillPane() {
+		return skillPane;
 	}
 	
 	public ExperienceBar getExperienceBar() {

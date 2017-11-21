@@ -18,9 +18,9 @@ import utility.*;
 public class Tower extends Entity implements Shootable {
 	private static final int MAX_HP = 3000;
 	private static final int CANVAS_SIZE = 200;
-	private static final int RADIUS = 75;
 	private static final int RELOAD_DONE = 5;
 	
+	public static final int RADIUS = 75;
 	public static final int BULLET_SPEED = 300;
 	public static final int BULLET_DAMAGE = 20;
 	

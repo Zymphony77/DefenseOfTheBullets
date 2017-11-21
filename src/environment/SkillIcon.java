@@ -49,6 +49,7 @@ public class SkillIcon extends Pane {
 				ICON_SIZE / 3, ICON_SIZE / 3);
 		
 		drawIcon();
+		undrawUpgrade();
 		
 		getChildren().addAll(icon, upgrade);
 	}
@@ -102,7 +103,6 @@ public class SkillIcon extends Pane {
 	
 	public void drawUpgrade() {
 		upgrade.setOpacity(0.75);
-		
 		upgrade.setOnMouseClicked(event -> {
 			if(event.getButton() == MouseButton.PRIMARY) {
 				player.getExperience().decreaseSkillPoint();

@@ -38,4 +38,22 @@ public class Status {
 			return true;
 		return false;
 	}
+	
+	public static String getName(int status) {
+		switch(status) {
+		case 0:
+			return "STR";
+		case 1:
+			return "VIT";
+		case 2:
+			return "DEX";
+		case 3:
+			return "INT";
+		case 4:
+			return "AGI";
+		case 5:
+			return "LUK";
+		}
+		return "";
+	}
 }

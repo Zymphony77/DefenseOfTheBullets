@@ -6,6 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
@@ -24,6 +25,7 @@ public class Handler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
 	private static boolean autoshoot = false;
 	private static boolean skillUpgradable = false;
+	private static boolean statusUpgradable = false;
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
@@ -112,17 +114,30 @@ public class Handler {
 	
 	private static void checkPlayerUpgrade() {
 		// Status
+		if(Component.getInstance().getPlayer().getExperience().getPointStatus() > 0 && !statusUpgradable) {
+			statusUpgradable = true;
+			for(StatusIcon icon: Component.getInstance().getStatusPane().getIconList()) {
+				if(icon.isUpgradable()) {
+					icon.drawUpgrade();
+				}
+			}
+		} else if(Component.getInstance().getPlayer().getExperience().getPointStatus() == 0 && statusUpgradable) {
+			statusUpgradable = false;
+			for(StatusIcon icon: Component.getInstance().getStatusPane().getIconList()) {
+				icon.undrawUpgrade();
+			}
+		}
 		// Skill
 		if(Component.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
 			skillUpgradable = true;
-			for(SkillIcon icon: Component.getInstance().getSkillPanel().getIconList()) {
+			for(SkillIcon icon: Component.getInstance().getSkillPane().getIconList()) {
 				if(icon.isUpgradable()) {
 					icon.drawUpgrade();
 				}
 			}
 		} else if(Component.getInstance().getPlayer().getExperience().getSkillPoint() == 0 && skillUpgradable){
 			skillUpgradable = false;
-			for(SkillIcon icon: Component.getInstance().getSkillPanel().getIconList()) {
+			for(SkillIcon icon: Component.getInstance().getSkillPane().getIconList()) {
 				icon.undrawUpgrade();
 			}
 		}
@@ -142,8 +157,10 @@ public class Handler {
 		for(Tower tower: Component.getInstance().getTowerList()) {
 			tower.reload();
 		}
+		// Status Panel
+		Component.getInstance().getStatusPane().update();
 		// SkillPanel
-		Component.getInstance().getSkillPanel().update();
+		Component.getInstance().getSkillPane().update();
 	}
 	
 	private static void moveComponent() {
@@ -240,19 +257,65 @@ public class Handler {
 		Component.getInstance().getExperienceBar().draw();
 	}
 	
+//	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
+//			ArrayList<? extends Entity> list2) {
+//		for(int i = 0; i < list1.size(); ++i) {
+//			for(int j = (list1 == list2? i + 1: 0); j < list2.size(); ++j) {
+//				if(list1.get(i).getSide() == list2.get(j).getSide()) {
+//					continue;
+//				}
+//				
+//				if(list1.get(i).isCollided(list2.get(j))) {
+//					list1.get(i).takeDamage(list2.get(j));
+//					list2.get(j).takeDamage(list1.get(i));
+//				}
+//			}
+//		}
+//	}
+	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
 			ArrayList<? extends Entity> list2) {
-		for(int i = 0; i < list1.size(); ++i) {
-			for(int j = (list1 == list2? i + 1: 0); j < list2.size(); ++j) {
-				if(list1.get(i).getSide() == list2.get(j).getSide()) {
-					continue;
-				}
-				
-				if(list1.get(i).isCollided(list2.get(j))) {
-					list1.get(i).takeDamage(list2.get(j));
-					list2.get(j).takeDamage(list1.get(i));
+		ArrayList<Entity> list = new ArrayList<Entity>();
+		list.addAll(list1);
+		list.addAll(list2);
+		list.sort((entity1, entity2) -> {
+			if(entity1.getRefPoint().second < entity2.getRefPoint().second) {
+				return -1;
+			} else if(entity1.getRefPoint().second == entity2.getRefPoint().second) {
+				return 0;
+			} else {
+				return 1;
+			}
+		});
+		pairwiseCheckCollision(list, 0, Component.MAX_SIZE);
+	}
+	
+	private static void pairwiseCheckCollision(ArrayList<? extends Entity> entityList, 
+			double shift, double width) {
+		if(width <= 4 * Tower.RADIUS) {
+			for(int i = 0; i < entityList.size(); ++i) {
+				for(int j = i; j <= i + 7 && j < entityList.size(); ++j) {
+					if(entityList.get(i).isCollided(entityList.get(j)) && 
+							entityList.get(i).getSide() != entityList.get(j).getSide()) {
+						entityList.get(i).takeDamage(entityList.get(j));
+						entityList.get(j).takeDamage(entityList.get(i));
+					}
 				}
 			}
+		} else {
+			ArrayList<Entity> left = new ArrayList<Entity>();
+			ArrayList<Entity> right = new ArrayList<Entity>();
+			
+			for(Entity each: entityList) {
+				if(each.getRefPoint().first - shift < width / 2) {
+					left.add(each);
+				} else {
+					right.add(each);
+				}
+			}
+			
+			pairwiseCheckCollision(left, shift, width / 2);
+			pairwiseCheckCollision(right, shift + width / 2, width / 2);
 		}
 	}
 	
@@ -266,10 +329,13 @@ public class Handler {
 		Component.getInstance().getPlayerList().removeIf(deathPredicate);
 		Component.getInstance().getBulletList().removeIf(deathPredicate);
 		Component.getInstance().getFoodList().removeIf(deathPredicate);
+		
+		Component.getInstance().getMinimap().update();
 	}
 	
 	public static void reset() {
 		autoshoot = false;
 		skillUpgradable = false;
+		statusUpgradable = false;
 	}
 }

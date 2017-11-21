@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import entity.job.*;
 import skill.*;
 
-public class SkillPanel extends Pane {
+public class SkillPane extends Pane {
 	private Novice player;
 	private ArrayList<SkillIcon> iconList;
 	
-	public SkillPanel() {
+	public SkillPane() {
 		iconList = new ArrayList<SkillIcon>();
 	}
 	

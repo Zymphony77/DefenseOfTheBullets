@@ -6,12 +6,14 @@ public class Experience {
 	private int level;
 	private double currentExp;
 	private int skillPoint;
+	private int spentSkillPoint;
 	private int pointStatus;
 	
 	public Experience(int level, double currentExp) {
 		this.level = level;
 		this.currentExp = currentExp;
 		this.skillPoint = 1;
+		this.spentSkillPoint = 0;
 		this.pointStatus = 0;
 		
 		updateLevel();
@@ -81,5 +83,6 @@ public class Experience {
 	
 	public void decreaseSkillPoint() {
 		--skillPoint;
+		++spentSkillPoint;
 	}
 }

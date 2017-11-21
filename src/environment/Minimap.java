@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import main.*;
+import entity.tower.*;
 import utility.*;
 
 public class Minimap extends Pane {
@@ -13,12 +14,19 @@ public class Minimap extends Pane {
 	public static final double RATIO = MAP_SIZE / (Main.SCREEN_SIZE + Component.MAX_SIZE);
 	
 	private Canvas boundary;
+	private Canvas tower;
 	private Canvas viewBox;
 	
 	public Minimap() {
 		super();
 		
+		tower = new Canvas(MAP_SIZE, MAP_SIZE);
+		tower.setTranslateX(onScreen(new Pair(0, 0)).first);
+		tower.setTranslateY(onScreen(new Pair(0, 0)).second);
+		tower.setOpacity(0.75);
+		
 		drawBoundary();
+		getChildren().add(tower);
 	}
 	
 	private void drawBoundary() {
@@ -65,6 +73,23 @@ public class Minimap extends Pane {
 		
 		viewBox.setTranslateX(showCenter.first);
 		viewBox.setTranslateY(showCenter.second);
+	}
+	
+	public void update() {
+		GraphicsContext gc = tower.getGraphicsContext2D();
+		for(Tower tw: Component.getInstance().getTowerList()) {
+			if(tw.getSide() == Side.BLUE) {
+				gc.setFill(Color.CORNFLOWERBLUE);
+			} else if(tw.getSide() == Side.RED) {
+				gc.setFill(Color.ORANGERED);
+			} else {
+				gc.setFill(Color.GOLD);
+			}
+			
+			gc.fillOval((tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - tw.getRadius()) * RATIO, 
+					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - tw.getRadius()) * RATIO,
+					tw.getRadius() * 2 * RATIO, tw.getRadius() * 2 * RATIO);
+		}
 	}
 	
 	private Pair onScreen(Pair position) {

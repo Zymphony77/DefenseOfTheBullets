@@ -12,8 +12,8 @@ import entity.property.*;
 import main.*;
 
 public class ExperienceBar extends Pane {
-	private static final int MAX_WIDTH = 500;
-	private static final int MAX_HEIGHT = 20;
+	public static final int MAX_WIDTH = 500;
+	public static final int MAX_HEIGHT = 20;
 	
 	Experience experience;
 	

@@ -18,7 +18,7 @@ public class SceneManager {
 	private static Scene menuScene;
 	private static Scene endScene;
 	
-	static void createGameScene(Side side) {
+	static void setGameScene(Side side) {
 		Component.getInstance().initialize(side);
 		
 		Pane wholePane = new Pane();
@@ -32,7 +32,8 @@ public class SceneManager {
 		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
 		wholePane.getChildren().add(Component.getInstance().getMinimap());
 		wholePane.getChildren().add(Component.getInstance().getExperienceBar());
-		wholePane.getChildren().add(Component.getInstance().getSkillPanel());
+		wholePane.getChildren().add(Component.getInstance().getSkillPane());
+		wholePane.getChildren().add(Component.getInstance().getStatusPane());
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
 			Handler.update();
