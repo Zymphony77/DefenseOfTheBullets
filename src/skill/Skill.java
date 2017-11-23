@@ -16,6 +16,7 @@ public abstract class Skill {
 	protected int level;
 	
 	public Skill(int position, int maxLevel) {
+		this.caster = null;
 		this.position = position;
 		
 		this.maxLevel = maxLevel;
@@ -24,7 +25,6 @@ public abstract class Skill {
 	
 	protected abstract void drawEffect();
 	protected abstract void activateEffect();
-	protected abstract void undrawEffect();
 	
 	public void upgrade() {
 		++level;
@@ -40,6 +40,10 @@ public abstract class Skill {
 	
 	public void setCaster(Novice caster) {
 		this.caster = caster;
+	}
+	
+	public Novice getCaster() {
+		return caster;
 	}
 	
 	public int getLevel() {

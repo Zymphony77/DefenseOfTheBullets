@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
+import buff.*;
 import main.*;
 import entity.*;
 import entity.bullet.*;
@@ -24,6 +25,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final int RADIUS = 20;
 	
 	protected ArrayList<Skill> skillList;
+	protected ArrayList<Buff> buffList;
 	
 	protected double bulletDamage;
 	protected double healthRegen;
@@ -59,6 +61,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
 		skillList.add(new Frenzy());
+		
+		buffList = new ArrayList<Buff>();
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
@@ -119,9 +123,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		refPoint.second = Math.min(refPoint.second, (double) Component.MAX_SIZE);
 		refPoint.second = Math.max(refPoint.second, (double) 0);
 		
-		for(Skill skill: skillList) {
-			if(skill instanceof Frenzy && ((Frenzy) skill).isActive()) {
-				((Frenzy) skill).deactivateSkill();
+		for(Buff buff: buffList) {
+			if(buff instanceof FrenzyBuff && ((FrenzyBuff) buff).isActive()) {
+				((FrenzyBuff) buff).deactivateBuff();
+				buffList.remove(buff);
+				// updateStatus();
+				break;
 			}
 		}
 	}
@@ -135,8 +142,11 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	protected void takeDamage(Entity entity, double damage) {
-		if(((Frenzy) skillList.get(1)).isActive()) {
-			damage *= 1.25;
+		for(Buff buff: buffList) {
+			if(buff instanceof FrenzyBuff) {
+				damage *= 1.25;
+				break;
+			}
 		}
 		
 		if(hp > damage) {
@@ -202,17 +212,42 @@ public class Novice extends Entity implements Movable, Shootable {
 			return;
 		}
 		
-		if(((ActiveSkill) skill).isActive() || !skill.isReady()) {
+		if(!skill.isReady()) {
 			return;
 		}
 		
-		((ActiveSkill) skill).activateSkill(this);
+		((ActiveSkill) skill).activateSkill();
 	}
 	
 	public void upgradeSkill(int position) {
 		experience.decreaseSkillPoint();
 		skillList.get(position - 1).upgrade();
 	}
+	
+	/* ------------------- Buff ------------------- */
+	public void addBuff(Buff buff) {
+		for(Buff currentBuff: buffList) {
+			if(currentBuff.getClass() == buff.getClass()) {
+				removeBuff(currentBuff);
+			}
+		}
+		
+		buffList.add(buff);
+		
+		if(Component.getInstance().getPlayer() == this) {
+			Component.getInstance().getBuffPane().addBuff(buff);
+		}
+	}
+	
+	public void removeBuff(Buff buff) {
+		buff.deactivateBuff();
+		buffList.remove(buff);
+		
+		if(Component.getInstance().getPlayer() == this) {
+			Component.getInstance().getBuffPane().removeBuff(buff);
+		}
+	}
+	
 	/* ------------------- Status ------------------- */
 	public void upgradeAbility() {
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getStatus(0);
@@ -257,6 +292,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		return skillList;
 	}
 	
+	public ArrayList<Buff> getBuffList() {
+		return buffList;
+	}
+	
 	public Experience getExperience() {
 		return experience;
 	}
@@ -285,6 +324,4 @@ public class Novice extends Entity implements Movable, Shootable {
 	public String toString() {
 		return "Novice";
 	}
-	
-	
 }

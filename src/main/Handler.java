@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.function.Predicate;
 
 import bot.*;
+import buff.*;
 import entity.*;
 import entity.bullet.*;
 import entity.food.*;
@@ -147,7 +148,19 @@ public class Handler {
 		// Player
 		for(Novice player: Component.getInstance().getPlayerList()) {
 			player.reload();
+			// Buff
+			for(Buff buff: player.getBuffList()) {
+				if(buff instanceof Expirable) {
+					((Expirable) buff).update();
+				} else if(buff instanceof IntervalAffectable) {
+					((IntervalAffectable) buff).update();
+				}
+			}
+			// Skill
 			for(Skill skill: player.getSkillList()) {
+				if(skill.getCaster() == null) {
+					skill.setCaster(player);
+				}
 				if(skill instanceof ActiveSkill) {
 					((ActiveSkill) skill).update();
 				}
@@ -161,6 +174,8 @@ public class Handler {
 		Component.getInstance().getStatusPane().update();
 		// SkillPanel
 		Component.getInstance().getSkillPane().update();
+		// BuffPanel
+		Component.getInstance().getBuffPane().update();
 	}
 	
 	private static void moveComponent() {
@@ -275,9 +290,16 @@ public class Handler {
 	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
 			ArrayList<? extends Entity> list2) {
+		
+		if(list1.size() == 0 || list2.size() == 0) {
+			return;
+		}
+		
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		list.addAll(list1);
-		list.addAll(list2);
+		if(list1 != list2) {
+			list.addAll(list2);
+		}
 		list.sort((entity1, entity2) -> {
 			if(entity1.getRefPoint().second < entity2.getRefPoint().second) {
 				return -1;
@@ -287,19 +309,23 @@ public class Handler {
 				return 1;
 			}
 		});
-		pairwiseCheckCollision(list, 0, Component.MAX_SIZE);
+		pairwiseCheckCollision(list, 0, Component.MAX_SIZE, 
+				list1.get(0).getRadius() + list2.get(0).getRadius());
 	}
 	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> entityList, 
-			double shift, double width) {
+			double shift, double width, double maxDist) {
 		if(width <= 4 * Tower.RADIUS) {
 			for(int i = 0; i < entityList.size(); ++i) {
-				for(int j = i; j <= i + 7 && j < entityList.size(); ++j) {
+				int j = i + 1;
+				while(j < entityList.size() && entityList.get(j).getRefPoint().second 
+						- entityList.get(i).getRefPoint().second<= maxDist) {
 					if(entityList.get(i).isCollided(entityList.get(j)) && 
 							entityList.get(i).getSide() != entityList.get(j).getSide()) {
 						entityList.get(i).takeDamage(entityList.get(j));
 						entityList.get(j).takeDamage(entityList.get(i));
 					}
+					++j;
 				}
 			}
 		} else {
@@ -314,8 +340,8 @@ public class Handler {
 				}
 			}
 			
-			pairwiseCheckCollision(left, shift, width / 2);
-			pairwiseCheckCollision(right, shift + width / 2, width / 2);
+			pairwiseCheckCollision(left, shift, width / 2, maxDist);
+			pairwiseCheckCollision(right, shift + width / 2, width / 2, maxDist);
 		}
 	}
 	
@@ -329,6 +355,12 @@ public class Handler {
 		Component.getInstance().getPlayerList().removeIf(deathPredicate);
 		Component.getInstance().getBulletList().removeIf(deathPredicate);
 		Component.getInstance().getFoodList().removeIf(deathPredicate);
+		
+		for(Novice player: Component.getInstance().getPlayerList()) {
+			player.getBuffList().removeIf(buff -> {
+				return !buff.isActive();
+			});
+		}
 		
 		Component.getInstance().getMinimap().update();
 	}

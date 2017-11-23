@@ -36,6 +36,7 @@ public class Component {
 	
 	private Novice player;
 	
+	private BuffPane buffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
 	private ExperienceBar expBar;
@@ -49,6 +50,7 @@ public class Component {
 	private Canvas grid;
 	
 	public Component() {
+		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
 		expBar = new ExperienceBar();
@@ -251,6 +253,10 @@ public class Component {
 	
 	public ArrayList<Food> getFoodList() {
 		return foodList;
+	}
+	
+	public BuffPane getBuffPane() {
+		return buffPane;
 	}
 	
 	public StatusPane getStatusPane() {

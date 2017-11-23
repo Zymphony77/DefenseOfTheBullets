@@ -2,6 +2,7 @@ package skill;
 
 import javafx.scene.image.Image;
 
+import buff.*;
 import main.Main;
 
 public class Frenzy extends ActiveSkill {
@@ -19,22 +20,8 @@ public class Frenzy extends ActiveSkill {
 		// ADD EFFECT
 	}
 	
-	protected void undrawEffect() {
-		// REMOVE EFFECT
-	}
-	
 	protected void activateEffect() {
-		caster.setReloadDone((int) (caster.getReloadDone() / 1.5)); 
-	}
-	
-	@Override
-	public void deactivateSkill() {
-		super.deactivateSkill();
-	}
-	
-	protected void deactivateEffect() {
-		caster.setReloadDone((int) (caster.getReloadDone() * 1.5));
-		// caster.updateStatus();
+		caster.addBuff(new FrenzyBuff(caster, 1.5 + (0.1 * level)));
 	}
 	
 	public Image getImage() {

@@ -34,6 +34,7 @@ public class SceneManager {
 		wholePane.getChildren().add(Component.getInstance().getExperienceBar());
 		wholePane.getChildren().add(Component.getInstance().getSkillPane());
 		wholePane.getChildren().add(Component.getInstance().getStatusPane());
+		wholePane.getChildren().add(Component.getInstance().getBuffPane());
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
 			Handler.update();

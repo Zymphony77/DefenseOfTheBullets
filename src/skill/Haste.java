@@ -2,6 +2,7 @@ package skill;
 
 import javafx.scene.image.Image;
 
+import buff.*;
 import entity.job.Novice;
 import main.Main;
 
@@ -17,28 +18,18 @@ public class Haste extends ActiveSkill {
 		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN, DEFAULT_DURATION);
 	}
 	
-	protected void drawEffect() {
-		// No effect
-	}
-	
-	protected void undrawEffect() {
-		// No effect
-	}
-	
 	@Override
-	public void activateSkill(Novice caster) {
-		setCaster(caster);
+	public void activateSkill() {
 		setMaxCooldown(DEFAULT_COOLDOWN + (int) (COOLDOWN_PER_LEVEL * caster.getLevel() * Main.FRAME_RATE));
-		super.activateSkill(caster);
+		super.activateSkill();
+	}
+	
+	protected void drawEffect() {
+		// ADD EFFECT
 	}
 	
 	protected void activateEffect() {
-		caster.setSpeed(caster.getSpeed() * 1.5);
-	}
-	
-	protected void deactivateEffect() {
-		caster.setSpeed(caster.getSpeed() / 1.5);
-		// caster.updateStatus();
+		caster.addBuff(new HasteBuff(caster, (5 + level) * DEFAULT_DURATION / 10));
 	}
 	
 	public Image getImage() {

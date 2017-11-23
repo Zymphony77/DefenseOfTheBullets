@@ -7,7 +7,6 @@ public abstract class ActiveSkill extends Skill {
 	protected int remainingCooldown;
 	protected int maxDuration;
 	protected int remainingDuration;
-	protected boolean isActive;
 	
 	public ActiveSkill(int position, int maxLevel, int maxCooldown, int maxDuration) {
 		super(position, maxLevel);
@@ -17,44 +16,22 @@ public abstract class ActiveSkill extends Skill {
 		
 		this.maxDuration = maxDuration;
 		remainingDuration = 0;
-		
-		isActive = false;
 	}
 	
 	public void update() {
 		remainingCooldown = Math.max(remainingCooldown - 1, 0);
-		
-		if(isActive) {
-			--remainingDuration;
-			if(remainingDuration == 0) {
-				deactivateSkill();
-			}
-		}
 	}
 	
-	public void activateSkill(Novice caster) {
-		setCaster(caster);
-		
+	public void activateSkill() {
 		remainingDuration = maxDuration;
 		remainingCooldown = maxCooldown;
-		isActive = true;
 		drawEffect();
 		activateEffect();
 	}
 	
-	protected void deactivateSkill() {
-		remainingDuration = 0;
-		isActive = false;
-		undrawEffect();
-		deactivateEffect();
-	}
-	
-	protected abstract void deactivateEffect();
-	
 	public void reset() {
 		remainingCooldown = 0;
 		remainingDuration = 0;
-		isActive = false;
 	}
 	
 	@Override
@@ -76,10 +53,6 @@ public abstract class ActiveSkill extends Skill {
 	
 	public int getRemainingDuration() {
 		return remainingDuration;
-	}
-	
-	public boolean isActive() {
-		return isActive;
 	}
 	
 	protected void setMaxCooldown(int maxCooldown) {
