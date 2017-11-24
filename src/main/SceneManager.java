@@ -11,6 +11,10 @@ import javafx.scene.layout.Pane;
 import utility.*;
 import bot.*;
 import main.*;
+import main.game.GameComponent;
+import main.game.GameHandler;
+import main.menu.MenuComponent;
+import main.menu.MenuHandler;
 
 public class SceneManager {
 	private static Stage primaryStage;
@@ -18,26 +22,26 @@ public class SceneManager {
 	private static Scene menuScene;
 	private static Scene endScene;
 	
-	static void setGameScene(Side side) {
-		Component.getInstance().initialize(side);
+	public static void setGameScene(String name, Side side) {
+		GameComponent.getInstance().initialize(side, name);
 		
 		Pane wholePane = new Pane();
 		
-		wholePane.getChildren().add(Component.getInstance().getGrid());
-		wholePane.getChildren().add(Component.getInstance().getBoundaryPane());
-		wholePane.getChildren().add(Component.getInstance().getBulletPane());
-		wholePane.getChildren().add(Component.getInstance().getFoodPane());
-		wholePane.getChildren().add(Component.getInstance().getTowerPane());
-		wholePane.getChildren().add(Component.getInstance().getPlayerPane());
-		wholePane.getChildren().add(Component.getInstance().getHpBarPane());
-		wholePane.getChildren().add(Component.getInstance().getMinimap());
-		wholePane.getChildren().add(Component.getInstance().getExperienceBar());
-		wholePane.getChildren().add(Component.getInstance().getSkillPane());
-		wholePane.getChildren().add(Component.getInstance().getStatusPane());
-		wholePane.getChildren().add(Component.getInstance().getBuffPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getGrid());
+		wholePane.getChildren().add(GameComponent.getInstance().getBoundaryPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getBulletPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getFoodPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getTowerPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getPlayerPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getHpBarPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getMinimap());
+		wholePane.getChildren().add(GameComponent.getInstance().getExperienceBar());
+		wholePane.getChildren().add(GameComponent.getInstance().getSkillPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getStatusPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getBuffPane());
 		
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
-			Handler.update();
+			GameHandler.update();
 			BotTower.update();
 		}));
 		timer.setCycleCount(Animation.INDEFINITE);
@@ -45,12 +49,26 @@ public class SceneManager {
 		
 		gameScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
-		gameScene.setOnKeyPressed(event -> Handler.keyPressed(event));
-		gameScene.setOnKeyReleased(event -> Handler.keyReleased(event));
-		gameScene.setOnMouseMoved(event -> Handler.changeDirection(event));
+		gameScene.setOnKeyPressed(event -> GameHandler.keyPressed(event));
+		gameScene.setOnKeyReleased(event -> GameHandler.keyReleased(event));
+		gameScene.setOnMouseMoved(event -> GameHandler.changeDirection(event));
 		
 		primaryStage.setScene(gameScene);
 		primaryStage.setOnCloseRequest(event -> timer.stop());
+	}
+	
+	public static void setMenuScene() {
+		Pane wholePane = new Pane();
+		
+		wholePane.getChildren().add(MenuComponent.getInstance().getBackgroundPane());
+		wholePane.getChildren().add(MenuComponent.getInstance().getNamePane());
+		wholePane.getChildren().add(MenuComponent.getInstance().getSidePane());
+		
+		menuScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		
+		menuScene.setOnKeyPressed(event -> MenuHandler.keyPressed(event));
+		
+		primaryStage.setScene(menuScene);
 	}
 	
 	public static void setStage(Stage primaryStage) {

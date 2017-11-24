@@ -10,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import entity.property.*;
 import main.*;
+import main.game.GameComponent;
 
 public class ExperienceBar extends Pane {
 	public static final int MAX_WIDTH = 500;
@@ -18,6 +19,7 @@ public class ExperienceBar extends Pane {
 	Experience experience;
 	
 	private Canvas expCanvas;
+	private String name;
 	private double maxExp;
 	private double currentExp;
 	
@@ -68,10 +70,14 @@ public class ExperienceBar extends Pane {
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
 		
-		gc.fillText("-ZymphonY-", MAX_WIDTH / 5, MAX_HEIGHT / 2);
+		gc.fillText(name, MAX_WIDTH / 5, MAX_HEIGHT / 2);
 		gc.fillText("|", 3 * MAX_WIDTH / 8, MAX_HEIGHT / 2);
-		gc.fillText(Component.getInstance().getPlayer().toString(), MAX_WIDTH / 2, MAX_HEIGHT / 2); 
+		gc.fillText(GameComponent.getInstance().getPlayer().toString(), MAX_WIDTH / 2, MAX_HEIGHT / 2); 
 		gc.fillText("|", 5 * MAX_WIDTH / 8, MAX_HEIGHT / 2);
 		gc.fillText("Level " + experience.getLevel(), 4 * MAX_WIDTH / 5, MAX_HEIGHT / 2);
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }

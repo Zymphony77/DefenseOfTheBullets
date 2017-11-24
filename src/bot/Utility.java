@@ -5,8 +5,8 @@ import java.util.Random;
 import entity.Entity;
 import entity.bullet.Bullet;
 import entity.job.Novice;
-import main.Component;
 import main.Main;
+import main.game.GameComponent;
 import utility.Pair;
 import utility.Side;
 
@@ -19,7 +19,7 @@ public class Utility{
 	}
 	
 	protected boolean willCollide(Entity entity, Pair position, double time) {
-		for(Bullet each: Component.getInstance().getBulletList()) {
+		for(Bullet each: GameComponent.getInstance().getBulletList()) {
 			if(each.getLifeCycleCount() + time * Main.FRAME_RATE > Bullet.MAX_LIFE_CYCLE) {
 				continue;
 			}
@@ -93,20 +93,20 @@ public class Utility{
 		if(reference.getSide() == Side.BLUE) {
 			return entity.getRefPoint();
 		}
-		return new Pair(Component.MAX_SIZE - entity.getRefPoint().first, 
-				Component.MAX_SIZE - entity.getRefPoint().second);
+		return new Pair(GameComponent.MAX_SIZE - entity.getRefPoint().first, 
+				GameComponent.MAX_SIZE - entity.getRefPoint().second);
 	}
 	
 	protected Pair getRef(Entity reference, Pair pair) {
 		if(reference.getSide() == Side.BLUE) {
 			return pair;
 		}
-		return new Pair(Component.MAX_SIZE - pair.first, 
-				Component.MAX_SIZE - pair.second);
+		return new Pair(GameComponent.MAX_SIZE - pair.first, 
+				GameComponent.MAX_SIZE - pair.second);
 	}
 	
 	protected static Pair flip(Pair pair) {
-		return new Pair(Component.MAX_SIZE - pair.first, Component.MAX_SIZE - pair.second);
+		return new Pair(GameComponent.MAX_SIZE - pair.first, GameComponent.MAX_SIZE - pair.second);
 	}
 	
 	protected int checkDirection(int dir) {
@@ -181,12 +181,12 @@ public class Utility{
 			}
 		}
 		if(dir >= 3 && dir <= 5) {
-			if(getRef(player, player).second >= Component.MAX_SIZE) {
+			if(getRef(player, player).second >= GameComponent.MAX_SIZE) {
 				return true;
 			}
 		}
 		if(dir >= 1 && dir <= 3){
-			if(getRef(player, player).first >= Component.MAX_SIZE) {
+			if(getRef(player, player).first >= GameComponent.MAX_SIZE) {
 				return true;
 			}
 		}
@@ -205,11 +205,11 @@ public class Utility{
 	}
 	
 	protected int getPositionInMap() {
-		if(getRef(player, player).first <= Component.MAX_SIZE/2.0 && getRef(player, player).second <= Component.MAX_SIZE/2.0)
+		if(getRef(player, player).first <= GameComponent.MAX_SIZE/2.0 && getRef(player, player).second <= GameComponent.MAX_SIZE/2.0)
 			return 0;
-		else if(getRef(player, player).first > Component.MAX_SIZE/2.0 && getRef(player, player).second <= Component.MAX_SIZE/2.0)
+		else if(getRef(player, player).first > GameComponent.MAX_SIZE/2.0 && getRef(player, player).second <= GameComponent.MAX_SIZE/2.0)
 			return 1;
-		else if(getRef(player, player).first <= Component.MAX_SIZE/2.0 && getRef(player, player).second > Component.MAX_SIZE/2.0)
+		else if(getRef(player, player).first <= GameComponent.MAX_SIZE/2.0 && getRef(player, player).second > GameComponent.MAX_SIZE/2.0)
 			return 2;
 		return 3;
 	}

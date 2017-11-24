@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import main.*;
+import main.game.GameComponent;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -53,9 +54,9 @@ public class Tower extends Entity implements Shootable {
 		}
 		gc.fillOval(25, 25, 2*RADIUS, 2*RADIUS);
 		
-		Component.getInstance().removeComponent(hpBar);
+		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
-		Component.getInstance().addComponent(hpBar);
+		GameComponent.getInstance().addComponent(hpBar);
 	}
 	
 	public void changeCenter(Pair center) {
@@ -97,7 +98,7 @@ public class Tower extends Entity implements Shootable {
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction + random.nextInt(11) - 5, 
 				BULLET_DAMAGE, BULLET_SPEED, side);
-		Component.getInstance().addComponent(bullet);
+		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
 	}

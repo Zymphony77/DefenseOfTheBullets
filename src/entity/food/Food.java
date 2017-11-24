@@ -2,8 +2,8 @@ package entity.food;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import main.Component;
 import main.Main;
+import main.game.GameComponent;
 
 import java.util.Random;
 
@@ -31,7 +31,7 @@ public class Food extends Entity implements Rotatable {
 		canvas.setWidth(CANVAS_SIZE);
 		canvas.setHeight(CANVAS_SIZE);
 		
-		changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		

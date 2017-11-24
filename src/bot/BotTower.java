@@ -4,13 +4,13 @@ import java.util.Random;
 
 import entity.job.Novice;
 import entity.tower.Tower;
+import main.game.GameComponent;
 import entity.bullet.Bullet;
-import main.Component;
 import utility.Pair;
 
 public class BotTower {
 	public static void update() {
-		for(Tower tower : Component.getInstance().getTowerList()) {
+		for(Tower tower : GameComponent.getInstance().getTowerList()) {
 			eachUpdate(tower);
 		}
 	}
@@ -20,7 +20,7 @@ public class BotTower {
 		double distance = Double.MAX_VALUE;
 		Pair res = null;
 		
-		for(Novice novice : Component.getInstance().getPlayerList()) {
+		for(Novice novice : GameComponent.getInstance().getPlayerList()) {
 			//check range of bullet
 			if(distance > tower.getRefPoint().distance(novice.getRefPoint()) && novice.getSide() != tower.getSide() 
 					&& tower.getRefPoint().distance(novice.getRefPoint()) <= Tower.BULLET_SPEED * Bullet.LIFE_DURATION) {

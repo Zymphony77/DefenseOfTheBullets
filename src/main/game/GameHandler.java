@@ -1,6 +1,7 @@
-package main;
+package main.game;
 
 import javafx.scene.input.MouseEvent;
+import main.Main;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +23,7 @@ import environment.*;
 import skill.*;
 import utility.*;
 
-public class Handler {
+public class GameHandler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
 	private static boolean autoshoot = false;
 	private static boolean skillUpgradable = false;
@@ -52,8 +53,8 @@ public class Handler {
 		if(event.getCode().isDigitKey()) {
 			String keyName = event.getCode().toString();
 			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1));
-			if(skillNumber <= Component.getInstance().getPlayer().getSkillList().size()) {
-				Component.getInstance().getPlayer().useSkill(skillNumber);
+			if(skillNumber <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
+				GameComponent.getInstance().getPlayer().useSkill(skillNumber);
 			}
 		}
 		
@@ -93,52 +94,52 @@ public class Handler {
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
 		
-		Component.getInstance().getPlayer().setDirection(Math.toDegrees(Math.atan2(y, x)));
-		Component.getInstance().getPlayer().rotate();
+		GameComponent.getInstance().getPlayer().setDirection(Math.toDegrees(Math.atan2(y, x)));
+		GameComponent.getInstance().getPlayer().rotate();
 	}
 	
 	public static void update() {
 		if(activeKey.contains(KeyCode.SPACE) || autoshoot) {
-			Component.getInstance().getPlayer().shoot();
+			GameComponent.getInstance().getPlayer().shoot();
 		}
 		
 		checkPlayerUpgrade();
 		updateReloadAndSkill();
 		moveComponent();
 		movePlayer();
-		moveCenter(Component.getInstance().getPlayer().getRefPoint());
+		moveCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		checkCollision();
 		clearDeadComponent();
 		
-		Component.getInstance().generateFood();
+		GameComponent.getInstance().generateFood();
 	}
 	
 	private static void checkPlayerUpgrade() {
 		// Status
-		if(Component.getInstance().getPlayer().getExperience().getPointStatus() > 0 && !statusUpgradable) {
+		if(GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0 && !statusUpgradable) {
 			statusUpgradable = true;
-			for(StatusIcon icon: Component.getInstance().getStatusPane().getIconList()) {
+			for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
 				if(icon.isUpgradable()) {
 					icon.drawUpgrade();
 				}
 			}
-		} else if(Component.getInstance().getPlayer().getExperience().getPointStatus() == 0 && statusUpgradable) {
+		} else if(GameComponent.getInstance().getPlayer().getExperience().getPointStatus() == 0 && statusUpgradable) {
 			statusUpgradable = false;
-			for(StatusIcon icon: Component.getInstance().getStatusPane().getIconList()) {
+			for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
 				icon.undrawUpgrade();
 			}
 		}
 		// Skill
-		if(Component.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
+		if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
 			skillUpgradable = true;
-			for(SkillIcon icon: Component.getInstance().getSkillPane().getIconList()) {
+			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
 				if(icon.isUpgradable()) {
 					icon.drawUpgrade();
 				}
 			}
-		} else if(Component.getInstance().getPlayer().getExperience().getSkillPoint() == 0 && skillUpgradable){
+		} else if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() == 0 && skillUpgradable){
 			skillUpgradable = false;
-			for(SkillIcon icon: Component.getInstance().getSkillPane().getIconList()) {
+			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
 				icon.undrawUpgrade();
 			}
 		}
@@ -146,7 +147,7 @@ public class Handler {
 	
 	private static void updateReloadAndSkill() {
 		// Player
-		for(Novice player: Component.getInstance().getPlayerList()) {
+		for(Novice player: GameComponent.getInstance().getPlayerList()) {
 			player.reload();
 			// Buff
 			for(Buff buff: player.getBuffList()) {
@@ -167,26 +168,26 @@ public class Handler {
 			}
 		}
 		// Tower
-		for(Tower tower: Component.getInstance().getTowerList()) {
+		for(Tower tower: GameComponent.getInstance().getTowerList()) {
 			tower.reload();
 		}
 		// Status Panel
-		Component.getInstance().getStatusPane().update();
+		GameComponent.getInstance().getStatusPane().update();
 		// SkillPanel
-		Component.getInstance().getSkillPane().update();
+		GameComponent.getInstance().getSkillPane().update();
 		// BuffPanel
-		Component.getInstance().getBuffPane().update();
+		GameComponent.getInstance().getBuffPane().update();
 	}
 	
 	private static void moveComponent() {
-		for(Bot bot: Component.getInstance().getBotList()) {
+		for(Bot bot: GameComponent.getInstance().getBotList()) {
 			bot.move();
 			bot.getPlayer().move();
 		}
-		for(Bullet bullet: Component.getInstance().getBulletList()) {
+		for(Bullet bullet: GameComponent.getInstance().getBulletList()) {
 			bullet.move();
 		}
-		for(Food food: Component.getInstance().getFoodList()) {
+		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.rotate();
 		}
 	}
@@ -198,68 +199,68 @@ public class Handler {
 		
 		for(KeyCode key: activeKey) {
 			if(key == KeyCode.UP) {
-				y -= Component.getInstance().getPlayer().getSpeed();
+				y -= GameComponent.getInstance().getPlayer().getSpeed();
 			}
 			
 			if(key == KeyCode.DOWN) {
-				y += Component.getInstance().getPlayer().getSpeed();
+				y += GameComponent.getInstance().getPlayer().getSpeed();
 			}
 			
 			if(key == KeyCode.LEFT) {
-				x -= Component.getInstance().getPlayer().getSpeed();
+				x -= GameComponent.getInstance().getPlayer().getSpeed();
 			}
 			
 			if(key == KeyCode.RIGHT) {
-				x += Component.getInstance().getPlayer().getSpeed();
+				x += GameComponent.getInstance().getPlayer().getSpeed();
 			}
 		}
 		
 		sz = Math.sqrt(x*x + y*y);
 		
 		if(sz != 0) {
-			Component.getInstance().getPlayer().setMoving(Math.toDegrees(Math.atan2(y, x)));
-			Component.getInstance().getPlayer().move();
+			GameComponent.getInstance().getPlayer().setMoving(Math.toDegrees(Math.atan2(y, x)));
+			GameComponent.getInstance().getPlayer().move();
 		} else {
-			Component.getInstance().getPlayer().stopMoving();
+			GameComponent.getInstance().getPlayer().stopMoving();
 		}
 	}
 	
 	private static void moveCenter(Pair center) {
 		// Player and HpBar
-		for(Novice player: Component.getInstance().getPlayerList()) {
+		for(Novice player: GameComponent.getInstance().getPlayerList()) {
 			player.changeCenter(center);
 			player.getHpBar().changeCenter(center);
 		}
 		// Tower and HpBar
-		for(Tower tower: Component.getInstance().getTowerList()) {
+		for(Tower tower: GameComponent.getInstance().getTowerList()) {
 			tower.changeCenter(center);
 			tower.getHpBar().changeCenter(center);
 		}
 		// Bullet
-		for(Bullet bullet: Component.getInstance().getBulletList()) {
+		for(Bullet bullet: GameComponent.getInstance().getBulletList()) {
 			bullet.changeCenter(center);
 		}
 		// Food
-		for(Food food: Component.getInstance().getFoodList()) {
+		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.changeCenter(center);
 		}
 		// Boundary
-		Component.getInstance().shiftBoundary(center);
+		GameComponent.getInstance().shiftBoundary(center);
 		//Grid
-		double translatex = ((-center.first % (2 * Component.GRID_SIZE))) - 2 * Component.GRID_SIZE;
-		double translatey = ((-center.second % (2 * Component.GRID_SIZE))) - 2 * Component.GRID_SIZE;
+		double translatex = ((-center.first % (2 * GameComponent.GRID_SIZE))) - 2 * GameComponent.GRID_SIZE;
+		double translatey = ((-center.second % (2 * GameComponent.GRID_SIZE))) - 2 * GameComponent.GRID_SIZE;
 		
-		Component.getInstance().getGrid().setTranslateX(translatex);
-		Component.getInstance().getGrid().setTranslateY(translatey);
+		GameComponent.getInstance().getGrid().setTranslateX(translatex);
+		GameComponent.getInstance().getGrid().setTranslateY(translatey);
 		
-		Component.getInstance().getMinimap().changeCenter(center);
+		GameComponent.getInstance().getMinimap().changeCenter(center);
 	}
 	
 	private static void checkCollision() {
-		ArrayList<Novice> playerList = Component.getInstance().getPlayerList();
-		ArrayList<Tower> towerList = Component.getInstance().getTowerList();
-		ArrayList<Bullet> bulletList = Component.getInstance().getBulletList();
-		ArrayList<Food> foodList = Component.getInstance().getFoodList();
+		ArrayList<Novice> playerList = GameComponent.getInstance().getPlayerList();
+		ArrayList<Tower> towerList = GameComponent.getInstance().getTowerList();
+		ArrayList<Bullet> bulletList = GameComponent.getInstance().getBulletList();
+		ArrayList<Food> foodList = GameComponent.getInstance().getFoodList();
 		
 		pairwiseCheckCollision(bulletList, bulletList);
 		pairwiseCheckCollision(bulletList, foodList);
@@ -269,7 +270,7 @@ public class Handler {
 		pairwiseCheckCollision(playerList, towerList);
 		pairwiseCheckCollision(playerList, playerList);
 		
-		Component.getInstance().getExperienceBar().draw();
+		GameComponent.getInstance().getExperienceBar().draw();
 	}
 	
 //	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
@@ -309,7 +310,7 @@ public class Handler {
 				return 1;
 			}
 		});
-		pairwiseCheckCollision(list, 0, Component.MAX_SIZE, 
+		pairwiseCheckCollision(list, 0, GameComponent.MAX_SIZE, 
 				list1.get(0).getRadius() + list2.get(0).getRadius());
 	}
 	
@@ -352,17 +353,17 @@ public class Handler {
 			}
 		};
 		
-		Component.getInstance().getPlayerList().removeIf(deathPredicate);
-		Component.getInstance().getBulletList().removeIf(deathPredicate);
-		Component.getInstance().getFoodList().removeIf(deathPredicate);
+		GameComponent.getInstance().getPlayerList().removeIf(deathPredicate);
+		GameComponent.getInstance().getBulletList().removeIf(deathPredicate);
+		GameComponent.getInstance().getFoodList().removeIf(deathPredicate);
 		
-		for(Novice player: Component.getInstance().getPlayerList()) {
+		for(Novice player: GameComponent.getInstance().getPlayerList()) {
 			player.getBuffList().removeIf(buff -> {
 				return !buff.isActive();
 			});
 		}
 		
-		Component.getInstance().getMinimap().update();
+		GameComponent.getInstance().getMinimap().update();
 	}
 	
 	public static void reset() {

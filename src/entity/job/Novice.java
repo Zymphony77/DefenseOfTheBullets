@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import buff.*;
 import main.*;
+import main.game.GameComponent;
 import entity.*;
 import entity.bullet.*;
 import entity.property.*;
@@ -77,8 +78,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
-		if(Component.getInstance().getPlayer() != null) {
-			changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		if(GameComponent.getInstance().getPlayer() != null) {
+			changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		}
 		
 		gc.setFill(Color.DARKGRAY);
@@ -86,9 +87,9 @@ public class Novice extends Entity implements Movable, Shootable {
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
-		Component.getInstance().removeComponent(hpBar);
+		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
-		Component.getInstance().addComponent(hpBar);
+		GameComponent.getInstance().addComponent(hpBar);
 	}
 	
 	public void changeCenter(Pair center) {
@@ -116,11 +117,11 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		refPoint.first += Math.cos(Math.toRadians(moveDirection)) * speed / Main.FRAME_RATE;
-		refPoint.first = Math.min(refPoint.first, (double) Component.MAX_SIZE);
+		refPoint.first = Math.min(refPoint.first, (double) GameComponent.MAX_SIZE);
 		refPoint.first = Math.max(refPoint.first, (double) 0);
 		
 		refPoint.second += Math.sin(Math.toRadians(moveDirection)) * speed / Main.FRAME_RATE;
-		refPoint.second = Math.min(refPoint.second, (double) Component.MAX_SIZE);
+		refPoint.second = Math.min(refPoint.second, (double) GameComponent.MAX_SIZE);
 		refPoint.second = Math.max(refPoint.second, (double) 0);
 		
 		for(Buff buff: buffList) {
@@ -187,7 +188,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, bulletDamage, bulletSpeed, side);
-		Component.getInstance().addComponent(bullet);
+		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
 	}
@@ -234,8 +235,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		buffList.add(buff);
 		
-		if(Component.getInstance().getPlayer() == this) {
-			Component.getInstance().getBuffPane().addBuff(buff);
+		if(GameComponent.getInstance().getPlayer() == this) {
+			GameComponent.getInstance().getBuffPane().addBuff(buff);
 		}
 	}
 	
@@ -243,8 +244,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		buff.deactivateBuff();
 		buffList.remove(buff);
 		
-		if(Component.getInstance().getPlayer() == this) {
-			Component.getInstance().getBuffPane().removeBuff(buff);
+		if(GameComponent.getInstance().getPlayer() == this) {
+			GameComponent.getInstance().getBuffPane().removeBuff(buff);
 		}
 	}
 	

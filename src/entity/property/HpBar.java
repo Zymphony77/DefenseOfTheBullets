@@ -8,6 +8,7 @@ import entity.*;
 import entity.job.*;
 import entity.tower.*;
 import main.*;
+import main.game.GameComponent;
 import utility.*;
 
 public class HpBar {
@@ -38,8 +39,8 @@ public class HpBar {
 		canvas.setWidth(maxWidth);
 		canvas.setHeight(5);
 		
-		if(Component.getInstance().getPlayer() != null) {
-			changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		if(GameComponent.getInstance().getPlayer() != null) {
+			changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		}
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();

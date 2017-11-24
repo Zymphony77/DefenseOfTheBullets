@@ -6,12 +6,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import main.*;
+import main.game.GameComponent;
 import entity.tower.*;
 import utility.*;
 
 public class Minimap extends Pane {
 	public static final int MAP_SIZE = Main.SCREEN_SIZE / 5;
-	public static final double RATIO = MAP_SIZE / (Main.SCREEN_SIZE + Component.MAX_SIZE);
+	public static final double RATIO = MAP_SIZE / (Main.SCREEN_SIZE + GameComponent.MAX_SIZE);
 	
 	private Canvas boundary;
 	private Canvas tower;
@@ -46,7 +47,7 @@ public class Minimap extends Pane {
 		gc.strokeRect(0, 0, MAP_SIZE, MAP_SIZE);
 		gc.setFill(Color.AZURE);
 		gc.fillRect(Main.SCREEN_SIZE / 2 * RATIO, Main.SCREEN_SIZE / 2 * RATIO, 
-				Component.MAX_SIZE * RATIO, Component.MAX_SIZE * RATIO);
+				GameComponent.MAX_SIZE * RATIO, GameComponent.MAX_SIZE * RATIO);
 		
 		boundary.setOpacity(0.75);
 		
@@ -58,7 +59,7 @@ public class Minimap extends Pane {
 		viewBox.setWidth(Main.SCREEN_SIZE * RATIO);
 		viewBox.setHeight(Main.SCREEN_SIZE * RATIO);
 		
-		changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		
 		GraphicsContext gc = viewBox.getGraphicsContext2D();
 		gc.setLineWidth(2);
@@ -77,7 +78,7 @@ public class Minimap extends Pane {
 	
 	public void update() {
 		GraphicsContext gc = tower.getGraphicsContext2D();
-		for(Tower tw: Component.getInstance().getTowerList()) {
+		for(Tower tw: GameComponent.getInstance().getTowerList()) {
 			if(tw.getSide() == Side.BLUE) {
 				gc.setFill(Color.CORNFLOWERBLUE);
 			} else if(tw.getSide() == Side.RED) {

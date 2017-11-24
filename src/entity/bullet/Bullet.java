@@ -6,6 +6,7 @@ import entity.*;
 import entity.job.*;
 import entity.property.Movable;
 import main.*;
+import main.game.GameComponent;
 import utility.*;
 
 public class Bullet extends Entity implements Movable {
@@ -40,7 +41,7 @@ public class Bullet extends Entity implements Movable {
 		canvas.setWidth(2*RADIUS);
 		canvas.setHeight(2*RADIUS);
 		
-		changeCenter(Component.getInstance().getPlayer().getRefPoint());
+		changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		
 		GraphicsContext gc = this.getCanvas().getGraphicsContext2D();
 		
@@ -59,11 +60,11 @@ public class Bullet extends Entity implements Movable {
 		refPoint.first += Math.cos(Math.toRadians(direction)) * speed / Main.FRAME_RATE;
 		refPoint.second += Math.sin(Math.toRadians(direction)) * speed / Main.FRAME_RATE;
 		
-		if(refPoint.first < -50 || refPoint.first > Component.MAX_SIZE + 50) {
+		if(refPoint.first < -50 || refPoint.first > GameComponent.MAX_SIZE + 50) {
 			die();
 		}
 		
-		if(refPoint.second < -50 || refPoint.second > Component.MAX_SIZE + 50) {
+		if(refPoint.second < -50 || refPoint.second > GameComponent.MAX_SIZE + 50) {
 			die();
 		}
 		

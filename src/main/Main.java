@@ -29,7 +29,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		SceneManager.setStage(primaryStage);
-		SceneManager.setGameScene(Side.BLUE);
+		SceneManager.setMenuScene();
+//		SceneManager.setGameScene("", Side.BLUE);
 		
 		primaryStage.setTitle("DotB: Defense of the Bullets");
 		primaryStage.setResizable(false);

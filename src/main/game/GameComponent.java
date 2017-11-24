@@ -1,7 +1,8 @@
-package main;
+package main.game;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import main.Main;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -19,13 +20,13 @@ import environment.*;
 import skill.*;
 import utility.*;
 
-public class Component {
+public class GameComponent {
 	public static final double MAX_SIZE = 7500;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
 	public static final int MAX_FOOD_COUNT = 1500;
 	
-	private static final Component instance = new Component();
+	private static final GameComponent instance = new GameComponent();
 	
 	private ArrayList<Novice> playerList;
 	private ArrayList<Bot> botList;
@@ -35,6 +36,7 @@ public class Component {
 	private Canvas[] boundaryList;
 	
 	private Novice player;
+	private String playerName;
 	
 	private BuffPane buffPane;
 	private StatusPane statusPane;
@@ -49,7 +51,7 @@ public class Component {
 	private Pane boundaryPane;
 	private Canvas grid;
 	
-	public Component() {
+	public GameComponent() {
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -123,12 +125,15 @@ public class Component {
 		boundaryList[3].setTranslateX(MAX_SIZE - center.first + Main.SCREEN_SIZE / 2);
 	}
 	
-	public void initialize(Side side) {
-		player = new Novice(new Pair(200, 200), Side.RED);
+	public void initialize(Side side, String name) {
+		playerName = name;
+		
+		player = new Novice(new Pair(200, 200), side);
+		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-//		Novice shootTest = new Novice(new Pair(400, 200), Side.BLUE);
+//		Novice shootTest = new Novice(new Pair(400, 200), Side.RED);
 //		addComponent(shootTest);
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
@@ -223,7 +228,7 @@ public class Component {
 		}
 	}
 	
-	public static Component getInstance() {
+	public static GameComponent getInstance() {
 		return instance;
 	}
 	

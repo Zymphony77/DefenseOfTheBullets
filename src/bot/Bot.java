@@ -14,8 +14,8 @@ import entity.food.Food;
 import entity.job.Novice;
 import entity.property.Status;
 import entity.tower.Tower;
-import main.Component;
 import main.Main;
+import main.game.GameComponent;
 import utility.Grid;
 import utility.Job;
 import utility.Pair;
@@ -41,7 +41,7 @@ public abstract class Bot {
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
 	protected static final int SIZE_OF_GRID = 30;
 	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 30; // Expected Value is 20 seconds to change;
-	protected static final int SAFETY_ZONE = (int)(Component.MAX_SIZE * 0.1);
+	protected static final int SAFETY_ZONE = (int)(GameComponent.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
 	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
@@ -98,8 +98,8 @@ public abstract class Bot {
 						|| newTmp.getGridY() > SIZE_OF_GRID) {
 					continue;
 				}
-				if(newTmp.getX() < 0  || newTmp.getX() >= Component.MAX_SIZE
-						|| newTmp.getY() < 0 || newTmp.getY() >= Component.MAX_SIZE) {
+				if(newTmp.getX() < 0  || newTmp.getX() >= GameComponent.MAX_SIZE
+						|| newTmp.getY() < 0 || newTmp.getY() >= GameComponent.MAX_SIZE) {
 					continue;
 				}
 				if(utility.willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
@@ -131,7 +131,7 @@ public abstract class Bot {
 		foodList.clear();
 		towerList.clear();
 		
-		for (Novice tmp : Component.getInstance().getPlayerList()) {
+		for (Novice tmp : GameComponent.getInstance().getPlayerList()) {
 		    if(utility.isVisible(utility.getRef(player, tmp)) && tmp.getSide() != player.getSide()){
 		    		playerEnemiesList.add(tmp);
 		    }
@@ -140,19 +140,19 @@ public abstract class Bot {
 		    }
 		}
 		
-		for (Bullet tmp : Component.getInstance().getBulletList()) {
+		for (Bullet tmp : GameComponent.getInstance().getBulletList()) {
 			if(utility.isVisible(utility.getRef(player, tmp)) && tmp.getSide() != player.getSide()){
 		    		bulletList.add(tmp);
 		    }
 		}
 		
-		for (Food tmp : Component.getInstance().getFoodList()) {
+		for (Food tmp : GameComponent.getInstance().getFoodList()) {
 			if(utility.isVisible(utility.getRef(player, tmp))) {
 				foodList.add(tmp);
 			}
 		}
 		
-		for (Tower tmp : Component.getInstance().getTowerList()) {
+		for (Tower tmp : GameComponent.getInstance().getTowerList()) {
 			if(utility.isVisible(utility.getRef(player, tmp)) && tmp.getSide() != player.getSide()) {
 				towerList.add(tmp);
 			}
@@ -313,7 +313,7 @@ public abstract class Bot {
 			
 			//if x-coordinate > 60% and y-coordinate > 60% and 0 isn't player.Side >> LT
 			//player will not move if RT have many foods. it can go to LT and then go to RT in next move.
-			if(utility.getRef(player, player).first >= Component.MAX_SIZE * 0.75 && utility.getRef(player, player).second >= Component.MAX_SIZE * 0.75) {
+			if(utility.getRef(player, player).first >= GameComponent.MAX_SIZE * 0.75 && utility.getRef(player, player).second >= GameComponent.MAX_SIZE * 0.75) {
 				System.out.println("Back!!!!");
 				food[3] = 0;
 			}
@@ -488,7 +488,7 @@ public abstract class Bot {
 		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
-		for(Tower tower : Component.getInstance().getTowerList()) {
+		for(Tower tower : GameComponent.getInstance().getTowerList()) {
 			if(tower.getSide() == player.getSide() && distance > utility.getRef(player, player).distance(utility.getRef(player, tower))) {
 				distance = utility.getRef(player, player).distance(utility.getRef(player, tower));
 				tmp = tower;
@@ -528,7 +528,7 @@ public abstract class Bot {
 		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
-		for(Tower tower : Component.getInstance().getTowerList()) {
+		for(Tower tower : GameComponent.getInstance().getTowerList()) {
 			if(tower.getSide() != player.getSide() && distance > utility.getRef(player, player).distance(utility.getRef(player, tower))) {
 				distance = utility.getRef(player, player).distance(utility.getRef(player, tower));
 				tmp = tower;
