@@ -1,9 +1,9 @@
 package entity;
 
+import entity.property.Side;
 import javafx.scene.canvas.Canvas;
 import main.game.GameComponent;
 import utility.Pair;
-import utility.Side;
 
 public abstract class Entity {
 	protected Canvas canvas;

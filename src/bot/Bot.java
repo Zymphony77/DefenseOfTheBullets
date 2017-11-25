@@ -12,6 +12,7 @@ import entity.Entity;
 import entity.bullet.Bullet;
 import entity.food.Food;
 import entity.job.Novice;
+import entity.property.Side;
 import entity.property.Status;
 import entity.tower.Tower;
 import main.Main;
@@ -19,7 +20,6 @@ import main.game.GameComponent;
 import utility.Grid;
 import utility.Job;
 import utility.Pair;
-import utility.Side;
 
 public abstract class Bot {
 	protected Novice player;

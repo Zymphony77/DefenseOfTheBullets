@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import entity.*;
 import entity.job.*;
 import entity.property.Movable;
+import entity.property.Side;
 import main.*;
 import main.game.GameComponent;
 import utility.*;

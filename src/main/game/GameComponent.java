@@ -14,6 +14,7 @@ import entity.*;
 import entity.bullet.*;
 import entity.job.*;
 import entity.property.HpBar;
+import entity.property.Side;
 import entity.food.*;
 import entity.tower.*;
 import environment.*;
@@ -133,8 +134,8 @@ public class GameComponent {
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-//		Novice shootTest = new Novice(new Pair(400, 200), Side.RED);
-//		addComponent(shootTest);
+		Novice shootTest = new Novice(new Pair(400, 200), Side.RED);
+		addComponent(shootTest);
 		
 		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
 		addComponent(tower);

@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 
 import utility.*;
 import bot.*;
+import entity.property.Side;
 import main.*;
 import main.game.GameComponent;
 import main.game.GameHandler;

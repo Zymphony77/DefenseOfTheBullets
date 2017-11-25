@@ -5,10 +5,10 @@ import java.util.Random;
 import entity.Entity;
 import entity.bullet.Bullet;
 import entity.job.Novice;
+import entity.property.Side;
 import main.Main;
 import main.game.GameComponent;
 import utility.Pair;
-import utility.Side;
 
 public class Utility{
 	Novice player;

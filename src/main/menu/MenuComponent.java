@@ -1,5 +1,6 @@
 package main.menu;
 
+import entity.property.Side;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,7 +12,6 @@ import javafx.scene.text.TextAlignment;
 
 import main.Main;
 import main.SceneManager;
-import utility.Side;
 
 public class MenuComponent {
 	public static final Image LEFT_ARROW = new Image("resource/image/LeftArrow.png");

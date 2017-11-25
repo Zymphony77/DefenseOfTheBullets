@@ -14,6 +14,7 @@ import entity.bullet.*;
 import entity.job.Novice;
 import entity.property.HpBar;
 import entity.property.Shootable;
+import entity.property.Side;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {

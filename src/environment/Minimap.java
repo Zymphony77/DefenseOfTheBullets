@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import main.*;
 import main.game.GameComponent;
+import entity.property.Side;
 import entity.tower.*;
 import utility.*;
 
