@@ -1,8 +1,10 @@
 package buff;
 
 import javafx.scene.image.Image;
+
 import main.Main;
 import entity.job.*;
+import skill.*;
 
 public class InvincibleBuff extends Buff implements Expirable {
 	private static final Image IMAGE = new Image("resource/image/InvincibleIcon.png");
@@ -47,5 +49,9 @@ public class InvincibleBuff extends Buff implements Expirable {
 	
 	public Image getImage() {
 		return IMAGE;
+	}
+	
+	public Skill getSkill() {
+		return null;
 	}
 }

@@ -244,6 +244,12 @@ public class Novice extends Entity implements Movable, Shootable {
 			return;
 		}
 		
+		for(Buff buff: buffList) {
+			if(buff.getSkill() != null && buff.getSkill().getClass() == skill.getClass()) {
+				return;
+			}
+		}
+		
 		((ActiveSkill) skill).activateSkill();
 	}
 	

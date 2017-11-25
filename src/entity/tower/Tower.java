@@ -109,6 +109,10 @@ public class Tower extends Entity implements Shootable {
 		hpBar.draw();
 	}
 	
+	public void setSide(Side side) {
+		this.side = side;
+	}
+	
 	public HpBar getHpBar() {
 		return hpBar;
 	}

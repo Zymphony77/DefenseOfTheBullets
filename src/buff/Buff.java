@@ -3,6 +3,7 @@ package buff;
 import javafx.scene.image.Image;
 
 import entity.job.*;
+import skill.*;
 
 public abstract class Buff {
 	protected BuffType buffType;
@@ -39,4 +40,6 @@ public abstract class Buff {
 	public boolean isActive() {
 		return isActive;
 	}
+	
+	public abstract Skill getSkill();
 }

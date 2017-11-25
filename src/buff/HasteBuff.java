@@ -3,8 +3,10 @@ package buff;
 import javafx.scene.image.Image;
 
 import entity.job.*;
+import skill.*;
 
 public class HasteBuff extends Buff implements Expirable {
+	private static final Skill SKILL = new Haste();
 	private static final Image IMAGE = new Image("resource/image/HasteIcon.png");
 	
 	private int maxDuration;
@@ -46,5 +48,9 @@ public class HasteBuff extends Buff implements Expirable {
 	
 	public Image getImage() {
 		return IMAGE;
+	}
+	
+	public Skill getSkill() {
+		return SKILL;
 	}
 }

@@ -3,8 +3,10 @@ package buff;
 import javafx.scene.image.Image;
 
 import entity.job.*;
+import skill.*;
 
 public class FrenzyBuff extends Buff {
+	private static final Skill SKILL = new Frenzy();
 	private static final Image IMAGE = new Image("resource/image/FrenzyIcon.png");
 	private double reloadFactor;
 	
@@ -27,5 +29,9 @@ public class FrenzyBuff extends Buff {
 	
 	public Image getImage() {
 		return IMAGE;
+	}
+	
+	public Skill getSkill() {
+		return SKILL;
 	}
 }

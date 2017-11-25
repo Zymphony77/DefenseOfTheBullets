@@ -69,11 +69,45 @@ public class GameHandler {
 			autoshoot = !autoshoot;
 		}
 		
-		// CHEAT
+		// CHEAT -- FOR TESTING PURPOSES
+		
+		// OVER MAX STATUS
 		if(event.getCode() == KeyCode.EQUALS) {
 			for(int i = 0; i < 6; ++i) {
-				for(int j = 0; j < 12; ++j) {
+				for(int j = 0; j < 15; ++j) {
 					GameComponent.getInstance().getPlayer().getStatus().updateStatus(i);
+				}
+			}
+			
+			for(int i = 0; i < GameComponent.getInstance().getPlayer().getSkillList().size(); ++i) {
+				for(int j = 0; j < 10000; ++j) {
+					GameComponent.getInstance().getPlayer().upgradeSkill(i + 1);
+				}
+			}
+			
+			for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
+				icon.undrawUpgrade();
+			}
+			
+			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
+				icon.undrawUpgrade();
+			}
+		}
+		
+		// INSTANT WIN
+		if(event.getCode() == KeyCode.OPEN_BRACKET) {
+			for(Tower tower: GameComponent.getInstance().getTowerList()) {
+				tower.setSide(GameComponent.getInstance().getPlayer().getSide());
+			}
+		}
+		
+		// INSTANT LOSE
+		if(event.getCode() == KeyCode.CLOSE_BRACKET) {
+			for(Tower tower: GameComponent.getInstance().getTowerList()) {
+				if(GameComponent.getInstance().getPlayer().getSide() == Side.RED) {
+					tower.setSide(Side.BLUE);
+				} else {
+					tower.setSide(Side.RED);
 				}
 			}
 		}
@@ -189,7 +223,6 @@ public class GameHandler {
 			}
 		}
 		// Skill
-		System.out.println(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint());
 		if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
 			skillUpgradable = true;
 			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
