@@ -18,7 +18,7 @@ import entity.property.Side;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {
-	private static final int MAX_HP = 3000;
+	private static final int MAX_HP = 10000;
 	private static final int CANVAS_SIZE = 200;
 	private static final int RELOAD_DONE = 5;
 	

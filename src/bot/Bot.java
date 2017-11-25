@@ -39,7 +39,7 @@ public abstract class Bot {
 	protected abstract void upgradeJob();
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
-	protected static final int SIZE_OF_GRID = 30;
+	protected static final int SIZE_OF_GRID = 15;
 	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 30; // Expected Value is 20 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(GameComponent.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
@@ -78,7 +78,6 @@ public abstract class Bot {
 		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 15, 15, 0.0, true, -1);
 		Grid newTmp;
 		queue.add(tmp);
-		//System.out.println(tmp.getX() + " " + tmp.getY() + " " + utility.positionXInGrid(tmp.getX()) + " " + utility.positionYInGrid(tmp.getY()));
 		grid[15][15] = new Grid(tmp);
 		
 		//System.out.println("tower: " + tmp.getX() + " " + tmp.getY());

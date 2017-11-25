@@ -28,7 +28,7 @@ public class GameComponent {
 	public static final double MAX_SIZE = 7500;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
-	public static final int MAX_FOOD_COUNT = 1500;
+	public static final int MAX_FOOD_COUNT = 1000;
 	
 	private static final GameComponent instance = new GameComponent();
 	
@@ -147,6 +147,35 @@ public class GameComponent {
 		
 		Novice shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
 		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+		addComponent(shootTest);
+		
+		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+		addComponent(shootTest);
+		
+		if(side == Side.BLUE) {
+			shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+			addComponent(shootTest);
+		}else {
+			shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+			addComponent(shootTest);
+		}
 		
 		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
 		addComponent(tower);
