@@ -87,4 +87,22 @@ public class MenuHandler {
 		gc.setStroke(Color.gray(0.4));
 		gc.strokeRoundRect(3, 3, 197, 197, 44, 44);
 	}
+	
+	public static void drawLightButtonBackground() {
+		GraphicsContext gc = MenuComponent.getInstance().getMoveBack().getGraphicsContext2D();
+		gc.setFill(Color.gray(0.8));
+		gc.fillOval(0, 0, 75, 75);
+		gc.setFill(Color.DIMGRAY);
+		gc.drawImage(MenuComponent.LEFT_ARROW, 7, 27, 60, 20);
+		gc.setStroke(Color.DIMGRAY);
+	}
+	
+	public static void drawDarkButtonBackground() {
+		GraphicsContext gc = MenuComponent.getInstance().getMoveBack().getGraphicsContext2D();
+		gc.setFill(Color.gray(0.6));
+		gc.fillOval(0, 0, 75, 75);
+		gc.setFill(Color.DIMGRAY);
+		gc.drawImage(MenuComponent.LEFT_ARROW, 7, 27, 60, 20);
+		gc.setStroke(Color.DIMGRAY);
+	}
 }

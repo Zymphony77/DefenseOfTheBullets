@@ -51,7 +51,10 @@ public class SceneManager {
 		
 		gameScene.setOnKeyPressed(event -> GameHandler.keyPressed(event));
 		gameScene.setOnKeyReleased(event -> GameHandler.keyReleased(event));
-		gameScene.setOnMouseMoved(event -> GameHandler.changeDirection(event));
+		gameScene.setOnMouseMoved(event -> GameHandler.changeDirection(event));			// Move
+		gameScene.setOnMouseDragged(event -> GameHandler.changeDirection(event));			// Click + Move
+		gameScene.setOnMousePressed(event -> GameHandler.mousePressed(event));
+		gameScene.setOnMouseReleased(event -> GameHandler.mouseReleased(event));
 		
 		primaryStage.setScene(gameScene);
 		primaryStage.setOnCloseRequest(event -> timer.stop());

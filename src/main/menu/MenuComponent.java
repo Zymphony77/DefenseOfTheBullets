@@ -14,7 +14,8 @@ import main.SceneManager;
 import utility.Side;
 
 public class MenuComponent {
-	private static final Image LEFT_ARROW = new Image("resource/image/LeftArrow.png");
+	public static final Image LEFT_ARROW = new Image("resource/image/LeftArrow.png");
+	
 	private static final MenuComponent instance = new MenuComponent("");
 	
 	private Pane backgroundPane;
@@ -102,12 +103,15 @@ public class MenuComponent {
 		gc.fillOval(0, 0, 75, 75);
 		gc.setFill(Color.DIMGRAY);
 		gc.drawImage(LEFT_ARROW, 7, 27, 60, 20);
+		gc.setStroke(Color.DIMGRAY);
 		
 		red.setOnMouseEntered(event -> MenuHandler.drawBorder(red, Color.ORANGERED));
 		blue.setOnMouseEntered(event -> MenuHandler.drawBorder(blue, Color.CORNFLOWERBLUE));
+		moveBack.setOnMouseEntered(event -> MenuHandler.drawLightButtonBackground());
 		
 		red.setOnMouseExited(event -> MenuHandler.undrawBorder(red));
 		blue.setOnMouseExited(event -> MenuHandler.undrawBorder(blue));
+		moveBack.setOnMouseExited(event -> MenuHandler.drawDarkButtonBackground());
 		
 		red.setOnMouseClicked(event -> SceneManager.setGameScene(this.name, Side.RED));
 		blue.setOnMouseClicked(event -> SceneManager.setGameScene(this.name, Side.BLUE));

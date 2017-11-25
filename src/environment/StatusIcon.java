@@ -38,7 +38,7 @@ public class StatusIcon extends Pane {
 		
 		upgrade = new Canvas(ICON_SIZE, ICON_SIZE);
 		
-		upgrade.setTranslateX(MAX_WIDTH + 37);
+		upgrade.setTranslateX(MAX_WIDTH + 35);
 		upgrade.setTranslateY(getIconShift().second + MAX_HEIGHT / 2 - ICON_SIZE / 2);
 		
 		GraphicsContext gc = upgrade.getGraphicsContext2D();
@@ -62,7 +62,7 @@ public class StatusIcon extends Pane {
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.fillText(Status.getName(position), 12, MAX_HEIGHT / 2);
 		
-		double blockSize = (double) MAX_WIDTH / Status.MAX_STATUS;
+		double blockSize = (double) (MAX_WIDTH - 30) / Status.MAX_STATUS;
 		gc.setFill(Color.MOCCASIN);
 		for(int i = 0; i < player.getStatus().getStatus(position); ++i) {
 			gc.fillRect(30 + i * (blockSize + 2), MAX_HEIGHT / 4, blockSize,  MAX_HEIGHT / 2);
@@ -78,7 +78,7 @@ public class StatusIcon extends Pane {
 		upgrade.setOnMouseClicked(event -> {
 			player.getStatus().updateStatus(position);
 			player.getExperience().decreasePointStatus();
-			if(player.getExperience().getPointStatus() <= 0) {
+			if(player.getStatus().getStatus(position) >= Status.MAX_STATUS) {
 				undrawUpgrade();
 			}
 		});

@@ -4,6 +4,7 @@ import javafx.scene.input.MouseEvent;
 import main.Main;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ import utility.*;
 
 public class GameHandler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
+	private static HashSet<MouseButton> activeMouse = new HashSet<MouseButton>();
 	private static boolean autoshoot = false;
+	private static boolean isPrimaryMouseClicked = false;
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
 	
@@ -90,6 +93,18 @@ public class GameHandler {
 		}
 	}
 	
+	public static void mousePressed(MouseEvent event) {
+		if(event.getButton() == MouseButton.PRIMARY) {
+			activeMouse.add(MouseButton.PRIMARY);
+		}
+	}
+	
+	public static void mouseReleased(MouseEvent event) {
+		if(event.getButton() == MouseButton.PRIMARY) {
+			activeMouse.remove(MouseButton.PRIMARY);
+		}
+	}
+	
 	public static void changeDirection(MouseEvent event) {
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
@@ -99,7 +114,7 @@ public class GameHandler {
 	}
 	
 	public static void update() {
-		if(activeKey.contains(KeyCode.SPACE) || autoshoot) {
+		if(activeKey.contains(KeyCode.SPACE) || activeMouse.contains(MouseButton.PRIMARY) || autoshoot) {
 			GameComponent.getInstance().getPlayer().shoot();
 		}
 		
@@ -368,6 +383,7 @@ public class GameHandler {
 	
 	public static void reset() {
 		autoshoot = false;
+		isPrimaryMouseClicked = false;
 		skillUpgradable = false;
 		statusUpgradable = false;
 	}
