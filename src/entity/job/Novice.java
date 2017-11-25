@@ -16,6 +16,7 @@ import utility.*;
 
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
+	private static final double DEFAULT_ATTACK = 50;
 	private static final double DEFAULT_SPEED = 150;
 	private static final double DEFAULT_BULLET_DAMAGE = 100;
 	private static final double DEFAULT_BULLET_SPEED = 200;
@@ -31,11 +32,13 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected double bulletDamage;
 	protected double healthRegen;
 	protected double bulletHP;
-	protected double bulletSpeed, speed;
+	protected double bulletSpeed;
+	protected double speed;
+	protected double damageFactor;
 	protected int reloadDone;
 	protected int criticalDamage;
 	protected double criticalChance;
-	Status status;
+	protected Status status;
 	
 	protected boolean isMoving;
 	protected double moveDirection;
@@ -48,22 +51,19 @@ public class Novice extends Entity implements Movable, Shootable {
 	public Novice(Pair refPoint, Side side) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		
-		speed = DEFAULT_SPEED;
-		attack = 100;
-		isMoving = false;
-		moveDirection = 0;
-		bulletDamage = DEFAULT_BULLET_DAMAGE;
-		bulletHP = DEFAULT_BULLET_HP;
-		bulletSpeed = DEFAULT_BULLET_SPEED;
-		healthRegen = DEFAULT_HEALTH_REGEN;
+		buffList = new ArrayList<Buff>();
 		
 		status = new Status();
+		upgradeAbility();
+		
+		hp = maxHp;
+		
+		isMoving = false;
+		moveDirection = 0;
 		
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
 		skillList.add(new Frenzy());
-		
-		buffList = new ArrayList<Buff>();
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
@@ -143,12 +143,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	protected void takeDamage(Entity entity, double damage) {
-		for(Buff buff: buffList) {
-			if(buff instanceof FrenzyBuff) {
-				damage *= 1.25;
-				break;
-			}
-		}
+		damage *= damageFactor;
 		
 		if(hp > damage) {
 			hp -= damage;
@@ -157,6 +152,12 @@ public class Novice extends Entity implements Movable, Shootable {
 			hp = 0;
 			die(entity);
 		}
+	}
+	
+	public void spawn() {
+		isDead = false;
+		canvas.setOpacity(1);
+		buffList.add(new InvincibleBuff(this));
 	}
 	
 	public void die(Entity killer) {
@@ -176,6 +177,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		if(realKiller != null) {
 			realKiller.gainExp(experience.getGainedExperience() / 3);		// Adjust given EXP here
+		}
+		
+		for(Buff buff: buffList) {
+			buff.deactivateBuff();
 		}
 	}
 	
@@ -251,15 +256,28 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	/* ------------------- Status ------------------- */
 	public void upgradeAbility() {
+		// Deactivate Buff
+		for(Buff buff: buffList) {
+			buff.deactivateBuff();
+		}
+		
+		// Status
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getStatus(0);
 		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
 		bulletHP = DEFAULT_BULLET_HP + 1.5 * status.getStatus(2);
 		bulletSpeed = DEFAULT_BULLET_SPEED + 10 * status.getStatus(2);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
+		attack = DEFAULT_ATTACK + 10 * status.getStatus(1);
 		speed = DEFAULT_SPEED + 10 * status.getStatus(4);
 		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
 //		criticalDamage;
 //		criticalChance;
+		damageFactor = 1;
+		
+		// Re-activate Buff
+		for(Buff buff: buffList) {
+			buff.activateBuff();
+		}
 	}
 	
 	public void upgradeStatus(int status) {
@@ -279,6 +297,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+	
+	public void setDamageFactor(double damageFactor) {
+		this.damageFactor = damageFactor;
 	}
 	
 	public void setReloadDone(int reloadDone) {
@@ -311,6 +333,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public double getDamageFactor() {
+		return damageFactor;
 	}
 	
 	public int getReloadDone() {

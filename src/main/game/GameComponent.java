@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 import java.util.Random;
 
+import buff.*;
 import bot.*;
 import entity.*;
 import entity.bullet.*;
@@ -144,6 +145,10 @@ public class GameComponent {
 		skillPane.setPlayer(player);
 		statusPane.setPlayer(player);
 		generateFood();
+		
+		for(Novice each: playerList) {
+			each.addBuff(new InvincibleBuff(each));
+		}
 	}
 	
 	public void generateFood() {

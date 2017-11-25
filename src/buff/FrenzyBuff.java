@@ -17,10 +17,12 @@ public class FrenzyBuff extends Buff {
 	
 	public void drawEffect() {
 		player.setReloadDone((int) (player.getReloadDone() / reloadFactor));
+		player.setDamageFactor(player.getDamageFactor() * 1.25);
 	}
 	
 	public void undrawEffect() {
 		player.setReloadDone((int) (player.getReloadDone() * reloadFactor));
+		player.setDamageFactor(player.getDamageFactor() / 1.25);
 	}
 	
 	public Image getImage() {

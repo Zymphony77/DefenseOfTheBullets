@@ -16,7 +16,7 @@ public class HasteBuff extends Buff implements Expirable {
 		this.maxDuration = maxDuration;
 		this.duration = maxDuration;
 		
-		 activateBuff();
+		activateBuff();
 	}
 	
 	public void update() {

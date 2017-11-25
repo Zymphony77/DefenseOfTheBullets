@@ -12,8 +12,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
-import com.sun.xml.internal.ws.api.Component;
-
 import bot.*;
 import buff.*;
 import entity.*;
@@ -173,6 +171,9 @@ public class GameHandler {
 					((IntervalAffectable) buff).update();
 				}
 			}
+			
+			player.getBuffList().removeIf(buff -> !buff.isActive());
+			
 			// Skill
 			for(Skill skill: player.getSkillList()) {
 				if(skill.getCaster() == null) {
