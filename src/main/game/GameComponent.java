@@ -9,6 +9,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.sun.xml.internal.ws.api.Component;
+
 import buff.*;
 import bot.*;
 import entity.*;
@@ -127,18 +129,38 @@ public class GameComponent {
 		boundaryList[3].setTranslateX(MAX_SIZE - center.first + Main.SCREEN_SIZE / 2);
 	}
 	
+	public Pair spawnPoint(Side side) {
+		Random rand = new Random();
+		if(side == Side.BLUE)
+			return new Pair(rand.nextDouble() * MAX_SIZE / 10.0, rand.nextDouble() * MAX_SIZE / 10.0);
+		else
+			return new Pair(MAX_SIZE - rand.nextDouble() * MAX_SIZE / 10.0, MAX_SIZE - rand.nextDouble() * MAX_SIZE / 10.0);
+	}
+	
 	public void initialize(Side side, String name) {
 		playerName = name;
 		
-		player = new Novice(new Pair(200, 200), side);
+		player = new Novice(spawnPoint(side), side);
 		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-		Novice shootTest = new Novice(new Pair(400, 200), Side.RED);
+		Novice shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
 		addComponent(shootTest);
 		
-		Tower tower = new Tower(new Pair(500, 500), Side.BLUE);
+		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
+		addComponent(tower);
+		
+		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
+		addComponent(tower);
+		
+		tower = new Tower(new Pair(GameComponent.MAX_SIZE * 4.0 / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
+		addComponent(tower);
+		
+		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 5.0), Side.NEUTRAL);
+		addComponent(tower);
+		
+		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE * 4.0 / 5.0), Side.NEUTRAL);
 		addComponent(tower);
 		
 		minimap.drawViewBox();

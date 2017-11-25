@@ -136,6 +136,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public void heal(double amount) {
 		hp = Math.min(hp + amount, maxHp);
+		hpBar.draw();
 	}
 	
 	public void takeDamage(Entity entity) {

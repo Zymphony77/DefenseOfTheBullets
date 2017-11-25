@@ -104,6 +104,11 @@ public class Tower extends Entity implements Shootable {
 		reloadCount = 0;
 	}
 	
+	public void heal(double amount) {
+		hp = Math.min(hp + amount, maxHp);
+		hpBar.draw();
+	}
+	
 	public HpBar getHpBar() {
 		return hpBar;
 	}
