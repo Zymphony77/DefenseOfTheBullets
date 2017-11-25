@@ -30,10 +30,7 @@ public class BotNovice extends Bot{
 			System.out.println("DEAD!!!!");
 			return;
 		}
-		
-		///CHEAT
-		if(player.getExperience().getLevel() < 45)
-			player.gainExp(300);
+
 		
 		if(!player.isMoving())
 			player.useSkill(2);

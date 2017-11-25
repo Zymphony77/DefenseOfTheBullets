@@ -110,16 +110,6 @@ public abstract class Bot {
 				queue.add(newTmp);
 			}
 		}
-//		for(int i = 0; i <= SIZE_OF_GRID; i++) {
-//			for(int j = 0; j <= SIZE_OF_GRID; j++) {
-//				if(grid[i][j] != null && grid[i][j].getFirstDirection() >= 0)
-//					System.out.print(grid[i][j].getFirstDirection() + " ");
-//				else
-//					System.out.print("- ");
-//			}
-//			System.out.println(); 
-//		}
-//		System.exit(0);
 	}
 	
 	protected void findEntityInRange()
@@ -251,8 +241,8 @@ public abstract class Bot {
 	
 	protected void farm() {
 		
-		int[] food = new int[8];
-		int[] enemies = new int[8];
+		int[] food = new int[9];
+		int[] enemies = new int[9];
 		
 		for(Food tmp : foodList) {
 			int chk = utility.checkCoordinate(player,  new Pair(utility.getRef(player, tmp)));
@@ -339,7 +329,7 @@ public abstract class Bot {
 		
 		player.useSkill(1);
 
-		int[] bullet = new int[8];
+		int[] bullet = new int[9];
 		
 		for(Bullet tmp : bulletList) {
 			int chk = utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)));

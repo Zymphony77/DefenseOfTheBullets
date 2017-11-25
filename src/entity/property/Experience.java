@@ -40,10 +40,10 @@ public class Experience {
 	public void reborn() {
 		currentExp = getGainedExperience() / 2;
 		level = 1;
-		
 		skillPoint = 1;
 		spentSkillPoint = 0;
 		pointStatus = 0;
+		updateLevel();
 	}
 	
 	public double getGainedExperience() {
