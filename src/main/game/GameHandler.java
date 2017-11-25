@@ -1,7 +1,10 @@
 package main.game;
 
+import javafx.animation.Timeline;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.scene.input.MouseEvent;
-import main.Main;
+import javafx.util.Duration;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.function.Predicate;
 
 import bot.*;
@@ -22,6 +26,7 @@ import entity.job.*;
 import entity.property.*;
 import entity.tower.*;
 import environment.*;
+import main.Main;
 import skill.*;
 import utility.*;
 
@@ -34,6 +39,9 @@ public class GameHandler {
 	private static boolean autoshoot = false;
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
+	private static boolean isEnd = false;
+	
+	private static Timeline timer;
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
@@ -113,6 +121,10 @@ public class GameHandler {
 		}
 	}
 	
+	public static void keyPressedEnd(KeyEvent event) {
+		
+	}
+	
 	public static void keyReleased(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
 			activeKey.remove(KeyCode.SPACE);
@@ -151,6 +163,15 @@ public class GameHandler {
 		}
 	}
 	
+	public static void startGame() {
+		timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
+			GameHandler.update();
+			BotTower.update();
+		}));
+		timer.setCycleCount(Animation.INDEFINITE);
+		timer.play();
+	}
+	
 	public static void changeDirection(MouseEvent event) {
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
@@ -172,6 +193,7 @@ public class GameHandler {
 		moveCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		checkCollision();
 		clearDeadComponent();
+		checkEnding();
 		
 		GameComponent.getInstance().generateFood();
 	}
@@ -183,7 +205,7 @@ public class GameHandler {
 				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
 				
 				if(player.isPlayer()) {
-					reset();
+					reborn();
 					
 					GameComponent.getInstance().getSkillPane().clear();
 					GameComponent.getInstance().getStatusPane().clear();
@@ -468,9 +490,61 @@ public class GameHandler {
 		GameComponent.getInstance().getMinimap().update();
 	}
 	
-	public static void reset() {
+	private static void checkEnding() {
+		Side side = Side.NEUTRAL;
+		for(Tower tower: GameComponent.getInstance().getTowerList()) {
+			if(side == Side.NEUTRAL) {
+				side = tower.getSide();
+			}
+			
+			if(side == Side.NEUTRAL) {
+				return;
+			}
+			
+			if(side != tower.getSide()) {
+				return;
+			}
+		}
+		
+		if(GameComponent.getInstance().getPlayer().getSide() == side) {
+			endGame("Victory");
+		} else {
+			endGame("Defeat");
+		}
+	}
+	
+	private static void endGame(String mode) {
+		isEnd = true;
+		stopTimer();
+		
+		Random random = new Random();
+		Pair pos = GameComponent.getInstance().getPlayer().getRefPoint();
+		Timeline shake = new Timeline(new KeyFrame(Duration.millis(20), event -> {
+			moveCenter(new Pair(pos.first + random.nextInt(21) - 10, pos.second + random.nextInt(21) - 10));
+		}));
+		shake.setCycleCount(50);
+		shake.setOnFinished(event -> {
+			moveCenter(pos);
+			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1), e1 -> {}));
+			delay.setCycleCount(1);
+			delay.setOnFinished(e2 -> GameComponent.getInstance().setEnding(mode));
+			delay.playFromStart();
+		});
+		shake.playFromStart();
+	}
+	
+	public static void stopTimer() {
+		timer.stop();
+	}
+	
+	public static void reborn() {
 		autoshoot = false;
 		skillUpgradable = false;
 		statusUpgradable = false;
+	}
+	
+	public static void reset() {
+		reborn();
+		isEnd = false;
 	}
 }

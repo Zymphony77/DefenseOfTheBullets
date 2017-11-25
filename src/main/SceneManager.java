@@ -40,13 +40,7 @@ public class SceneManager {
 		wholePane.getChildren().add(GameComponent.getInstance().getSkillPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getStatusPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getBuffPane());
-		
-		Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
-			GameHandler.update();
-			BotTower.update();
-		}));
-		timer.setCycleCount(Animation.INDEFINITE);
-		timer.play();
+		wholePane.getChildren().add(GameComponent.getInstance().getEndPane());
 		
 		gameScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
@@ -57,8 +51,10 @@ public class SceneManager {
 		gameScene.setOnMousePressed(event -> GameHandler.mousePressed(event));
 		gameScene.setOnMouseReleased(event -> GameHandler.mouseReleased(event));
 		
+		GameHandler.startGame();
+		
 		primaryStage.setScene(gameScene);
-		primaryStage.setOnCloseRequest(event -> timer.stop());
+		primaryStage.setOnCloseRequest(event -> GameHandler.stopTimer());
 	}
 	
 	public static void setMenuScene() {

@@ -1,15 +1,16 @@
 package main.game;
 
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import main.Main;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import com.sun.xml.internal.ws.api.Component;
 
 import buff.*;
 import bot.*;
@@ -21,6 +22,7 @@ import entity.property.Side;
 import entity.food.*;
 import entity.tower.*;
 import environment.*;
+import main.Main;
 import skill.*;
 import utility.*;
 
@@ -42,6 +44,7 @@ public class GameComponent {
 	private Novice player;
 	private String playerName;
 	
+	private Pane endPane;
 	private BuffPane buffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
@@ -56,6 +59,7 @@ public class GameComponent {
 	private Canvas grid;
 	
 	public GameComponent() {
+		endPane = new Pane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -286,6 +290,29 @@ public class GameComponent {
 		}
 	}
 	
+	public void setEnding(String mode) {		// Victory / Defeat
+		endPane.getChildren().clear();
+		
+		Canvas icon = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		icon.setScaleX(0.0);
+		icon.setScaleY(0.0);
+		icon.setOpacity(0);
+		
+		endPane.getChildren().add(icon);
+		
+		GraphicsContext gc = icon.getGraphicsContext2D();
+		gc.translate(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2);
+		gc.drawImage(new Image("resource/image/" + mode + ".png"), -250, -250, 500, 500);
+		
+		Timeline zoom = new Timeline(new KeyFrame(Duration.millis(10), event -> {
+			icon.setScaleX(icon.getScaleX() + 0.01);
+			icon.setScaleY(icon.getScaleY() + 0.01);
+			icon.setOpacity(icon.getOpacity() + 0.01);
+		}));
+		zoom.setCycleCount(100);
+		zoom.playFromStart();
+	}
+	
 	public static GameComponent getInstance() {
 		return instance;
 	}
@@ -320,6 +347,10 @@ public class GameComponent {
 	
 	public ArrayList<Food> getFoodList() {
 		return foodList;
+	}
+	
+	public Pane getEndPane() {
+		return endPane;
 	}
 	
 	public BuffPane getBuffPane() {
