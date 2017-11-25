@@ -160,19 +160,11 @@ public abstract class Bot {
 	}
 	
 	protected void move(int dir) {
-		
-		////// DEBUG ////////
-		if(destination == null) {
-			System.out.println("null");
-		}else {
-			System.out.println("destination:" + destination.first + " " + destination.second + " " + dir);
-		}
-		
+				
 		if(dir == -1) {
 			System.out.println(" Bug move(dir)!!!! ");
 			dir = prevDirection;
 			if(prevDirection == -1) {
-				System.out.println("Bugg" + prevDirection);
 				int tmpForMove = rand.nextInt(8);
 				while(utility.isHitTheWall(tmpForMove)) {
 					tmpForMove = rand.nextInt(8);
@@ -180,7 +172,6 @@ public abstract class Bot {
 				dir = tmpForMove;
 			}
 			if(rand.nextInt(NUMBER_OF_CHANGE_POSITION) == 0) {
-				System.out.println("change direction 2");
 				dir = rand.nextInt(8);
 				while(utility.isHitTheWall(dir)) {
 					dir = rand.nextInt(8);
@@ -195,7 +186,6 @@ public abstract class Bot {
 			while(utility.isHitTheWall(dir)) {
 				dir = rand.nextInt(8);
 			}
-			System.out.println("Direction in this turn: " + dir + " Level: " + player.getLevel());
 			player.setMoving((dir + 6)%8 * 45);
 		}
 		else {
@@ -210,11 +200,6 @@ public abstract class Bot {
 		}
 		
 		prevDirection = dir;
-		Status status = player.getStatus();
-		for(int i = 0; i < 6; i++) {
-			System.out.print(status.getStatus(i) + " ");
-		}
-		System.out.println("\n-*-*-*-*-*-*-*-*-*-*" + prevDirection + "-*-*-*-*-*-*-*-*-*-*-*-");
 	}
 	
 	protected Entity chooseClosestTarget() {
@@ -265,8 +250,6 @@ public abstract class Bot {
 	
 	protected void farm() {
 		
-		System.out.println("Farm!!!!");
-
 		int[] food = new int[8];
 		int[] enemies = new int[8];
 		
@@ -289,11 +272,9 @@ public abstract class Bot {
 			}
 			
 			int tmpForMove = prevDirection;
-			System.out.println("tmpForMove = " + prevDirection);
 			if(utility.isTowerInRange()) {
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
 				status = 5;
-				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move1 = " + tmpForMove);
 				move(oppositeDirection[tmp]);
 			}else {
 				if(tmpForMove == -1) {
@@ -304,7 +285,6 @@ public abstract class Bot {
 					}
 				}
 				status = 5;
-				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + " Move2 = " + tmpForMove);
 				move(tmpForMove);
 			}
 		}
@@ -314,14 +294,12 @@ public abstract class Bot {
 			//if x-coordinate > 60% and y-coordinate > 60% and 0 isn't player.Side >> LT
 			//player will not move if RT have many foods. it can go to LT and then go to RT in next move.
 			if(utility.getRef(player, player).first >= GameComponent.MAX_SIZE * 0.75 && utility.getRef(player, player).second >= GameComponent.MAX_SIZE * 0.75) {
-				System.out.println("Back!!!!");
 				food[3] = 0;
 			}
 			
 			if(utility.isTowerInRange()) {  //check tower in range.
 				int tmp = utility.checkCoordinate(player, towerList.get(0));
 				status = 3;
-				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move3 = " + oppositeDirection[tmp]);
 				move(oppositeDirection[tmp]);
 			}
 			else {
@@ -330,9 +308,7 @@ public abstract class Bot {
 					if(food[i] > food[tmpForMove])
 						tmpForMove = i;
 				}
-				System.out.println("farm dir : " + tmpForMove);
 				status = 5;
-				System.out.println("x = " + utility.getRef(player, player).first + " y = " + utility.getRef(player, player).second + "Move4 = " + tmpForMove);
 				move(tmpForMove);
 			}
 		}
@@ -390,15 +366,11 @@ public abstract class Bot {
 	
 	protected void escapeWithBullet() {
 
-		System.out.println("Escape With Bullet");
-		
 		/// if you don't want to change direction many time.
 //		if(status == 4 && rand.nextInt(30) != 0) {
 //			return;
 //		}
 
-		System.out.println("Escape With Bullet Nowwww");
-		
 		int[] bullet = new int[8];
 		
 		for(Bullet tmp : bulletList) {
@@ -421,12 +393,10 @@ public abstract class Bot {
 			}
 		}
 		
-		System.out.println("Direction to escape : " + oppositeDirection[tmpDir]);
 		int tmp = getDirectionWithArea(change8to4[oppositeDirection[tmpDir]]);
 		
 		
 		if(!utility.isHitTheWall(tmp) && tmp != -1) {
-			System.out.println("Direction with escape bullet: " + tmp);
 			status = 4;
 			move(tmp);
 		}else {
@@ -437,7 +407,6 @@ public abstract class Bot {
 	protected void escape() {
 		status = 3;
 		if(!bulletList.isEmpty()) {
-			System.out.println("EscapeWithBullet in Escape");
 			escapeWithBullet();
 		}
 		else {
@@ -483,7 +452,6 @@ public abstract class Bot {
 	}
 
 	protected void defenseTower() {
-		System.out.println("-- Defense Tower --");
 		status = 1;
 		
 		Tower tmp = null;
@@ -517,8 +485,7 @@ public abstract class Bot {
 
 	protected void attackTower() {
 		///not done not done not done :)
-		System.out.println("-- Attack Tower --");
-		
+
 		if(player.getHp() < player.getMaxHp() * 0.7) {
 			destination = null;
 			escape();
@@ -538,8 +505,6 @@ public abstract class Bot {
 			farm();
 			return;
 		}
-		
-		System.out.println("tower: " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
 		
 		if(!utility.isVisible(utility.getRef(player, tmp))) {
 			int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);

@@ -21,6 +21,11 @@ public class BotNovice extends Bot{
 	public void move() {
 		// TODO Auto-generated method stub
 		
+		if(player.isDead()) {
+			cnt = 0;
+			return;
+		}
+		
 		//upgrade
 		upgradeStatus();
 		
@@ -31,7 +36,6 @@ public class BotNovice extends Bot{
 		updateGrid();
 		
 		if(destination != null && !utility.isVisible(destination)) {
-			System.out.println("desitnation can't be visible" + utility.isVisible(destination));
 			destination = null;
 		}
 		else if(destination != null){

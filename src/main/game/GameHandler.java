@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
+import com.sun.xml.internal.ws.api.Component;
+
 import bot.*;
 import buff.*;
 import entity.*;
@@ -28,7 +30,6 @@ public class GameHandler {
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
 	private static HashSet<MouseButton> activeMouse = new HashSet<MouseButton>();
 	private static boolean autoshoot = false;
-	private static boolean isPrimaryMouseClicked = false;
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
 	
@@ -196,6 +197,7 @@ public class GameHandler {
 	
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
+			bot.getPlayer().upgradeAbility();
 			bot.move();
 			bot.getPlayer().move();
 		}
@@ -211,6 +213,8 @@ public class GameHandler {
 		double x = 0;
 		double y = 0;
 		double sz;
+		
+		GameComponent.getInstance().getPlayer().upgradeAbility();
 		
 		for(KeyCode key: activeKey) {
 			if(key == KeyCode.UP) {
@@ -287,23 +291,7 @@ public class GameHandler {
 		
 		GameComponent.getInstance().getExperienceBar().draw();
 	}
-	
-//	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
-//			ArrayList<? extends Entity> list2) {
-//		for(int i = 0; i < list1.size(); ++i) {
-//			for(int j = (list1 == list2? i + 1: 0); j < list2.size(); ++j) {
-//				if(list1.get(i).getSide() == list2.get(j).getSide()) {
-//					continue;
-//				}
-//				
-//				if(list1.get(i).isCollided(list2.get(j))) {
-//					list1.get(i).takeDamage(list2.get(j));
-//					list2.get(j).takeDamage(list1.get(i));
-//				}
-//			}
-//		}
-//	}
-	
+		
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> list1, 
 			ArrayList<? extends Entity> list2) {
 		
@@ -383,7 +371,6 @@ public class GameHandler {
 	
 	public static void reset() {
 		autoshoot = false;
-		isPrimaryMouseClicked = false;
 		skillUpgradable = false;
 		statusUpgradable = false;
 	}
