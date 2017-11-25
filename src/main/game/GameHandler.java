@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 import bot.*;
@@ -25,8 +26,11 @@ import skill.*;
 import utility.*;
 
 public class GameHandler {
+	private static final int SPAWN_TIME = 5 * Main.FRAME_RATE;
+	
 	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
 	private static HashSet<MouseButton> activeMouse = new HashSet<MouseButton>();
+	private static HashMap<Novice, Integer> deadPlayer = new HashMap<Novice, Integer>();
 	private static boolean autoshoot = false;
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
@@ -63,6 +67,15 @@ public class GameHandler {
 		if(event.getCode() == KeyCode.E && !activeKey.contains(KeyCode.E)) {
 			activeKey.add(KeyCode.E);
 			autoshoot = !autoshoot;
+		}
+		
+		// CHEAT
+		if(event.getCode() == KeyCode.EQUALS) {
+			for(int i = 0; i < 6; ++i) {
+				for(int j = 0; j < 12; ++j) {
+					GameComponent.getInstance().getPlayer().getStatus().updateStatus(i);
+				}
+			}
 		}
 	}
 	
@@ -117,6 +130,7 @@ public class GameHandler {
 			GameComponent.getInstance().getPlayer().shoot();
 		}
 		
+		updateDeadPlayer();
 		checkPlayerUpgrade();
 		updateReloadAndSkill();
 		moveComponent();
@@ -126,6 +140,37 @@ public class GameHandler {
 		clearDeadComponent();
 		
 		GameComponent.getInstance().generateFood();
+	}
+	
+	private static void updateDeadPlayer() {
+		for(Novice player: deadPlayer.keySet()) {
+			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1) {
+				player.getExperience().reborn();
+				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
+				
+				if(player.isPlayer()) {
+					reset();
+					
+					GameComponent.getInstance().getSkillPane().clear();
+					GameComponent.getInstance().getStatusPane().clear();
+					
+					GameComponent.getInstance().setPlayer(newPlayer);
+					GameComponent.getInstance().getStatusPane().setPlayer(newPlayer);
+					GameComponent.getInstance().getSkillPane().setPlayer(newPlayer);
+					GameComponent.getInstance().getExperienceBar().setExperience(newPlayer.getExperience());
+				} else {
+					GameComponent.getInstance().getBotList().add(new BotNovice(newPlayer));
+					newPlayer.setPlayer(false);
+				}
+				
+				newPlayer.addBuff(new InvincibleBuff(newPlayer));
+				GameComponent.getInstance().addComponent(newPlayer);
+			}
+			
+			deadPlayer.put(player, new Integer(deadPlayer.get(player).intValue() + 1));
+		}
+		
+		deadPlayer.keySet().removeIf(player -> deadPlayer.get(player).intValue() >= SPAWN_TIME);
 	}
 	
 	private static void checkPlayerUpgrade() {
@@ -144,6 +189,7 @@ public class GameHandler {
 			}
 		}
 		// Skill
+		System.out.println(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint());
 		if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
 			skillUpgradable = true;
 			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
@@ -187,7 +233,6 @@ public class GameHandler {
 		// Tower
 		for(Tower tower: GameComponent.getInstance().getTowerList()) {
 			tower.reload();
-			tower.heal(tower.getMaxHp() / 200 / Main.FRAME_RATE);
 		}
 		// Status Panel
 		GameComponent.getInstance().getStatusPane().update();
@@ -200,7 +245,6 @@ public class GameHandler {
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
 			bot.getPlayer().upgradeAbility();
-			bot.getPlayer().heal(bot.getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
 			bot.move();
 			bot.getPlayer().move();
 		}
@@ -213,12 +257,15 @@ public class GameHandler {
 	}
 	
 	private static void movePlayer() {
+		if(GameComponent.getInstance().getPlayer().isDead()) {
+			return;
+		}
+		
 		double x = 0;
 		double y = 0;
 		double sz;
 		
 		GameComponent.getInstance().getPlayer().upgradeAbility();
-		GameComponent.getInstance().getPlayer().heal(GameComponent.getInstance().getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
 		
 		for(KeyCode key: activeKey) {
 			if(key == KeyCode.UP) {
@@ -354,13 +401,25 @@ public class GameHandler {
 	}
 	
 	private static void clearDeadComponent() {
+		GameComponent.getInstance().getPlayerList().removeIf(player -> {
+			if(player.isDead()) {
+				deadPlayer.put(player, 0);
+				return true;
+			} else {
+				return false;
+			}
+		});
+		
+		GameComponent.getInstance().getBotList().removeIf(bot -> {
+			return bot.getPlayer().isDead();
+		});
+		
 		Predicate<Entity> deathPredicate = new Predicate<Entity>() {
 			public boolean test(Entity entity) {
 				return entity.isDead();
 			}
 		};
 		
-		GameComponent.getInstance().getPlayerList().removeIf(deathPredicate);
 		GameComponent.getInstance().getBulletList().removeIf(deathPredicate);
 		GameComponent.getInstance().getFoodList().removeIf(deathPredicate);
 		

@@ -41,6 +41,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected Status status;
 	
 	protected boolean isMoving;
+	protected boolean isPlayer;
 	protected double moveDirection;
 	
 	protected HpBar hpBar;
@@ -59,6 +60,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		hp = maxHp;
 		
 		isMoving = false;
+		isPlayer = true;
 		moveDirection = 0;
 		
 		skillList = new ArrayList<Skill>();
@@ -69,6 +71,29 @@ public class Novice extends Entity implements Movable, Shootable {
 		reloadCount = DEFAULT_RELOAD;
 
 		experience = new Experience(1, 0);
+	}
+	
+	public Novice(Pair refPoint, Experience experience, Side side) {
+		super(refPoint, DEFAULT_MAX_HP, 0, side);
+		this.experience = experience;
+		
+		buffList = new ArrayList<Buff>();
+		
+		status = new Status();
+		upgradeAbility();
+		
+		hp = maxHp;
+		
+		isMoving = false;
+		isPlayer = true;
+		moveDirection = 0;
+		
+		skillList = new ArrayList<Skill>();
+		skillList.add(new Haste());
+		skillList.add(new Frenzy());
+		
+		reloadDone = DEFAULT_RELOAD;
+		reloadCount = DEFAULT_RELOAD;
 	}
 	
 	/* ------------------- UI ------------------- */
@@ -155,12 +180,6 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 	}
 	
-	public void spawn() {
-		isDead = false;
-		canvas.setOpacity(1);
-		buffList.add(new InvincibleBuff(this));
-	}
-	
 	public void die(Entity killer) {
 		super.die();
 		hpBar.die();
@@ -179,6 +198,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		if(realKiller != null) {
 			realKiller.gainExp(experience.getGainedExperience() / 3);		// Adjust given EXP here
 		}
+		
+		// change lv
 		
 		for(Buff buff: buffList) {
 			buff.deactivateBuff();
@@ -308,6 +329,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		this.reloadDone = reloadDone;
 	}
 	
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
+	}
+	
 	public int getRadius() {
 		return 20;
 	}
@@ -346,6 +371,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public Job getJob() {
 		return Job.NOVICE;
+	}
+	
+	public boolean isPlayer() {
+		return isPlayer;
 	}
 	
 	@Override

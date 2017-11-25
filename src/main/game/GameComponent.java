@@ -129,7 +129,7 @@ public class GameComponent {
 		boundaryList[3].setTranslateX(MAX_SIZE - center.first + Main.SCREEN_SIZE / 2);
 	}
 	
-	public Pair spawnPoint(Side side) {
+	public static Pair spawnPoint(Side side) {
 		Random rand = new Random();
 		if(side == Side.BLUE)
 			return new Pair(rand.nextDouble() * MAX_SIZE / 10.0, rand.nextDouble() * MAX_SIZE / 10.0);
@@ -251,6 +251,7 @@ public class GameComponent {
 			
 			if((Novice) component != player) {
 				botList.add(new BotNovice((Novice) component));
+				((Novice) component).setPlayer(false);
 			}
 		} else if(component instanceof Bullet) {
 			bulletList.add((Bullet) component);
@@ -287,6 +288,10 @@ public class GameComponent {
 	
 	public static GameComponent getInstance() {
 		return instance;
+	}
+	
+	public void setPlayer(Novice player) {
+		this.player = player;
 	}
 	
 	public Pair getShift() {

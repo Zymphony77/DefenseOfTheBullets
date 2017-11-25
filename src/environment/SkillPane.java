@@ -35,9 +35,6 @@ public class SkillPane extends Pane {
 	public void setPlayer(Novice player) {
 		this.player = player;
 		
-		iconList.clear();
-		getChildren().clear();
-		
 		// Filling backwards to prevent "Overlaying Canvases" which
 		// (GUESS) cause the canvases underneath to NOT be able to pick Event
 		for(int i = player.getSkillList().size() - 1; i >= 0; --i) {
@@ -49,5 +46,9 @@ public class SkillPane extends Pane {
 	
 	public ArrayList<SkillIcon> getIconList() {
 		return iconList;
+	}
+	
+	public Novice getPlayer() {
+		return player;
 	}
 }

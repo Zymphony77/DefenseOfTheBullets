@@ -8,7 +8,6 @@ import entity.job.*;
 import buff.*;
 
 public class BuffPane extends Pane {
-	private Novice player;
 	private ArrayList<BuffIcon> iconList;
 	
 	public BuffPane() {
