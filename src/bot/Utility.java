@@ -118,7 +118,9 @@ public class Utility{
 		double y = getRef(player, a).second - getRef(player, b).second;
 		
 		int tmp;
-		if(x > 0 && y > 0){
+		if(Math.abs(x) <= 0.01 && Math.abs(y) <= 0.01) {
+			return 8;
+		}else if(x > 0 && y > 0){
 			tmp = 7;
 		}else if(y > 0 && x == 0) {
 			tmp = 0;

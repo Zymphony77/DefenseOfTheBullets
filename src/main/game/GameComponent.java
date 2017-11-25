@@ -148,34 +148,34 @@ public class GameComponent {
 		Novice shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
 		addComponent(shootTest);
 		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		if(side == Side.BLUE) {
-			shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-			addComponent(shootTest);
-		}else {
-			shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-			addComponent(shootTest);
-		}
+//		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+//		addComponent(shootTest);
+//		
+//		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+//		addComponent(shootTest);
+//		
+//		if(side == Side.BLUE) {
+//			shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
+//			addComponent(shootTest);
+//		}else {
+//			shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
+//			addComponent(shootTest);
+//		}
 		
 		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
 		addComponent(tower);

@@ -7,12 +7,13 @@ public class BotNovice extends Bot{
 	
 	//STR = 1 VIT = 2 DEX = 3 INT = 4 AGI = 5 LUK = 6
 	
-	private final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5};
-	private int cnt = 0;
+	private static final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5};
+	private int cnt;
 	
 	public BotNovice(Novice player)
 	{
 		super(player);
+		cnt = 0;
 		job = Job.NOVICE; //job will change if it have other jobs.
 		prevDirection = 7;
 	}
@@ -23,8 +24,13 @@ public class BotNovice extends Bot{
 		
 		if(player.isDead()) {
 			cnt = 0;
+			System.out.println("DEAD!!!!");
 			return;
 		}
+		
+		///CHEAT
+		if(player.getExperience().getLevel() < 45)
+			player.gainExp(300);
 		
 		//upgrade
 		upgradeStatus();

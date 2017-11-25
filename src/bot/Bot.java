@@ -30,8 +30,8 @@ public abstract class Bot {
 	protected static ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
 	protected static ArrayList<Tower> towerList = new ArrayList<Tower>();
 	protected static ArrayList<Food> foodList = new ArrayList<Food>();
-	protected int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0};
-	protected int[] change4to8 = new int[] {7, 1, 3, 5};
+	protected int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0, 4};
+	protected int[] change4to8 = new int[] {7, 1, 3, 5, 0};
 	
 	public abstract void move();
 	protected abstract void upgradeSkill();
@@ -159,11 +159,14 @@ public abstract class Bot {
 	}
 	
 	protected void move(int dir) {
+		if(dir == -2) {
+			player.stopMoving();
+			return;
+		}
 				
 		if(dir == -1) {
-			System.out.println(" Bug move(dir)!!!! ");
 			dir = prevDirection;
-			if(prevDirection == -1) {
+			if(prevDirection == -1 || prevDirection == -2) {
 				int tmpForMove = rand.nextInt(8);
 				while(utility.isHitTheWall(tmpForMove)) {
 					tmpForMove = rand.nextInt(8);
@@ -316,51 +319,16 @@ public abstract class Bot {
 	protected int getDirectionWithArea(int area) {
 		//return Pair of Destination for move.
 		if(area == 0) {
-			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
-				if(grid[i][0] != null && grid[i][0].isChk()) {
-					return grid[i][0].getFirstDirection();
-				}
-			}
-			for(int j = 0; j <= SIZE_OF_GRID/2; j++) {
-				if(grid[0][j] != null && grid[0][j].isChk()) {
-					return grid[0][j].getFirstDirection();
-				}
-			}
+			return 7;
 		}else if(area == 1) {
-			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
-				if(grid[i][0] != null && grid[i][0].isChk()) {
-					return grid[i][0].getFirstDirection();
-				}
-			}
-			for(int j = 0; j < SIZE_OF_GRID/2; j++) {
-				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
-					return grid[SIZE_OF_GRID][j].getFirstDirection();
-				}
-			}
+			return 1;
 		}else if(area == 2) {
-			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
-				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
-					return grid[i][SIZE_OF_GRID].getFirstDirection();
-				}
-			}
-			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
-				if(grid[0][j] != null && grid[0][j].isChk()) {
-					return grid[0][j].getFirstDirection();
-				}
-			}
+			return 3;
+		}else if(area == 2){
+			return 7;
 		}else {
-			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
-				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
-					return grid[i][SIZE_OF_GRID].getFirstDirection();
-				}
-			}
-			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
-				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
-					return grid[SIZE_OF_GRID][j].getFirstDirection();
-				}
-			}
+			return -2;
 		}
-		return -1;
 	}
 	
 	protected void escapeWithBullet() {
@@ -466,26 +434,14 @@ public abstract class Bot {
 			return;
 		}
 		
-		System.out.println("tower: " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
-		
-		if(!utility.isVisible(utility.getRef(player, tmp))) {
-			int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
-			move(res);
-		}else {
-			int newX = utility.positionXInGrid(utility.getRef(player, tmp).first), newY = utility.positionYInGrid(utility.getRef(player, tmp).second);
-			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
-				int res = grid[newX][newY].getFirstDirection();
-				destination = utility.getRef(player, tmp);
-				System.out.println("x : " + newX + " y : " + newY + " get direction in defense: " + res);
-				move(res);
-			}
-		}
+		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
+		move(res);
 	}
 
 	protected void attackTower() {
 		///not done not done not done :)
 
-		if(player.getHp() < player.getMaxHp() * 0.7) {
+		if(player.getHp() < player.getMaxHp() * 0.5) {
 			destination = null;
 			escape();
 		}
@@ -505,22 +461,9 @@ public abstract class Bot {
 			return;
 		}
 		
-		if(!utility.isVisible(utility.getRef(player, tmp))) {
-			int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
-			move(res);
-		}else {
-			int newX = utility.positionXInGrid(utility.getRef(player, tmp).first) - 10, newY = utility.positionYInGrid(utility.getRef(player, tmp).second) - 10;
-			if(newX < 0)
-				newX = 0;
-			if(newY < 0)
-				newY = 0;
-			if(grid[newX][newY] != null && grid[newX][newY].isChk()) {
-				int res = grid[newX][newY].getFirstDirection();
-				destination = utility.getRef(player, utility.getRef(player, new Pair(grid[newX][newY].getX(), grid[newX][newY].getY())));
-				System.out.println("x : " + newX + " y : " + newY + " get direction in defense: " + res);
-				move(res);
-			}
-		}
+		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
+		System.out.println(res + " " + ((tmp.getSide() == player.getSide()) ? 1:0) + " " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
+		move(res);
 	}
 	
 	protected void war() {

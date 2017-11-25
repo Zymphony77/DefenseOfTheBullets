@@ -266,6 +266,7 @@ public class GameHandler {
 		// Tower
 		for(Tower tower: GameComponent.getInstance().getTowerList()) {
 			tower.reload();
+			tower.heal(tower.getMaxHp() / 200 / Main.FRAME_RATE);
 		}
 		// Status Panel
 		GameComponent.getInstance().getStatusPane().update();
@@ -278,6 +279,7 @@ public class GameHandler {
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
 			bot.getPlayer().upgradeAbility();
+			bot.getPlayer().heal(bot.getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
 			bot.move();
 			bot.getPlayer().move();
 		}
@@ -298,6 +300,7 @@ public class GameHandler {
 		double y = 0;
 		double sz;
 		
+		GameComponent.getInstance().getPlayer().heal(GameComponent.getInstance().getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
 		GameComponent.getInstance().getPlayer().upgradeAbility();
 		
 		for(KeyCode key: activeKey) {

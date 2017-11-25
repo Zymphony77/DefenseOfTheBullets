@@ -315,6 +315,9 @@ public class Novice extends Entity implements Movable, Shootable {
 		if(experience.decreasePointStatus()) {
 			this.status.updateStatus(status);
 			upgradeAbility();
+			if(status == 1) {
+				heal(500.0);
+			}
 		}
 	}
 	
