@@ -197,7 +197,6 @@ public abstract class Bot {
 			while(utility.isHitTheWall(dir)) {
 				dir = rand.nextInt(8);
 			}
-			//System.out.println(dir + " " + utility.getRef(player, player).first + " " + utility.getRef(player, player).second);
 			player.setMoving((oppositeDirection[dir] + 6)%8 * 45);
 		}
 		
@@ -256,14 +255,14 @@ public abstract class Bot {
 		int[] enemies = new int[8];
 		
 		for(Food tmp : foodList) {
-			int chk = utility.checkCoordinate(player, tmp);
+			int chk = utility.checkCoordinate(player,  new Pair(utility.getRef(player, tmp)));
 			food[chk]++;
 		}
 		
 		hueristicFood(food);
 		
 		for(Novice tmp : playerEnemiesList) {
-			int chk = utility.checkCoordinate(player, tmp);
+			int chk = utility.checkCoordinate(player,  new Pair(utility.getRef(player, tmp)));
 			enemies[chk]++;
 		}
 		
@@ -275,7 +274,7 @@ public abstract class Bot {
 			
 			int tmpForMove = prevDirection;
 			if(utility.isTowerInRange()) {
-				int tmp = utility.checkCoordinate(player, towerList.get(0));
+				int tmp = utility.checkCoordinate(player, new Pair(utility.getRef(player, towerList.get(0))));
 				status = 5;
 				move(oppositeDirection[tmp]);
 			}else {
@@ -300,7 +299,7 @@ public abstract class Bot {
 			}
 			
 			if(utility.isTowerInRange()) {  //check tower in range.
-				int tmp = utility.checkCoordinate(player, towerList.get(0));
+				int tmp = utility.checkCoordinate(player, new Pair(utility.getRef(player, towerList.get(0))));
 				status = 3;
 				move(oppositeDirection[tmp]);
 			}
@@ -324,8 +323,8 @@ public abstract class Bot {
 			return 1;
 		}else if(area == 2) {
 			return 3;
-		}else if(area == 2){
-			return 7;
+		}else if(area == 3){
+			return 5;
 		}else {
 			return -2;
 		}
@@ -337,16 +336,18 @@ public abstract class Bot {
 //		if(status == 4 && rand.nextInt(30) != 0) {
 //			return;
 //		}
+		
+		player.useSkill(1);
 
 		int[] bullet = new int[8];
 		
 		for(Bullet tmp : bulletList) {
-			int chk = utility.checkCoordinate(player, tmp);
+			int chk = utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)));
 			bullet[chk]++;
 		}
 		
 		for(Novice tmp : playerEnemiesList) {
-			int chk = utility.checkCoordinate(player, tmp);
+			int chk = utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)));
 			bullet[chk] += 5;
 		}
 		
@@ -373,6 +374,9 @@ public abstract class Bot {
 
 	protected void escape() {
 		status = 3;
+		
+		player.useSkill(1);
+		
 		if(!bulletList.isEmpty()) {
 			escapeWithBullet();
 		}
@@ -434,7 +438,7 @@ public abstract class Bot {
 			return;
 		}
 		
-		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
+		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)))]);
 		move(res);
 	}
 
@@ -460,9 +464,10 @@ public abstract class Bot {
 			farm();
 			return;
 		}
-		
-		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, tmp)]);
-		System.out.println(res + " " + ((tmp.getSide() == player.getSide()) ? 1:0) + " " + tmp.getRefPoint().first + " " + tmp.getRefPoint().second);
+		Pair position = new Pair(utility.getRef(player, tmp));
+		position.first -= 250;
+		position.second -= 250;
+		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, position)]);
 		move(res);
 	}
 	

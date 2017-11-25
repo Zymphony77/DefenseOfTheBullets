@@ -386,6 +386,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		return isPlayer;
 	}
 	
+	public boolean isMoving() {
+		return isMoving;
+	}
+	
 	@Override
 	public String toString() {
 		return "Novice";

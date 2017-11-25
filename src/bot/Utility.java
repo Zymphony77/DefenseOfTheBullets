@@ -113,13 +113,13 @@ public class Utility{
 		return dir;
 	}
 	
-	protected int checkCoordinate(Entity a, Entity b) {
-		double x = getRef(player, a).first - getRef(player, b).first;
-		double y = getRef(player, a).second - getRef(player, b).second;
-		
+	protected int checkCoordinate(Entity a, Pair b) {
+		double x = getRef(player, a).first - b.first;
+		double y = getRef(player, a).second - b.second;
+				
 		int tmp;
-		if(Math.abs(x) <= 0.01 && Math.abs(y) <= 0.01) {
-			return 8;
+		if(Math.abs(x) <= 10 && Math.abs(y) <= 10) {
+			tmp = 8;
 		}else if(x > 0 && y > 0){
 			tmp = 7;
 		}else if(y > 0 && x == 0) {
@@ -142,15 +142,12 @@ public class Utility{
 	}
 	
 	protected int canMoveWithDestination(Pair destination, int prevDirection) {
-		System.out.println("canMoveWithDestination");
 		
 		if(destination == null) {
-			System.out.println("Destination is null.");
 			return -1;
 		}
 		
 		int x = positionXInGrid(destination.first), y = positionYInGrid(destination.second);
-		System.out.println("Position In GRID: " + x + " " + y);
 		if(x < 0 || x > Main.SCREEN_SIZE || y < 0 || y > Main.SCREEN_SIZE) {
 			destination = null;
 			return -1;
@@ -159,7 +156,6 @@ public class Utility{
 			prevDirection = Bot.grid[x][y].getFirstDirection();
 			destination = new Pair(Bot.grid[x][y].getX(), Bot.grid[x][y].getY());
 			if(!isHitTheWall(prevDirection)) {
-				System.out.println("canMoveWithDestination = true");
 				return prevDirection;
 			}
 		}
@@ -196,7 +192,6 @@ public class Utility{
 	}
 	
 	protected int getDirectionAdjacent(int prevDirection) {
-		System.out.println("getDirectionAdjacent");
 		int newx = Bot.SIZE_OF_GRID/2 + Bot.newPosition[prevDirection][0], newy = Bot.SIZE_OF_GRID/2 + Bot.newPosition[prevDirection][1];
 		if(newx < 0 || newx > Bot.SIZE_OF_GRID || newy < 0 || newy > Bot.SIZE_OF_GRID) {
 			if(Bot.grid[newx][newy] != null && Bot.grid[newx][newy].isChk() && !isHitTheWall(prevDirection)) {

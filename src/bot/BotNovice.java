@@ -7,13 +7,16 @@ public class BotNovice extends Bot{
 	
 	//STR = 1 VIT = 2 DEX = 3 INT = 4 AGI = 5 LUK = 6
 	
-	private static final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5};
-	private int cnt;
+	private static final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5, 5, 5, 5, 5, 5};
+	private static final int[] upSkill = new int[] {2, 1, 2, 1, 2, 1, 2, 1, 2, 1};
+	private int cntStatus;
+	private int cntSkill;
 	
 	public BotNovice(Novice player)
 	{
 		super(player);
-		cnt = 0;
+		cntStatus = 0;
+		cntSkill = 0;
 		job = Job.NOVICE; //job will change if it have other jobs.
 		prevDirection = 7;
 	}
@@ -23,7 +26,7 @@ public class BotNovice extends Bot{
 		// TODO Auto-generated method stub
 		
 		if(player.isDead()) {
-			cnt = 0;
+			cntStatus = 0;
 			System.out.println("DEAD!!!!");
 			return;
 		}
@@ -31,6 +34,9 @@ public class BotNovice extends Bot{
 		///CHEAT
 		if(player.getExperience().getLevel() < 45)
 			player.gainExp(300);
+		
+		if(!player.isMoving())
+			player.useSkill(2);
 		
 		//upgrade
 		upgradeStatus();
@@ -82,21 +88,21 @@ public class BotNovice extends Bot{
 	@Override
 	protected void upgradeSkill() {
 		// TODO Auto-generated method stub
-		
+		if(player.getExperience().getSkillPoint() > 0)
+			player.upgradeSkill(upSkill[cntSkill++]);
 	}
 
 	@Override
 	protected void upgradeStatus() {
 		// TODO Auto-generated method stub
-		if(player.getExperience().getPointStatus() > 0) {
-			player.upgradeStatus(upStatus[cnt++]);
+		if(player.getExperience().getPointStatus() > 0 && cntStatus < upStatus.length) {
+			player.upgradeStatus(upStatus[cntStatus++]);
 		}
 	}
 
 	@Override
 	protected void upgradeJob() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 
