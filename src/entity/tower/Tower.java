@@ -24,7 +24,7 @@ public class Tower extends Entity implements Shootable {
 	
 	public static final int RADIUS = 75;
 	public static final int BULLET_SPEED = 300;
-	public static final int BULLET_DAMAGE = 20;
+	public static final int BULLET_DAMAGE = 200;
 	
 	protected HpBar hpBar;
 	protected int reloadCount;
