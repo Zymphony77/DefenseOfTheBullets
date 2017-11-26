@@ -16,12 +16,13 @@ import main.game.GameComponent;
 import main.game.GameHandler;
 import main.menu.MenuComponent;
 import main.menu.MenuHandler;
+import main.scoreboard.ScoreboardComponent;
 
 public class SceneManager {
 	private static Stage primaryStage;
 	private static Scene gameScene;
 	private static Scene menuScene;
-	private static Scene endScene;
+	private static Scene scoreboardScene;
 	
 	public static void setGameScene(String name, Side side) {
 		GameComponent.getInstance().initialize(side, name);
@@ -69,6 +70,18 @@ public class SceneManager {
 		menuScene.setOnKeyPressed(event -> MenuHandler.keyPressed(event));
 		
 		primaryStage.setScene(menuScene);
+	}
+	
+	public static void setScoreboardScene() {
+		Pane wholePane = new Pane();
+		
+		wholePane.getChildren().add(ScoreboardComponent.getInstance().getBackgroundPane());
+		wholePane.getChildren().add(ScoreboardComponent.getInstance().getVictoryPane());
+		wholePane.getChildren().add(ScoreboardComponent.getInstance().getDefeatPane());
+		
+		scoreboardScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		
+		primaryStage.setScene(scoreboardScene);
 	}
 	
 	public static void setStage(Stage primaryStage) {

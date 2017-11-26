@@ -5,6 +5,8 @@ import javafx.animation.KeyFrame;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
@@ -302,7 +304,7 @@ public class GameComponent {
 		
 		GraphicsContext gc = icon.getGraphicsContext2D();
 		gc.translate(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2);
-		gc.drawImage(new Image("resource/image/" + mode + ".png"), -250, -250, 500, 500);
+		gc.drawImage(new Image("resource/image/" + mode + ".png"), -300, -300, 600, 600);
 		
 		Timeline zoom = new Timeline(new KeyFrame(Duration.millis(10), event -> {
 			icon.setScaleX(icon.getScaleX() + 0.01);
@@ -310,6 +312,17 @@ public class GameComponent {
 			icon.setOpacity(icon.getOpacity() + 0.01);
 		}));
 		zoom.setCycleCount(100);
+		zoom.setOnFinished(event -> {
+			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(2.5), e1 -> {}));
+			delay.setCycleCount(1);
+			delay.setOnFinished(e2 -> {
+				gc.setFont(Font.font("Telugu MN", 20));
+				gc.setTextAlign(TextAlignment.CENTER);
+				gc.fillText("Press [ENTER] to continue", 0, Main.SCREEN_SIZE / 2 - 150);
+				GameHandler.allowChangeScene();
+			});
+			delay.playFromStart();
+		});
 		zoom.playFromStart();
 	}
 	

@@ -27,6 +27,7 @@ import entity.property.*;
 import entity.tower.*;
 import environment.*;
 import main.Main;
+import main.SceneManager;
 import skill.*;
 import utility.*;
 
@@ -40,10 +41,17 @@ public class GameHandler {
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
 	private static boolean isEnd = false;
+	private static boolean changeSceneReady = false;
 	
 	private static Timeline timer;
+	private static int frameCount;
 	
 	public static void keyPressed(KeyEvent event) {
+		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
+			reset();
+			SceneManager.setScoreboardScene();
+		}
+		
 		if(event.getCode() == KeyCode.SPACE) {
 			activeKey.add(KeyCode.SPACE);
 		}
@@ -121,10 +129,6 @@ public class GameHandler {
 		}
 	}
 	
-	public static void keyPressedEnd(KeyEvent event) {
-		
-	}
-	
 	public static void keyReleased(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
 			activeKey.remove(KeyCode.SPACE);
@@ -164,6 +168,8 @@ public class GameHandler {
 	}
 	
 	public static void startGame() {
+		frameCount = 0;
+		
 		timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
 			GameHandler.update();
 			BotTower.update();
@@ -173,6 +179,10 @@ public class GameHandler {
 	}
 	
 	public static void changeDirection(MouseEvent event) {
+		if(isEnd) {
+			return;
+		}
+		
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
 		
@@ -181,6 +191,8 @@ public class GameHandler {
 	}
 	
 	public static void update() {
+		++frameCount;
+		
 		if(activeKey.contains(KeyCode.SPACE) || activeMouse.contains(MouseButton.PRIMARY) || autoshoot) {
 			GameComponent.getInstance().getPlayer().shoot();
 		}
@@ -199,13 +211,15 @@ public class GameHandler {
 	}
 	
 	private static void updateDeadPlayer() {
+		// if(player.isDead()) bloodSpill
+		
 		for(Novice player: deadPlayer.keySet()) {
 			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1) {
 				player.getExperience().reborn();
 				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
 				
 				if(player.isPlayer()) {
-					reborn();
+					rebornReset();
 					
 					GameComponent.getInstance().getSkillPane().clear();
 					GameComponent.getInstance().getStatusPane().clear();
@@ -537,14 +551,19 @@ public class GameHandler {
 		timer.stop();
 	}
 	
-	public static void reborn() {
+	public static void allowChangeScene() {
+		changeSceneReady = true;
+	}
+	
+	public static void rebornReset() {
 		autoshoot = false;
 		skillUpgradable = false;
 		statusUpgradable = false;
 	}
 	
 	public static void reset() {
-		reborn();
+		rebornReset();
 		isEnd = false;
+		changeSceneReady = false;
 	}
 }
