@@ -25,6 +25,7 @@ import entity.food.*;
 import entity.tower.*;
 import environment.*;
 import main.Main;
+import main.ranking.RankingComponent;
 import skill.*;
 import utility.*;
 
@@ -319,11 +320,47 @@ public class GameComponent {
 				gc.setFont(Font.font("Telugu MN", 20));
 				gc.setTextAlign(TextAlignment.CENTER);
 				gc.fillText("Press [ENTER] to continue", 0, Main.SCREEN_SIZE / 2 - 150);
+				RankingComponent.getInstance().reset();
 				GameHandler.allowChangeScene();
 			});
 			delay.playFromStart();
 		});
 		zoom.playFromStart();
+	}
+	
+	public void reset() {
+		endPane = new Pane();
+		buffPane = new BuffPane();
+		statusPane = new StatusPane();
+		skillPane = new SkillPane();
+		expBar = new ExperienceBar();
+		minimap = new Minimap();
+		hpBarPane = new Pane();
+		playerPane = new Pane();
+		towerPane = new Pane();
+		bulletPane = new Pane();
+		foodPane = new Pane();
+		boundaryPane = new Pane();
+		
+		playerList = new ArrayList<Novice>();
+		botList = new ArrayList<Bot>();
+		towerList = new ArrayList<Tower>();
+		bulletList = new ArrayList<Bullet>();
+		foodList = new ArrayList<Food>();
+		
+		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
+		grid.setTranslateX(-2 * GRID_SIZE);
+		grid.setTranslateY(-2 * GRID_SIZE);
+		GraphicsContext gc = grid.getGraphicsContext2D();
+		gc.setStroke(Color.gray(0.95));
+		gc.setLineWidth(1);
+		for(int i = 0; i < GRID_NUMBER + 4; ++i) {
+			for(int j = 0; j < GRID_NUMBER + 4; ++j) {
+				grid.getGraphicsContext2D().strokeRect(GRID_SIZE * i, GRID_SIZE * j, GRID_SIZE, GRID_SIZE);
+			}
+		}
+		
+		addBoundary();
 	}
 	
 	public static GameComponent getInstance() {
@@ -416,5 +453,9 @@ public class GameComponent {
 	
 	public Canvas getGrid() {
 		return grid;
+	}
+	
+	public String getPlayerName() {
+		return playerName;
 	}
 }

@@ -214,7 +214,7 @@ public class GameHandler {
 		// if(player.isDead()) bloodSpill
 		
 		for(Novice player: deadPlayer.keySet()) {
-			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1) {
+			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1 || isEnd) {
 				player.getExperience().reborn();
 				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
 				
@@ -529,6 +529,7 @@ public class GameHandler {
 	
 	private static void endGame(String mode) {
 		isEnd = true;
+		updateDeadPlayer();
 		stopTimer();
 		
 		Random random = new Random();

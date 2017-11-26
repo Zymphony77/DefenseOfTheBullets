@@ -12,17 +12,15 @@ import utility.*;
 import bot.*;
 import entity.property.Side;
 import main.*;
-import main.game.GameComponent;
-import main.game.GameHandler;
-import main.menu.MenuComponent;
-import main.menu.MenuHandler;
-import main.scoreboard.ScoreboardComponent;
+import main.game.*;
+import main.menu.*;
+import main.ranking.*;
 
 public class SceneManager {
 	private static Stage primaryStage;
 	private static Scene gameScene;
 	private static Scene menuScene;
-	private static Scene scoreboardScene;
+	private static Scene rankingScene;
 	
 	public static void setGameScene(String name, Side side) {
 		GameComponent.getInstance().initialize(side, name);
@@ -75,13 +73,14 @@ public class SceneManager {
 	public static void setScoreboardScene() {
 		Pane wholePane = new Pane();
 		
-		wholePane.getChildren().add(ScoreboardComponent.getInstance().getBackgroundPane());
-		wholePane.getChildren().add(ScoreboardComponent.getInstance().getVictoryPane());
-		wholePane.getChildren().add(ScoreboardComponent.getInstance().getDefeatPane());
+		wholePane.getChildren().add(RankingComponent.getInstance().getBackgroundPane());
+		wholePane.getChildren().add(RankingComponent.getInstance().getRankingPane());
 		
-		scoreboardScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		rankingScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
-		primaryStage.setScene(scoreboardScene);
+		rankingScene.setOnKeyPressed(event -> RankingHandler.keyPressed(event));
+		
+		primaryStage.setScene(rankingScene);
 	}
 	
 	public static void setStage(Stage primaryStage) {

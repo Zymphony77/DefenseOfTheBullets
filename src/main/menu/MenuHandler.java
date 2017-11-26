@@ -10,7 +10,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import entity.property.*;
 import main.Main;
+import main.SceneManager;
+import main.ranking.RankingComponent;
 import utility.*;
 
 public class MenuHandler {
@@ -72,6 +76,12 @@ public class MenuHandler {
 		MenuComponent.getInstance().getRed().setTranslateX(Main.SCREEN_SIZE + 125 + shift);
 		MenuComponent.getInstance().getBlue().setTranslateX(Main.SCREEN_SIZE + 425 + shift);
 		MenuComponent.getInstance().getMoveBack().setTranslateX(Main.SCREEN_SIZE + 337.5 + shift);
+	}
+	
+	public static void moveToGameScene(String name, Side side) {
+		SceneManager.setGameScene(name, side);
+		moveCanvasBack();
+		MenuComponent.getInstance().setName("");
 	}
 	
 	public static void drawBorder(Canvas canvas, Color color) {

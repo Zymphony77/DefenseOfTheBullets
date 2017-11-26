@@ -38,7 +38,6 @@ public class MenuComponent {
 		GraphicsContext gc = background.getGraphicsContext2D();
 		gc.setFill(Color.gray(0.7));
 		gc.fillRect(0, 0, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
-		gc.setFill(Color.DIMGRAY);
 		
 		Canvas logoBig = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		logoBig.setOpacity(0.08);
@@ -113,8 +112,9 @@ public class MenuComponent {
 		blue.setOnMouseExited(event -> MenuHandler.undrawBorder(blue));
 		moveBack.setOnMouseExited(event -> MenuHandler.drawDarkButtonBackground());
 		
-		red.setOnMouseClicked(event -> SceneManager.setGameScene(this.name, Side.RED));
-		blue.setOnMouseClicked(event -> SceneManager.setGameScene(this.name, Side.BLUE));
+		
+		red.setOnMouseClicked(event -> MenuHandler.moveToGameScene(this.name, Side.RED));
+		blue.setOnMouseClicked(event -> MenuHandler.moveToGameScene(this.name, Side.BLUE));
 		moveBack.setOnMouseClicked(event -> MenuHandler.moveCanvasBack());
 		
 		sidePane.getChildren().addAll(red, blue, moveBack);
