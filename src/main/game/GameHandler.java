@@ -325,6 +325,7 @@ public class GameHandler {
 		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.rotate();
 		}
+		System.out.println();
 	}
 	
 	private static void movePlayer() {

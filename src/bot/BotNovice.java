@@ -31,6 +31,7 @@ public class BotNovice extends Bot{
 			return;
 		}
 
+		System.out.print(player.getExperience().getLevel() + " ");
 		
 		if(!player.isMoving())
 			player.useSkill(2);
@@ -56,7 +57,7 @@ public class BotNovice extends Bot{
 			}
 		}
 		
-		if(player.getHp() < player.getMaxHp() * 0.3) {
+		if(player.getHp() < player.getMaxHp() * 0.6) {
 			escape();
 		}
 		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!

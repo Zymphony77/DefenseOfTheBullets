@@ -306,18 +306,55 @@ public abstract class Bot {
 	}
 
 	protected int getDirectionWithArea(int area) {
-		//return Pair of Destination for move.
 		if(area == 0) {
-			return 7;
+			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
+				if(grid[i][0] != null && grid[i][0].isChk()) {
+					return grid[i][0].getFirstDirection();
+				}
+			}
+			for(int j = 0; j <= SIZE_OF_GRID/2; j++) {
+				if(grid[0][j] != null && grid[0][j].isChk()) {
+					return grid[0][j].getFirstDirection();
+				}
+			}
 		}else if(area == 1) {
-			return 1;
+			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
+				if(grid[i][0] != null && grid[i][0].isChk()) {
+					return grid[i][0].getFirstDirection();
+				}
+			}
+			for(int j = 0; j < SIZE_OF_GRID/2; j++) {
+				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
+					return grid[SIZE_OF_GRID][j].getFirstDirection();
+				}
+			}
 		}else if(area == 2) {
-			return 3;
+			for(int i = 0; i <= SIZE_OF_GRID/2; i++) {
+				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
+					return grid[i][SIZE_OF_GRID].getFirstDirection();
+				}
+			}
+			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
+				if(grid[0][j] != null && grid[0][j].isChk()) {
+					return grid[0][j].getFirstDirection();
+				}
+			}
 		}else if(area == 3){
-			return 5;
-		}else {
+			for(int i = (int) SIZE_OF_GRID/2 ; i < SIZE_OF_GRID; i++) {
+				if(grid[i][SIZE_OF_GRID] != null && grid[i][SIZE_OF_GRID].isChk()) {
+					return grid[i][SIZE_OF_GRID].getFirstDirection();
+				}
+			}
+			for(int j = (int) SIZE_OF_GRID/2; j <= SIZE_OF_GRID; j++) {
+				if(grid[SIZE_OF_GRID][j] != null && grid[SIZE_OF_GRID][j].isChk()) {
+					return grid[SIZE_OF_GRID][j].getFirstDirection();
+				}
+			}
+		}
+		else if(area == 4){
 			return -2;
 		}
+		return -1;
 	}
 	
 	protected void escapeWithBullet() {
@@ -365,9 +402,10 @@ public abstract class Bot {
 	protected void escape() {
 		status = 3;
 		
-		player.useSkill(1);
-		
-		if(!bulletList.isEmpty()) {
+		if(!towerList.isEmpty()) {
+			move(getDirectionWithArea(change8to4[oppositeDirection[utility.checkCoordinate(player, new Pair(utility.getRef(player, towerList.get(0)).first, utility.getRef(player, towerList.get(0)).second))]]));
+		}
+		else if(!bulletList.isEmpty()) {
 			escapeWithBullet();
 		}
 		else {
@@ -393,15 +431,6 @@ public abstract class Bot {
 				}
 				else {
 					int res = getDirectionWithArea(0);
-					if(res == -1) {
-						res = getDirectionWithArea(3);
-					}
-					if(res == -1) {
-						res = getDirectionWithArea(1);
-					}
-					if(res == -1) {
-						res = getDirectionWithArea(2);
-					}
 					move(res);
 				}
 			}
