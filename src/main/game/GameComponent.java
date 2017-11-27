@@ -48,6 +48,7 @@ public class GameComponent {
 	private String playerName;
 	
 	private Pane endPane;
+	private Pane bloodPane;
 	private BuffPane buffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
@@ -63,6 +64,7 @@ public class GameComponent {
 	
 	public GameComponent() {
 		endPane = new Pane();
+		bloodPane = new Pane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -293,6 +295,21 @@ public class GameComponent {
 		}
 	}
 	
+	public void drawBloodSpill() {
+		Canvas bloodSpill = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		
+		bloodPane.getChildren().add(bloodSpill);
+		
+		int pic = 1;
+		Timeline bloodAnimate = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+			bloodSpill.getGraphicsContext2D().drawImage(new Image("resource/image/BloodSpill" + pic + ".png"), Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		}));
+	}
+	
+	public void undrawBloodSpill() {
+		bloodPane.getChildren().clear();
+	}
+	
 	public void setEnding(String mode) {		// Victory / Defeat
 		endPane.getChildren().clear();
 		
@@ -330,6 +347,7 @@ public class GameComponent {
 	
 	public void reset() {
 		endPane = new Pane();
+		bloodPane = new Pane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -401,6 +419,10 @@ public class GameComponent {
 	
 	public Pane getEndPane() {
 		return endPane;
+	}
+	
+	public Pane getBloodPane() {
+		return bloodPane;
 	}
 	
 	public BuffPane getBuffPane() {

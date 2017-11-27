@@ -1,6 +1,9 @@
 package buff;
 
 import javafx.scene.image.Image;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import main.Main;
 import entity.job.*;
@@ -14,30 +17,7 @@ public class InvincibleBuff extends Buff implements Expirable {
 	
 	private double opacity = 1;
 	private double opacityChange = -0.01;
-	private Thread blinking = new Thread(new Runnable() {
-		@Override
-		public void run() {
-			try {
-				for(int i = 0; i < 1250; ++i) {
-					opacity += opacityChange;
-					
-					if(opacity < 0.01) {
-						opacityChange = 0.01;
-					} else if(opacity > 0.99) {
-						opacityChange = -0.01;
-					}
-					
-					player.getCanvas().setOpacity(opacity);
-					
-					Thread.sleep(5);
-				}
-			} catch(InterruptedException e) {
-				System.out.println("IN");
-				player.getCanvas().setOpacity(1);
-			}
-			System.out.println("END");
-		}
-	});
+	private Timeline blinking;
 	
 	public InvincibleBuff(Novice player) {
 		super(player, BuffType.BUFF);
@@ -45,7 +25,24 @@ public class InvincibleBuff extends Buff implements Expirable {
 		maxDuration = 5 * Main.FRAME_RATE;
 		duration = maxDuration;
 		
-		blinking.start();
+		opacity = 1;
+		opacityChange = -0.01;
+		blinking = new Timeline(new KeyFrame(Duration.millis(5), event -> {
+			opacity += opacityChange;
+			
+			if(opacity < 0.005) {
+				opacityChange = 0.01;
+			} else if(opacity > 0.995) {
+				opacityChange = -0.01;
+			}
+			
+			player.getCanvas().setOpacity(opacity);
+		}));
+		blinking.setOnFinished(event -> {
+			player.getCanvas().setOpacity(1);
+		});
+		blinking.setCycleCount(1000);
+		blinking.playFromStart();
 		activateBuff();
 	}
 	
@@ -53,8 +50,6 @@ public class InvincibleBuff extends Buff implements Expirable {
 		--duration;
 		
 		if(duration <= 0) {
-			System.out.println("INTERRUPT");
-			blinking.interrupt();
 			deactivateBuff();
 		}
 	}

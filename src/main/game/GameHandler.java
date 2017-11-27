@@ -443,20 +443,25 @@ public class GameHandler {
 	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> entityList, 
 			double shift, double width, double maxDist) {
-		if(width <= 4 * Tower.RADIUS) {
-			for(int i = 0; i < entityList.size(); ++i) {
-				int j = i + 1;
-				while(j < entityList.size() && entityList.get(j).getRefPoint().second 
-						- entityList.get(i).getRefPoint().second<= maxDist) {
-					if(entityList.get(i).isCollided(entityList.get(j)) && 
-							entityList.get(i).getSide() != entityList.get(j).getSide()) {
-						entityList.get(i).takeDamage(entityList.get(j));
-						entityList.get(j).takeDamage(entityList.get(i));
-					}
-					++j;
-				}
+		ArrayList<Entity> middle = new ArrayList<Entity>();
+		for(Entity each: entityList) {
+			if(Math.abs(each.getRefPoint().first - shift - width/2) <= maxDist) {
+				middle.add(each);
 			}
-		} else {
+		}
+		
+		for(int i = 0; i < middle.size(); ++i) {
+			int j = i + 1;
+			while(j < middle.size() && middle.get(j).getRefPoint().second - middle.get(i).getRefPoint().second <= maxDist) {
+				if(middle.get(i).isCollided(middle.get(j)) && middle.get(i).getSide() != middle.get(j).getSide()) {
+					middle.get(i).takeDamage(middle.get(j));
+					middle.get(j).takeDamage(middle.get(i));
+				}
+				++j;
+			}
+		}
+		
+		if(width > maxDist) {
 			ArrayList<Entity> left = new ArrayList<Entity>();
 			ArrayList<Entity> right = new ArrayList<Entity>();
 			
