@@ -79,6 +79,9 @@ public class RankingComponent {
 	
 	public void calculateRanking() {
 		int cnt = 1;
+		winnerList.clear();
+		loserList.clear();
+		
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
 			if(player.getSide() == winnerSide) {
 				winnerList.add(new PlayerWithName(player, player.isPlayer()? GameComponent.getInstance().getPlayerName(): "Homemade AI #" + (cnt++)));
@@ -160,7 +163,7 @@ public class RankingComponent {
 			gc.fillText(loserList.get(i).getName(), 425, 450 + 50*i);
 			gc.fillText("Lv.", 650, 450 + 50*i);
 			gc.setTextAlign(TextAlignment.RIGHT);
-			gc.fillText("" + winnerList.get(i).getPlayer().getLevel(), 700, 450 + 50*i);
+			gc.fillText("" + loserList.get(i).getPlayer().getLevel(), 700, 450 + 50*i);
 		}
 		
 		gc.setFill(Color.BLACK);
