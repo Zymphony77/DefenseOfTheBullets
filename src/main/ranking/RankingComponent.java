@@ -112,9 +112,6 @@ public class RankingComponent {
 		
 		GraphicsContext gc = ranking.getGraphicsContext2D();
 		
-//		gc.setFill(Color.DIMGRAY);
-//		gc.fillRect(20, 295, 710, 390);
-		
 		if(winnerSide == Side.BLUE) {
 			gc.setFill(Color.rgb(189, 218, 242));
 		} else {
@@ -142,11 +139,6 @@ public class RankingComponent {
 		gc.setFill(Color.DIMGRAY);
 		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 20));
 		for(int i = 0; i < 5; ++i) {
-//			if(winnerSide == Side.BLUE) {
-//				gc.setFill(Color.CORNFLOWERBLUE);
-//			} else {
-//				gc.setFill(Color.ORANGERED);
-//			}
 			gc.setTextAlign(TextAlignment.LEFT);
 			gc.fillText(winnerList.get(i).getName(), 50, 450 + 50*i);
 			gc.fillText("Lv.", 275, 450 + 50*i);
@@ -155,11 +147,6 @@ public class RankingComponent {
 		}
 		
 		for(int i = 0; i < 5; ++i) {
-//			if(winnerSide == Side.RED) {
-//				gc.setFill(Color.CORNFLOWERBLUE);
-//			} else {
-//				gc.setFill(Color.ORANGERED);
-//			}
 			gc.setTextAlign(TextAlignment.LEFT);
 			gc.fillText(loserList.get(i).getName(), 425, 450 + 50*i);
 			gc.fillText("Lv.", 650, 450 + 50*i);

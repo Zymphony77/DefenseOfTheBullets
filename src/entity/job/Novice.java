@@ -17,10 +17,10 @@ import utility.*;
 public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_ATTACK = 50;
-	private static final double DEFAULT_SPEED = 150;
-	private static final double DEFAULT_BULLET_DAMAGE = 100;
+	private static final double DEFAULT_SPEED = 100;
+	private static final double DEFAULT_BULLET_DAMAGE = 250;
 	private static final double DEFAULT_BULLET_SPEED = 200;
-	private static final double DEFAULT_BULLET_HP = 10;
+	private static final double DEFAULT_BULLET_HP = 50;
 	private static final double DEFAULT_HEALTH_REGEN = 10;
 	private static final int DEFAULT_RELOAD = 20;
 	private static final int CANVAS_SIZE = 60;
@@ -292,11 +292,11 @@ public class Novice extends Entity implements Movable, Shootable {
 		// Status
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 30 * status.getStatus(0);
 		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
-		bulletHP = DEFAULT_BULLET_HP + 5 * status.getStatus(2);
-		bulletSpeed = DEFAULT_BULLET_SPEED + 20 * status.getStatus(2);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
 		attack = DEFAULT_ATTACK + 20 * status.getStatus(1);
-		speed = DEFAULT_SPEED + 20 * status.getStatus(4);
+		bulletHP = DEFAULT_BULLET_HP + 25 * status.getStatus(2);
+		bulletSpeed = DEFAULT_BULLET_SPEED + 20 * status.getStatus(2);
+		speed = DEFAULT_SPEED + 15 * status.getStatus(4);
 		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
 //		criticalDamage;
 //		criticalChance;

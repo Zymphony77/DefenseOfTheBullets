@@ -36,10 +36,10 @@ public class SceneManager {
 		wholePane.getChildren().add(GameComponent.getInstance().getHpBarPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getMinimap());
 		wholePane.getChildren().add(GameComponent.getInstance().getExperienceBar());
+		wholePane.getChildren().add(GameComponent.getInstance().getBloodPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getSkillPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getStatusPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getBuffPane());
-		wholePane.getChildren().add(GameComponent.getInstance().getBloodPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getEndPane());
 		
 		gameScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);

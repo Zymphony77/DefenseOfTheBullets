@@ -214,8 +214,6 @@ public class GameHandler {
 	}
 	
 	private static void updateDeadPlayer() {
-		// if(player.isDead()) bloodSpill
-		
 		for(Novice player: deadPlayer.keySet()) {
 			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1 || isEnd) {
 				GameComponent.getInstance().getBloodPane().undrawDeadScene();
