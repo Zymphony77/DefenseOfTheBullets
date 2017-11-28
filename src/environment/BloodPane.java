@@ -16,6 +16,7 @@ import entity.property.*;
 
 public class BloodPane extends Pane {
 	private Canvas[] bloodSpill;
+	private Canvas[] respawn;
 	private Canvas text;
 	private double textOpacity;
 	private int spillStage;
@@ -35,26 +36,22 @@ public class BloodPane extends Pane {
 			getChildren().add(bloodSpill[i]);
 		}
 		
+		path = "resource/image/Respawn";
+		
 		text = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		text.setOpacity(0);
-		
-		GraphicsContext gc = text.getGraphicsContext2D();
-		if(side == Side.BLUE) {
-			gc.setFill(Color.RED);
-		} else {
-			gc.setFill(Color.ORANGERED);
-		}
-		
-		gc.setStroke(Color.WHITESMOKE);
-		gc.setLineWidth(2);
-		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 80));
-		gc.setTextAlign(TextAlignment.CENTER);
-		gc.fillText("RESPAWN IN", Main.SCREEN_SIZE / 2, 250);
-		gc.strokeText("RESPAWN IN", Main.SCREEN_SIZE / 2, 250);
-		
-		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 400));
+		text.getGraphicsContext2D().drawImage(new Image(path + "Text.png"), 0, 0, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
 		getChildren().add(text);
+		
+		respawn = new Canvas[4];
+		for(int i = 0; i < 4; ++i) {
+			respawn[i] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+			respawn[i].setOpacity(0);
+			respawn[i].getGraphicsContext2D().drawImage(new Image(path + i + ".png"), 0, 0, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+			
+			getChildren().add(respawn[i]);
+		}
 	}
 	
 	public void drawDeadScene() {
@@ -72,10 +69,12 @@ public class BloodPane extends Pane {
 		showText.setCycleCount(1000);
 		
 		Timeline count = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-			GraphicsContext gc = text.getGraphicsContext2D();
-			gc.clearRect(0, 350, Main.SCREEN_SIZE, 400);
-			gc.fillText("" + countDown, Main.SCREEN_SIZE / 2, 575);
-			gc.strokeText("" + countDown, Main.SCREEN_SIZE / 2, 575);
+			if(countDown < 3) {
+				respawn[countDown + 1].setOpacity(0);
+			} else {
+				text.setOpacity(0);
+			}
+			respawn[countDown].setOpacity(1);
 			--countDown;
 		}));
 		count.setCycleCount(4);
@@ -90,9 +89,13 @@ public class BloodPane extends Pane {
 		spillStage = 0;
 		textOpacity = 0;
 		countDown = 3;
+		
+		text.setOpacity(0);
 		for(Canvas each: bloodSpill) {
 			each.setOpacity(0);
 		}
-		text.setOpacity(0);
+		for(Canvas each: respawn) {
+			each.setOpacity(0);
+		}
 	}
 }

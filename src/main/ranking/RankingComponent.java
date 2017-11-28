@@ -112,21 +112,21 @@ public class RankingComponent {
 		
 		GraphicsContext gc = ranking.getGraphicsContext2D();
 		
-		gc.setFill(Color.DIMGRAY);
-		gc.fillRect(20, 295, 710, 390);
+//		gc.setFill(Color.DIMGRAY);
+//		gc.fillRect(20, 295, 710, 390);
 		
 		if(winnerSide == Side.BLUE) {
-			gc.setFill(Color.rgb(130, 220, 255));
+			gc.setFill(Color.rgb(189, 218, 242));
 		} else {
-			gc.setFill(Color.rgb(255, 180, 155));
+			gc.setFill(Color.rgb(239, 190, 171));
 		}
 		gc.fillRect(25, 300, 348, 98);
 		gc.fillRect(25, 402, 348, 278);
 		
 		if(winnerSide == Side.RED) {
-			gc.setFill(Color.rgb(130, 220, 255));
+			gc.setFill(Color.rgb(189, 218, 242));
 		} else {
-			gc.setFill(Color.rgb(255, 180, 155));
+			gc.setFill(Color.rgb(239, 190, 171));
 		}
 		gc.fillRect(377, 300, 348, 98);
 		gc.fillRect(377, 402, 348, 278);
@@ -139,13 +139,14 @@ public class RankingComponent {
 		gc.fillText("VICTORY", 199, 349);
 		gc.fillText("DEFEAT", 551, 349);
 		
+		gc.setFill(Color.DIMGRAY);
 		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 20));
 		for(int i = 0; i < 5; ++i) {
-			if(winnerSide == Side.BLUE) {
-				gc.setFill(Color.CORNFLOWERBLUE);
-			} else {
-				gc.setFill(Color.ORANGERED);
-			}
+//			if(winnerSide == Side.BLUE) {
+//				gc.setFill(Color.CORNFLOWERBLUE);
+//			} else {
+//				gc.setFill(Color.ORANGERED);
+//			}
 			gc.setTextAlign(TextAlignment.LEFT);
 			gc.fillText(winnerList.get(i).getName(), 50, 450 + 50*i);
 			gc.fillText("Lv.", 275, 450 + 50*i);
@@ -154,11 +155,11 @@ public class RankingComponent {
 		}
 		
 		for(int i = 0; i < 5; ++i) {
-			if(winnerSide == Side.RED) {
-				gc.setFill(Color.CORNFLOWERBLUE);
-			} else {
-				gc.setFill(Color.ORANGERED);
-			}
+//			if(winnerSide == Side.RED) {
+//				gc.setFill(Color.CORNFLOWERBLUE);
+//			} else {
+//				gc.setFill(Color.ORANGERED);
+//			}
 			gc.setTextAlign(TextAlignment.LEFT);
 			gc.fillText(loserList.get(i).getName(), 425, 450 + 50*i);
 			gc.fillText("Lv.", 650, 450 + 50*i);
