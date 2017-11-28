@@ -39,6 +39,7 @@ public class SceneManager {
 		wholePane.getChildren().add(GameComponent.getInstance().getSkillPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getStatusPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getBuffPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getBloodPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getEndPane());
 		
 		gameScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
@@ -53,10 +54,17 @@ public class SceneManager {
 		GameHandler.startGame();
 		
 		primaryStage.setScene(gameScene);
-		primaryStage.setOnCloseRequest(event -> GameHandler.stopTimer());
+		primaryStage.setOnCloseRequest(event -> {
+			GameHandler.stopTimer();
+			for(Thread thread: GameComponent.getInstance().getThreadList()) {
+				thread.interrupt();
+			}
+		});
 	}
 	
 	public static void setMenuScene() {
+		GameComponent.getInstance().reset();
+		
 		Pane wholePane = new Pane();
 		
 		wholePane.getChildren().add(MenuComponent.getInstance().getBackgroundPane());
@@ -70,7 +78,7 @@ public class SceneManager {
 		primaryStage.setScene(menuScene);
 	}
 	
-	public static void setScoreboardScene() {
+	public static void setRankingScene() {
 		Pane wholePane = new Pane();
 		
 		wholePane.getChildren().add(RankingComponent.getInstance().getBackgroundPane());

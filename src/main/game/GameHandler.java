@@ -40,6 +40,7 @@ public class GameHandler {
 	private static boolean autoshoot = false;
 	private static boolean skillUpgradable = false;
 	private static boolean statusUpgradable = false;
+	private static boolean justDead = false;
 	private static boolean isEnd = false;
 	private static boolean changeSceneReady = false;
 	
@@ -49,7 +50,7 @@ public class GameHandler {
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
 			reset();
-			SceneManager.setScoreboardScene();
+			SceneManager.setRankingScene();
 		}
 		
 		if(event.getCode() == KeyCode.SPACE) {
@@ -215,7 +216,9 @@ public class GameHandler {
 		
 		for(Novice player: deadPlayer.keySet()) {
 			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1 || isEnd) {
+				GameComponent.getInstance().getBloodPane().undrawDeadScene();
 				player.getExperience().reborn();
+				
 				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
 				
 				if(player.isPlayer()) {
@@ -240,7 +243,7 @@ public class GameHandler {
 			deadPlayer.put(player, new Integer(deadPlayer.get(player).intValue() + 1));
 		}
 		
-		deadPlayer.keySet().removeIf(player -> deadPlayer.get(player).intValue() >= SPAWN_TIME);
+		deadPlayer.keySet().removeIf(player -> deadPlayer.get(player).intValue() >= SPAWN_TIME || isEnd);
 	}
 	
 	private static void checkPlayerUpgrade() {
@@ -413,6 +416,11 @@ public class GameHandler {
 		pairwiseCheckCollision(playerList, towerList);
 		pairwiseCheckCollision(playerList, playerList);
 		
+		if(GameComponent.getInstance().getPlayer().isDead() && !justDead) {
+			justDead = true;
+			GameComponent.getInstance().getBloodPane().drawDeadScene();
+		}
+		
 		GameComponent.getInstance().getExperienceBar().draw();
 	}
 		
@@ -566,6 +574,7 @@ public class GameHandler {
 		autoshoot = false;
 		skillUpgradable = false;
 		statusUpgradable = false;
+		justDead = false;
 	}
 	
 	public static void reset() {

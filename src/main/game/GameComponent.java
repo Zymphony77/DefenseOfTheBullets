@@ -42,13 +42,14 @@ public class GameComponent {
 	private ArrayList<Tower> towerList;
 	private ArrayList<Bullet> bulletList;
 	private ArrayList<Food> foodList;
+	private ArrayList<Thread> threadList;
 	private Canvas[] boundaryList;
 	
 	private Novice player;
 	private String playerName;
 	
 	private Pane endPane;
-	private Pane bloodPane;
+	private BloodPane bloodPane;
 	private BuffPane buffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
@@ -64,7 +65,6 @@ public class GameComponent {
 	
 	public GameComponent() {
 		endPane = new Pane();
-		bloodPane = new Pane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -82,6 +82,7 @@ public class GameComponent {
 		towerList = new ArrayList<Tower>();
 		bulletList = new ArrayList<Bullet>();
 		foodList = new ArrayList<Food>();
+		threadList = new ArrayList<Thread>();
 		
 		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
 		grid.setTranslateX(-2 * GRID_SIZE);
@@ -209,6 +210,8 @@ public class GameComponent {
 		for(Novice each: playerList) {
 			each.addBuff(new InvincibleBuff(each));
 		}
+		
+		bloodPane = new BloodPane(side);
 	}
 	
 	public void generateFood() {
@@ -295,21 +298,6 @@ public class GameComponent {
 		}
 	}
 	
-	public void drawBloodSpill() {
-		Canvas bloodSpill = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
-		
-		bloodPane.getChildren().add(bloodSpill);
-		
-		int pic = 1;
-		Timeline bloodAnimate = new Timeline(new KeyFrame(Duration.millis(100), event -> {
-			bloodSpill.getGraphicsContext2D().drawImage(new Image("resource/image/BloodSpill" + pic + ".png"), Main.SCREEN_SIZE, Main.SCREEN_SIZE);
-		}));
-	}
-	
-	public void undrawBloodSpill() {
-		bloodPane.getChildren().clear();
-	}
-	
 	public void setEnding(String mode) {		// Victory / Defeat
 		endPane.getChildren().clear();
 		
@@ -347,7 +335,6 @@ public class GameComponent {
 	
 	public void reset() {
 		endPane = new Pane();
-		bloodPane = new Pane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -365,6 +352,7 @@ public class GameComponent {
 		towerList = new ArrayList<Tower>();
 		bulletList = new ArrayList<Bullet>();
 		foodList = new ArrayList<Food>();
+		threadList = new ArrayList<Thread>();
 		
 		grid = new Canvas(GRID_SIZE * (GRID_NUMBER + 4), GRID_SIZE * (GRID_NUMBER + 4));
 		grid.setTranslateX(-2 * GRID_SIZE);
@@ -417,11 +405,15 @@ public class GameComponent {
 		return foodList;
 	}
 	
+	public ArrayList<Thread> getThreadList() {
+		return threadList;
+	}
+	
 	public Pane getEndPane() {
 		return endPane;
 	}
 	
-	public Pane getBloodPane() {
+	public BloodPane getBloodPane() {
 		return bloodPane;
 	}
 	

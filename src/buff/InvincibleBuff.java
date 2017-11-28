@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 
 import main.Main;
+import main.game.GameComponent;
 import entity.job.*;
 import skill.*;
 
@@ -15,39 +16,7 @@ public class InvincibleBuff extends Buff implements Expirable {
 	
 	private double opacity = 1;
 	private double opacityChange = -0.01;
-	private Thread blinking = new Thread(new Runnable() {
-		@Override
-		public void run() {
-			try {
-				for(int i = 0; i < 1250; ++i) {
-					opacity += opacityChange;
-					
-					if(opacity < 0.01) {
-						opacityChange = 0.01;
-					} else if(opacity > 0.99) {
-						opacityChange = -0.01;
-					}
-					Platform.runLater(new Runnable(){
-						@Override
-						public void run() {
-							player.getCanvas().setOpacity(opacity);
-						}
-					});
-		
-					Thread.sleep(5);
-				}
-			} catch(InterruptedException e) {
-				System.out.println("IN");
-				Platform.runLater(new Runnable(){
-					@Override
-					public void run() {
-						player.getCanvas().setOpacity(1.0);
-					}
-				});
-			}
-			System.out.println("END");
-		}
-	});
+	private Thread blinking;
 	
 	public InvincibleBuff(Novice player) {
 		super(player, BuffType.BUFF);
@@ -55,6 +24,40 @@ public class InvincibleBuff extends Buff implements Expirable {
 		maxDuration = 5 * Main.FRAME_RATE;
 		duration = maxDuration;
 		
+		blinking = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					for(int i = 0; i < 1250; ++i) {
+						opacity += opacityChange;
+						
+						if(opacity < 0.01) {
+							opacityChange = 0.01;
+						} else if(opacity > 0.99) {
+							opacityChange = -0.01;
+						}
+						Platform.runLater(new Runnable(){
+							@Override
+							public void run() {
+								player.getCanvas().setOpacity(opacity);
+							}
+						});
+			
+						Thread.sleep(5);
+					}
+				} catch(InterruptedException e) {
+					System.out.println("IN");
+					Platform.runLater(new Runnable(){
+						@Override
+						public void run() {
+							player.getCanvas().setOpacity(1.0);
+						}
+					});
+				}
+				System.out.println("END");
+			}
+		});
+		GameComponent.getInstance().getThreadList().add(blinking);
 		blinking.start();
 		activateBuff();
 	}
