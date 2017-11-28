@@ -113,6 +113,32 @@ public class Utility{
 		return dir;
 	}
 	
+	protected int checkCoordinateForEscape(Entity a, Pair b) {
+		double x = getRef(player, a).first - b.first;
+		double y = getRef(player, a).second - b.second;
+				
+		int tmp;
+		if(x > 0 && y > 0){
+			tmp = 7;
+		}else if(y > 0 && x == 0) {
+			tmp = 0;
+		}else if(x < 0 && y > 0) {
+			tmp = 1;
+		}else if(x < 0 && y == 0) {
+			tmp = 2;
+		}else if(x < 0 && y < 0) {
+			tmp = 3;
+		}else if(x == 0 && y < 0) {
+			tmp = 4;
+		}else if(x > 0 && y < 0){
+			tmp = 5;
+		}else {
+			tmp = 6;
+		}
+		
+		return tmp;
+	}
+	
 	protected int checkCoordinate(Entity a, Pair b) {
 		double x = getRef(player, a).first - b.first;
 		double y = getRef(player, a).second - b.second;

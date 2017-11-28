@@ -40,11 +40,11 @@ public abstract class Bot {
 	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
 	protected static final int SIZE_OF_GRID = 15;
-	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 30; // Expected Value is 20 seconds to change;
+	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 20; // Expected Value is 20 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(GameComponent.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
-	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3};
-	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 10][SIZE_OF_GRID + 10];
+	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3, -1};
+	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 3][SIZE_OF_GRID + 3];
 	protected static final int GAP_WHEN_ATTACK_TOWER = 300;
 	
 	protected int status = 0; //none = 0, defense = 1, attack = 2, escape = 3, escape with bullet = 4, farm = 5; 
@@ -78,37 +78,42 @@ public abstract class Bot {
 		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 15, 15, 0.0, true, -1);
 		Grid newTmp;
 		queue.add(tmp);
-		grid[15][15] = new Grid(tmp);
+		grid[SIZE_OF_GRID/2][SIZE_OF_GRID/2] = new Grid(tmp);
 		
 		//System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
-		while(!queue.isEmpty()) {
-			tmp = queue.poll();
-			//System.out.println(" : == " +  tmp.getGridX() + " " + tmp.getGridY() + " time : " + tmp.getTime() + " First : "+  tmp.getFirstDirection());
-			double time = timeForOnePixel + tmp.getTime();
-			for(int i = 0; i < 8; i++) {
-				if(tmp.getGridX() == 15 && tmp.getGridY() == 15) 
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, i);
-				else
-					newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, tmp.getFirstDirection());
-	
-				if(newTmp.getGridX() < 0 
-						|| newTmp.getGridX() > SIZE_OF_GRID
-						|| newTmp.getGridY() < 0 
-						|| newTmp.getGridY() > SIZE_OF_GRID) {
-					continue;
+		try {
+			while(!queue.isEmpty()) {
+				tmp = queue.poll();
+				//System.out.println(" : == " +  tmp.getGridX() + " " + tmp.getGridY() + " time : " + tmp.getTime() + " First : "+  tmp.getFirstDirection());
+				double time = timeForOnePixel + tmp.getTime();
+				for(int i = 0; i < 8; i++) {
+					if(tmp.getGridX() == SIZE_OF_GRID/2 && tmp.getGridY() == SIZE_OF_GRID/2) 
+						newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, i);
+					else
+						newTmp = new Grid(tmp.getX() + newPosition[i][0] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getY() + newPosition[i][1] * Main.SCREEN_SIZE / SIZE_OF_GRID, tmp.getGridX() + newPosition[i][0], tmp.getGridY() + newPosition[i][1], time, false, tmp.getFirstDirection());
+		
+					if(newTmp.getGridX() < 0 
+							|| newTmp.getGridX() > SIZE_OF_GRID
+							|| newTmp.getGridY() < 0 
+							|| newTmp.getGridY() > SIZE_OF_GRID) {
+						continue;
+					}
+					if(newTmp.getX() < 0  || newTmp.getX() >= GameComponent.MAX_SIZE
+							|| newTmp.getY() < 0 || newTmp.getY() >= GameComponent.MAX_SIZE) {
+						continue;
+					}
+					if(utility.willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
+							|| grid[newTmp.getGridX()][newTmp.getGridY()] != null ) {
+						continue;
+					}
+					newTmp.setChk(true);
+					grid[newTmp.getGridX()][newTmp.getGridY()] = new Grid(newTmp);
+					queue.add(newTmp);
 				}
-				if(newTmp.getX() < 0  || newTmp.getX() >= GameComponent.MAX_SIZE
-						|| newTmp.getY() < 0 || newTmp.getY() >= GameComponent.MAX_SIZE) {
-					continue;
-				}
-				if(utility.willCollide(player, new Pair((double)newTmp.getX(), (double)newTmp.getY()), newTmp.getTime()) 
-						|| grid[newTmp.getGridX()][newTmp.getGridY()] != null ) {
-					continue;
-				}
-				newTmp.setChk(true);
-				grid[newTmp.getGridX()][newTmp.getGridY()] = new Grid(newTmp);
-				queue.add(newTmp);
 			}
+		}catch(Exception e) {
+			System.out.println("BUG on find best path!");
+			e.printStackTrace();
 		}
 	}
 	
@@ -151,6 +156,7 @@ public abstract class Bot {
 	protected void move(int dir) {
 		if(dir == -2) {
 			player.stopMoving();
+			player.useSkill(2);
 			return;
 		}
 				
@@ -402,38 +408,42 @@ public abstract class Bot {
 	protected void escape() {
 		status = 3;
 		
-		if(!towerList.isEmpty()) {
-			move(getDirectionWithArea(change8to4[oppositeDirection[utility.checkCoordinate(player, new Pair(utility.getRef(player, towerList.get(0)).first, utility.getRef(player, towerList.get(0)).second))]]));
-		}
-		else if(!bulletList.isEmpty()) {
-			escapeWithBullet();
-		}
-		else {
-			if(utility.getRef(player, player).first < SAFETY_ZONE && utility.getRef(player, player).second < SAFETY_ZONE) {
-				farm();
+		try {
+			if(!towerList.isEmpty()) {
+				move(getDirectionWithArea(change8to4[oppositeDirection[utility.checkCoordinateForEscape(player, new Pair(utility.getRef(player, towerList.get(0)).first, utility.getRef(player, towerList.get(0)).second))]]));
 			}
-			else if(utility.getRef(player, player).first < SAFETY_ZONE) {
-				move(0);
-			}
-			else if(utility.getRef(player, player).second < SAFETY_ZONE) {
-				move(6);
+			else if(!bulletList.isEmpty()) {
+				escapeWithBullet();
 			}
 			else {
-				int positionInMap = utility.getPositionInMap();
-				if(positionInMap == 0) {
-					move(7);
+				if(utility.getRef(player, player).first < SAFETY_ZONE && utility.getRef(player, player).second < SAFETY_ZONE) {
+					farm();
 				}
-				else if(positionInMap == 1) {
+				else if(utility.getRef(player, player).first < SAFETY_ZONE) {
 					move(0);
 				}
-				else if(positionInMap == 2) {
+				else if(utility.getRef(player, player).second < SAFETY_ZONE) {
 					move(6);
 				}
 				else {
-					int res = getDirectionWithArea(0);
-					move(res);
+					int positionInMap = utility.getPositionInMap();
+					if(positionInMap == 0) {
+						move(7);
+					}
+					else if(positionInMap == 1) {
+						move(0);
+					}
+					else if(positionInMap == 2) {
+						move(6);
+					}
+					else {
+						int res = getDirectionWithArea(0);
+						move(res);
+					}
 				}
 			}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -486,7 +496,7 @@ public abstract class Bot {
 		Pair position = new Pair(utility.getRef(player, tmp));
 		position.first -= 250;
 		position.second -= 250;
-		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, position)]);
+		int res = utility.checkCoordinate(player, position);
 		move(res);
 	}
 	
