@@ -33,9 +33,6 @@ public class BotNovice extends Bot{
 
 		System.out.print(player.getExperience().getLevel() + " ");
 		
-		if(!player.isMoving())
-			player.useSkill(2);
-		
 		//upgrade
 		upgradeStatus();
 		
@@ -86,15 +83,29 @@ public class BotNovice extends Bot{
 	@Override
 	protected void upgradeSkill() {
 		// TODO Auto-generated method stub
-		if(player.getExperience().getSkillPoint() > 0)
-			player.upgradeSkill(upSkill[cntSkill++]);
+		try {
+			if(player.getExperience().getSkillPoint() > 0)
+				player.upgradeSkill(upSkill[cntSkill++]);
+		}catch(IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			cntStatus = 0;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void upgradeStatus() {
 		// TODO Auto-generated method stub
-		if(player.getExperience().getPointStatus() > 0 && cntStatus < upStatus.length) {
-			player.upgradeStatus(upStatus[cntStatus++]);
+		try {
+			if(player.getExperience().getPointStatus() > 0 && cntStatus < upStatus.length) {
+				player.upgradeStatus(upStatus[cntStatus++]);
+			}
+		}catch(IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			cntStatus = 0;
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
