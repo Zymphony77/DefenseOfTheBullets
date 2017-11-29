@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import buff.*;
 import main.*;
@@ -18,10 +19,12 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_ATTACK = 50;
 	private static final double DEFAULT_SPEED = 100;
-	private static final double DEFAULT_BULLET_DAMAGE = 250;
+	private static final double DEFAULT_BULLET_DAMAGE = 50;
 	private static final double DEFAULT_BULLET_SPEED = 200;
-	private static final double DEFAULT_BULLET_HP = 50;
+	private static final double DEFAULT_BULLET_HP = 250;
 	private static final double DEFAULT_HEALTH_REGEN = 10;
+	private static final double DEFAULT_CRITICAL_CHANCE = 0.08;
+	private static final double DEFAULT_CRITICAL_DAMAGE = 1.3;
 	private static final int DEFAULT_RELOAD = 20;
 	private static final int CANVAS_SIZE = 60;
 	private static final int RADIUS = 20;
@@ -36,7 +39,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected double speed;
 	protected double damageFactor;
 	protected int reloadDone;
-	protected int criticalDamage;
+	protected double criticalDamage;
 	protected double criticalChance;
 	protected Status status;
 	
@@ -214,7 +217,9 @@ public class Novice extends Entity implements Movable, Shootable {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, bulletDamage, bulletSpeed, side);
+		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		
+		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
 		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
@@ -290,17 +295,17 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		// Status
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 30 * status.getStatus(0);
-		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getStatus(0);
+		attack = DEFAULT_ATTACK + 10 * status.getStatus(0);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
-		attack = DEFAULT_ATTACK + 20 * status.getStatus(1);
-		bulletHP = DEFAULT_BULLET_HP + 25 * status.getStatus(2);
+		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
+		damageFactor = 1 - 0.02 * status.getStatus(1);
+		bulletHP = DEFAULT_BULLET_HP + 50 * status.getStatus(2);
 		bulletSpeed = DEFAULT_BULLET_SPEED + 20 * status.getStatus(2);
 		speed = DEFAULT_SPEED + 15 * status.getStatus(4);
 		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
-//		criticalDamage;
-//		criticalChance;
-		damageFactor = 1;
+		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.035 * status.getStatus(5);
+		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.1 * status.getStatus(5);
 		
 		// Re-activate Buff
 		for(Buff buff: buffList) {

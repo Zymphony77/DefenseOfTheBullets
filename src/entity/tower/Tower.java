@@ -18,13 +18,15 @@ import entity.property.Side;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {
-	private static final int MAX_HP = 40000;
+	private static final int MAX_HP = 75000;
 	private static final int CANVAS_SIZE = 200;
 	private static final int RELOAD_DONE = 5;
 	
 	public static final int RADIUS = 75;
 	public static final int BULLET_SPEED = 300;
-	public static final int BULLET_DAMAGE = 200;
+	public static final int BULLET_DAMAGE = 100;
+	public static final double CRITICAL_CHANCE = 0.25;
+	public static final double CRITICAL_DAMAGE = 2.00;
 	
 	protected HpBar hpBar;
 	protected int reloadCount;
@@ -32,7 +34,7 @@ public class Tower extends Entity implements Shootable {
 	public Tower(Pair refPoint, Side side) {
 		super(refPoint, MAX_HP, 0, side);
 		
-		attack = 100;
+		attack = 150;
 		reloadCount = RELOAD_DONE;
 	}
 	
@@ -97,8 +99,10 @@ public class Tower extends Entity implements Shootable {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 32);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 32);
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 10, direction + random.nextInt(11) - 5, 
-				BULLET_DAMAGE, BULLET_SPEED, side);
+		double currentDamage = (new Random()).nextDouble() < CRITICAL_CHANCE? BULLET_DAMAGE * CRITICAL_DAMAGE: BULLET_DAMAGE;
+		
+		Bullet bullet = new Bullet(this, new Pair(x, y), 250, direction + random.nextInt(11) - 5, 
+				currentDamage, BULLET_SPEED, side);
 		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;

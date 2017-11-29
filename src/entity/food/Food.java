@@ -21,8 +21,9 @@ public class Food extends Entity implements Rotatable {
 	private int foodExp;
 	
 	public Food(Pair refPoint) {
-		super(refPoint, 10, (new Random()).nextInt(360), Side.NEUTRAL);
+		super(refPoint, 100, (new Random()).nextInt(360), Side.NEUTRAL);
 		
+		attack = 150;
 		foodExp = FOOD_EXP;
 		rotateDirection = ((new Random()).nextInt(2) * 2) - 1;
 	}

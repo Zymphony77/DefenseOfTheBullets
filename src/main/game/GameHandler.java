@@ -232,7 +232,6 @@ public class GameHandler {
 					GameComponent.getInstance().getSkillPane().setPlayer(newPlayer);
 					GameComponent.getInstance().getExperienceBar().setExperience(newPlayer.getExperience());
 				} else {
-					GameComponent.getInstance().getBotList().add(new BotNovice(newPlayer));
 					newPlayer.setPlayer(false);
 				}
 				
