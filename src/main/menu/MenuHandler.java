@@ -12,8 +12,10 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import entity.property.*;
+import exception.*;
 import main.Main;
 import main.SceneManager;
+import main.game.GameComponent;
 import main.ranking.RankingComponent;
 import utility.*;
 
@@ -31,26 +33,30 @@ public class MenuHandler {
 			return;
 		}
 		
-		if(event.getCode() == KeyCode.BACK_SPACE) {
-			if(MenuComponent.getInstance().getName().length() > 0) {
-				MenuComponent.getInstance().setName(MenuComponent.getInstance().getName().substring(0, 
-						MenuComponent.getInstance().getName().length() - 1));
+		try {
+			if(event.getCode() == KeyCode.ENTER) {
+				moveCanvasForth();
+			} else {
+				MenuComponent.getInstance().addCharacter(event);
 			}
-		} else if(event.getCode() == KeyCode.ENTER) {
-			if(MenuComponent.getInstance().getName().length() > 0) {
-				onSideScreen = true;
-				Timeline shifter = new Timeline(new KeyFrame(Duration.millis(0.5), timelineEvent -> {
-					--shift;
-					shiftCanvas();
-				}));
-				shifter.setCycleCount(Main.SCREEN_SIZE);
-				shifter.playFromStart();
-			}
-		} else if(event.getText().length() == 1 && !event.getCode().isWhitespaceKey()) {
-			if(MenuComponent.getInstance().getName().length() < 10) {
-				MenuComponent.getInstance().setName(MenuComponent.getInstance().getName() + event.getText());
-			}
+			MenuComponent.getInstance().clearErrorMessage();
+		} catch(Exception e) {
+			MenuComponent.getInstance().setErrorMessage(e.getMessage());
 		}
+	}
+	
+	public static void moveCanvasForth() throws EmptyNameException {
+		if(MenuComponent.getInstance().getName().length() == 0) {
+			throw new EmptyNameException();
+		}
+		
+		onSideScreen = true;
+		Timeline shifter = new Timeline(new KeyFrame(Duration.millis(0.5), timelineEvent -> {
+			--shift;
+			shiftCanvas();
+		}));
+		shifter.setCycleCount(Main.SCREEN_SIZE);
+		shifter.playFromStart();
 	}
 	
 	public static void moveCanvasBack() {
@@ -73,15 +79,15 @@ public class MenuHandler {
 			}
 		}
 		
-		MenuComponent.getInstance().getRed().setTranslateX(Main.SCREEN_SIZE + 125 + shift);
-		MenuComponent.getInstance().getBlue().setTranslateX(Main.SCREEN_SIZE + 425 + shift);
-		MenuComponent.getInstance().getMoveBack().setTranslateX(Main.SCREEN_SIZE + 337.5 + shift);
+		MenuComponent.getInstance().getRed().setTranslateX(Main.SCREEN_SIZE * 3 / 2 - 250 + shift);
+		MenuComponent.getInstance().getBlue().setTranslateX(Main.SCREEN_SIZE * 3 / 2 + 50 + shift);
+		MenuComponent.getInstance().getMoveBack().setTranslateX(Main.SCREEN_SIZE * 3 / 2 - 37.5 + shift);
 	}
 	
 	public static void moveToGameScene(String name, Side side) {
 		SceneManager.setGameScene(name, side);
 		moveCanvasBack();
-		MenuComponent.getInstance().setName("");
+		MenuComponent.getInstance().resetName();
 	}
 	
 	public static void drawBorder(Canvas canvas, Color color) {

@@ -30,7 +30,7 @@ public class Bullet extends Entity implements Movable {
 	}
 	
 	public void takeDamage(Entity entity) {
-		if(hp > entity.getAttack()) {
+		if(hp - entity.getAttack() > 1e-4) {
 			hp -= entity.getAttack();
 		} else {
 			hp = 0;

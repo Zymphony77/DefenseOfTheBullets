@@ -31,7 +31,7 @@ public class BotNovice extends Bot{
 			return;
 		}
 
-		System.out.print(player.getExperience().getLevel() + " ");
+//		System.out.print(player.getExperience().getLevel() + " ");
 		
 		//upgrade
 		upgradeStatus();

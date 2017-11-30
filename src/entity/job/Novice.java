@@ -19,7 +19,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_ATTACK = 50;
 	private static final double DEFAULT_SPEED = 100;
-	private static final double DEFAULT_BULLET_DAMAGE = 50;
+	private static final double DEFAULT_BULLET_DAMAGE = 75;
 	private static final double DEFAULT_BULLET_SPEED = 200;
 	private static final double DEFAULT_BULLET_HP = 250;
 	private static final double DEFAULT_HEALTH_REGEN = 10;
@@ -174,7 +174,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected void takeDamage(Entity entity, double damage) {
 		damage *= damageFactor;
 		
-		if(hp > damage) {
+		if(hp - damage > 1e-4) {
 			hp -= damage;
 			hpBar.draw();
 		} else {
@@ -295,7 +295,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		// Status
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 5 * status.getStatus(0);
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 7.5 * status.getStatus(0);
 		attack = DEFAULT_ATTACK + 10 * status.getStatus(0);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
 		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);

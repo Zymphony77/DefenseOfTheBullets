@@ -21,7 +21,7 @@ public class Food extends Entity implements Rotatable {
 	private int foodExp;
 	
 	public Food(Pair refPoint) {
-		super(refPoint, 100, (new Random()).nextInt(360), Side.NEUTRAL);
+		super(refPoint, 150, (new Random()).nextInt(360), Side.NEUTRAL);
 		
 		attack = 150;
 		foodExp = FOOD_EXP;
@@ -57,7 +57,7 @@ public class Food extends Entity implements Rotatable {
 	}
 	
 	public void takeDamage(Entity entity) {
-		if(hp > entity.getAttack()) {
+		if(hp - entity.getAttack() > 1e-4) {
 			hp -= entity.getAttack();
 		} else {
 			hp = 0;

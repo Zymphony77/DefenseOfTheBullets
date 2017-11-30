@@ -331,7 +331,7 @@ public class GameHandler {
 		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.rotate();
 		}
-		System.out.println();
+//		System.out.println();
 	}
 	
 	private static void movePlayer() {
@@ -464,7 +464,8 @@ public class GameHandler {
 		for(int i = 0; i < middle.size(); ++i) {
 			int j = i + 1;
 			while(j < middle.size() && middle.get(j).getRefPoint().second - middle.get(i).getRefPoint().second <= maxDist) {
-				if(middle.get(i).isCollided(middle.get(j)) && middle.get(i).getSide() != middle.get(j).getSide()) {
+				if(middle.get(i).isCollided(middle.get(j)) && middle.get(i).getSide() != middle.get(j).getSide() &&
+						!middle.get(i).isDead() && !middle.get(j).isDead()) {
 					middle.get(i).takeDamage(middle.get(j));
 					middle.get(j).takeDamage(middle.get(i));
 				}

@@ -18,13 +18,14 @@ import entity.property.Side;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {
-	private static final int MAX_HP = 75000;
+	private static final int MAX_HP = 100000;
 	private static final int CANVAS_SIZE = 200;
 	private static final int RELOAD_DONE = 5;
 	
 	public static final int RADIUS = 75;
+	public static final int BULLET_HP = 250;
 	public static final int BULLET_SPEED = 300;
-	public static final int BULLET_DAMAGE = 100;
+	public static final int BULLET_DAMAGE = 125;
 	public static final double CRITICAL_CHANCE = 0.25;
 	public static final double CRITICAL_DAMAGE = 2.00;
 	
@@ -72,7 +73,7 @@ public class Tower extends Entity implements Shootable {
 	}
 	
 	public void takeDamage(Entity entity) {
-		if(hp > entity.getAttack()) {
+		if(hp - entity.getAttack() > 1e-4) {
 			hp -= entity.getAttack();
 			hpBar.draw();
 		} else {
@@ -101,7 +102,7 @@ public class Tower extends Entity implements Shootable {
 		
 		double currentDamage = (new Random()).nextDouble() < CRITICAL_CHANCE? BULLET_DAMAGE * CRITICAL_DAMAGE: BULLET_DAMAGE;
 		
-		Bullet bullet = new Bullet(this, new Pair(x, y), 250, direction + random.nextInt(11) - 5, 
+		Bullet bullet = new Bullet(this, new Pair(x, y), BULLET_HP, direction + random.nextInt(11) - 5, 
 				currentDamage, BULLET_SPEED, side);
 		GameComponent.getInstance().addComponent(bullet);
 		
