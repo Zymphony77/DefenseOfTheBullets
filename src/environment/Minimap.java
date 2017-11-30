@@ -2,20 +2,29 @@ package environment;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import main.*;
-import main.game.GameComponent;
+import main.game.*;
+import entity.job.*;
 import entity.property.Side;
 import entity.tower.*;
 import utility.*;
 
 public class Minimap extends Pane {
+	public static final Image BLUE_TOWER = new Image("resource/image/BlueTower.png");
+	public static final Image RED_TOWER = new Image("resource/image/RedTower.png");
+	public static final Image NEUTRAL_TOWER = new Image("resource/image/NeutralTower.png");
+	public static final Image BLUE_TOWER_BORDER = new Image("resource/image/BlueTowerBorder.png");
+	public static final Image RED_TOWER_BORDER = new Image("resource/image/RedTowerBorder.png");
+	public static final Image NEUTRAL_TOWER_BORDER = new Image("resource/image/NeutralTowerBorder.png");
 	public static final int MAP_SIZE = Main.SCREEN_SIZE / 5;
 	public static final double RATIO = MAP_SIZE / (Main.SCREEN_SIZE + GameComponent.MAX_SIZE);
 	
 	private Canvas boundary;
+	private Canvas player;
 	private Canvas tower;
 	private Canvas viewBox;
 	
@@ -27,8 +36,13 @@ public class Minimap extends Pane {
 		tower.setTranslateY(onScreen(new Pair(0, 0)).second);
 		tower.setOpacity(0.75);
 		
+		player = new Canvas(MAP_SIZE, MAP_SIZE);
+		player.setTranslateX(onScreen(new Pair(0, 0)).first);
+		player.setTranslateY(onScreen(new Pair(0, 0)).second);
+		player.setOpacity(0.75);
+		
 		drawBoundary();
-		getChildren().add(tower);
+		getChildren().addAll(player, tower);
 	}
 	
 	private void drawBoundary() {
@@ -78,19 +92,49 @@ public class Minimap extends Pane {
 	}
 	
 	public void update() {
+		// Tower
+		Image towerImage;
+		Image borderImage;
 		GraphicsContext gc = tower.getGraphicsContext2D();
 		for(Tower tw: GameComponent.getInstance().getTowerList()) {
 			if(tw.getSide() == Side.BLUE) {
-				gc.setFill(Color.CORNFLOWERBLUE);
+				towerImage = BLUE_TOWER;
+				borderImage = BLUE_TOWER_BORDER;
 			} else if(tw.getSide() == Side.RED) {
-				gc.setFill(Color.ORANGERED);
+				towerImage = RED_TOWER;
+				borderImage = RED_TOWER_BORDER;
 			} else {
-				gc.setFill(Color.GOLD);
+				towerImage = NEUTRAL_TOWER;
+				borderImage = NEUTRAL_TOWER_BORDER;
 			}
 			
-			gc.fillOval((tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - tw.getRadius()) * RATIO, 
-					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - tw.getRadius()) * RATIO,
-					tw.getRadius() * 2 * RATIO, tw.getRadius() * 2 * RATIO);
+			gc.clearRect((tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - 5 * tw.getRadius()) * RATIO, 
+					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - 5 * tw.getRadius()) * RATIO,
+					tw.getRadius() * 10 * RATIO, tw.getRadius() * 10 * RATIO);
+			gc.drawImage(towerImage, (tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - 4.5 * tw.getRadius()) * RATIO, 
+					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - 4.5 * tw.getRadius()) * RATIO,
+					tw.getRadius() * 9 * RATIO, tw.getRadius() * 9 * RATIO);
+			gc.clearRect((tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - 4.5 * tw.getRadius()) * RATIO, 
+					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - 4.5 * tw.getRadius()) * RATIO,
+					tw.getRadius() * 9 * RATIO, tw.getRadius() * 9 * RATIO * (1 - tw.getHp() / tw.getMaxHp()));
+			gc.drawImage(borderImage, (tw.getRefPoint().first + Main.SCREEN_SIZE / 2 - 5 * tw.getRadius()) * RATIO, 
+					(tw.getRefPoint().second + Main.SCREEN_SIZE / 2 - 5 * tw.getRadius()) * RATIO,
+					tw.getRadius() * 10 * RATIO, tw.getRadius() * 10 * RATIO);
+		}
+		
+		// Player
+		gc = player.getGraphicsContext2D();
+		gc.clearRect(0, 0, MAP_SIZE, MAP_SIZE);
+		for(Novice each: GameComponent.getInstance().getPlayerList()) {
+			if(each.getSide() == Side.BLUE) {
+				gc.setFill(Color.CORNFLOWERBLUE);
+			} else {
+				gc.setFill(Color.ORANGERED);
+			}
+			
+			gc.fillOval((each.getRefPoint().first + Main.SCREEN_SIZE / 2 - 3 * each.getRadius()) * RATIO, 
+					(each.getRefPoint().second + Main.SCREEN_SIZE / 2 - 3 * each.getRadius()) * RATIO, 
+					each.getRadius() * 6 * RATIO, each.getRadius() * 6 * RATIO);
 		}
 	}
 	

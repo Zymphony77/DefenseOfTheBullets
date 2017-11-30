@@ -90,6 +90,10 @@ public class GameHandler {
 		
 		// OVER MAX STATUS
 		if(event.getCode() == KeyCode.EQUALS) {
+			while(GameComponent.getInstance().getPlayer().getExperience().getLevel() < Experience.MAX_LEVEL) {
+				GameComponent.getInstance().getPlayer().gainExp(GameComponent.getInstance().getPlayer().getExperience().getMaxExp());
+			}
+			
 			for(int i = 0; i < 6; ++i) {
 				for(int j = 0; j < 15; ++j) {
 					GameComponent.getInstance().getPlayer().getStatus().updateStatus(i);

@@ -1,7 +1,7 @@
 package entity.property;
 
 public class Experience {
-	private static final int MAX_LEVEL = 50;
+	public static final int MAX_LEVEL = 50;
 	
 	private int level;
 	private double currentExp;

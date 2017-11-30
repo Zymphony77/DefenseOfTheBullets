@@ -46,7 +46,6 @@ public class InvincibleBuff extends Buff implements Expirable {
 						Thread.sleep(5);
 					}
 				} catch(InterruptedException e) {
-					System.out.println("IN");
 					Platform.runLater(new Runnable(){
 						@Override
 						public void run() {
@@ -54,7 +53,6 @@ public class InvincibleBuff extends Buff implements Expirable {
 						}
 					});
 				}
-				System.out.println("END");
 			}
 		});
 		GameComponent.getInstance().getThreadList().add(blinking);
@@ -66,7 +64,6 @@ public class InvincibleBuff extends Buff implements Expirable {
 		--duration;
 		
 		if(duration <= 0) {
-			System.out.println("INTERRUPT");
 			blinking.interrupt();
 			deactivateBuff();
 		}
