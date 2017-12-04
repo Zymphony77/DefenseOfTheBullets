@@ -18,6 +18,7 @@ public class Magician extends Novice {
 	public Magician(Novice oldPlayer) {
 		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
 		skillList.add(new FireOrb());
+		skillList.add(new IceOrb());
 	}
 	
 	@Override
@@ -58,11 +59,42 @@ public class Magician extends Novice {
 			if(buff instanceof FireOrbBuff) {
 				bullet = new FireBullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side, 
 						((FireOrbBuff) buff).getBurnDamage());
+				break;
 			}
+			
+			if(buff instanceof IceOrbBuff) {
+				bullet = new IceBullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
+				break;
+			}
+		}
+		
+		if(bullet == null) {
+			bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
 		}
 		
 		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
 	}
+	
+	 @Override
+	 public void useSkill(int position) {
+		 if(position == 3 && skillList.get(2).isReady()) {
+			 for(Buff buff: buffList) {
+				 if(buff instanceof IceOrbBuff) {
+					 removeBuff(buff);
+					 break;
+				 }
+			 }
+		 } else if(position == 4 && skillList.get(3).isReady()) {
+			 for(Buff buff: buffList) {
+				 if(buff instanceof FireOrbBuff) {
+					 removeBuff(buff);
+					 break;
+				 }
+			 }
+		 }
+		 
+		 super.useSkill(position);
+	 }
 }

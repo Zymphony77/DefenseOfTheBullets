@@ -74,6 +74,8 @@ public class GameHandler {
 		}
 		
 		if(event.getCode().isDigitKey()) {
+			activeKey.add(event.getCode());
+			
 			String keyName = event.getCode().toString();
 			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1));
 			if(skillNumber <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
@@ -161,6 +163,10 @@ public class GameHandler {
 		
 		if(event.getCode() == KeyCode.E ) {
 			activeKey.remove(KeyCode.E);
+		}
+		
+		if(event.getCode().isDigitKey()) {
+			activeKey.remove(event.getCode());
 		}
 	}
 	
@@ -336,6 +342,9 @@ public class GameHandler {
 		}
 		for(Bullet bullet: GameComponent.getInstance().getBulletList()) {
 			bullet.move();
+			if(bullet instanceof Rotatable) {
+				((Rotatable) bullet).rotate();
+			}
 		}
 		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.rotate();

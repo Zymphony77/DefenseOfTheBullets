@@ -14,6 +14,8 @@ public class FireOrbBuff extends Buff {
 	public FireOrbBuff(Novice caster, double burnDamage) {
 		super(caster, BuffType.BUFF);
 		this.burnDamage = burnDamage;
+		
+		activateBuff();
 	}
 	
 	public void drawEffect() {
