@@ -30,7 +30,12 @@ public class BotNovice extends Bot{
 			System.out.println("DEAD!!!!");
 			return;
 		}
-
+		
+		
+		//////// CHEAT
+		if(player.getLevel() < 31)
+			player.gainExp(1000);
+		
 //		System.out.print(player.getExperience().getLevel() + " ");
 		
 		//upgrade
@@ -57,11 +62,11 @@ public class BotNovice extends Bot{
 		if(player.getHp() < player.getMaxHp() * 0.6) {
 			escape();
 		}
-		else if(player.getLevel() < 10){ // level less than >> 10 Farm!!!!!!!!!!
-			farm();
-		}
 		else if(player.getLevel() < 30){
 			farm();
+		}
+		else if(!player.isMoving()) {
+			return;
 		}
 		else {
 			war();

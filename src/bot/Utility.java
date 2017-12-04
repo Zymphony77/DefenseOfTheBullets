@@ -144,7 +144,7 @@ public class Utility{
 		double y = getRef(player, a).second - b.second;
 				
 		int tmp;
-		if(Math.abs(x) <= 10 && Math.abs(y) <= 10) {
+		if(Math.abs(x) <= 20 && Math.abs(y) <= 20) {
 			tmp = 8;
 		}else if(x > 0 && y > 0){
 			tmp = 7;
@@ -163,6 +163,8 @@ public class Utility{
 		}else {
 			tmp = 6;
 		}
+		
+		if(rand.nextInt(1000) == 0)System.out.println(x + " " + y);
 		
 		return tmp;
 	}

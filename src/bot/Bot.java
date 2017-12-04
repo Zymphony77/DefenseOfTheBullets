@@ -75,7 +75,7 @@ public abstract class Bot {
 			}
 		}
 		
-		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), 15, 15, 0.0, true, -1);
+		Grid tmp = new Grid((int) Math.floor(utility.getRef(player, player).first), (int) Math.floor(utility.getRef(player, player).second), SIZE_OF_GRID/2, SIZE_OF_GRID/2, 0.0, true, -1);
 		Grid newTmp;
 		queue.add(tmp);
 		grid[SIZE_OF_GRID/2][SIZE_OF_GRID/2] = new Grid(tmp);
@@ -375,12 +375,12 @@ public abstract class Bot {
 		int[] bullet = new int[9];
 		
 		for(Bullet tmp : bulletList) {
-			int chk = utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)));
+			int chk = utility.checkCoordinateForEscape(player, new Pair(utility.getRef(player, tmp)));
 			bullet[chk]++;
 		}
 		
 		for(Novice tmp : playerEnemiesList) {
-			int chk = utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)));
+			int chk = utility.checkCoordinateForEscape(player, new Pair(utility.getRef(player, tmp)));
 			bullet[chk] += 5;
 		}
 		
@@ -395,7 +395,6 @@ public abstract class Bot {
 		}
 		
 		int tmp = getDirectionWithArea(change8to4[oppositeDirection[tmpDir]]);
-		
 		
 		if(!utility.isHitTheWall(tmp) && tmp != -1) {
 			status = 4;
