@@ -15,7 +15,7 @@ public class Haste extends ActiveSkill {
 	private static final Image IMAGE = new Image("resource/image/HasteIcon.png");
 	
 	public Haste() {
-		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN, DEFAULT_DURATION);
+		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN);
 	}
 	
 	@Override

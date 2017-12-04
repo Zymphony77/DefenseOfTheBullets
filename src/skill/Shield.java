@@ -13,7 +13,7 @@ public class Shield extends ActiveSkill {
 	private static final Image IMAGE = new Image("resource/image/FrenzyIcon.png");
 	
 	public Shield() {
-		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN, DEFAULT_DURATION);
+		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN);
 	}
 	
 	protected void drawEffect() {

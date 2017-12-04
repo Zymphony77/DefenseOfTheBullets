@@ -188,6 +188,7 @@ public class MenuComponent {
 	
 	public void resetName() {
 		name = "";
+		drawName();
 	}
 	
 	public static MenuComponent getInstance() {

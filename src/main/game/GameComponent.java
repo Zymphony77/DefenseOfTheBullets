@@ -150,7 +150,8 @@ public class GameComponent {
 	public void initialize(Side side, String name) {
 		playerName = name;
 		
-		player = new Novice(spawnPoint(side), side);
+		Novice oldPlayer = new Novice(spawnPoint(side), side);
+		player = new Magician(oldPlayer);
 		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);

@@ -1,0 +1,68 @@
+package entity.job;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
+import java.util.Random;
+
+import buff.*;
+import entity.bullet.*;
+import entity.property.*;
+import main.game.GameComponent;
+import skill.*;
+import utility.Pair;
+
+public class Magician extends Novice {
+	private static final int CANVAS_SIZE = 60;
+	private static final int RADIUS = 20;
+	public Magician(Novice oldPlayer) {
+		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
+		skillList.add(new FireOrb());
+	}
+	
+	@Override
+	public void draw() {
+		canvas.setWidth(CANVAS_SIZE);
+		canvas.setHeight(CANVAS_SIZE);
+		
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		if(GameComponent.getInstance().getPlayer() != null) {
+			changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
+		}
+		
+		gc.setFill(Color.DARKGRAY);
+		gc.fillRect(2*RADIUS, 25, RADIUS, 10);
+		gc.setFill(Color.MEDIUMPURPLE);
+		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
+		
+		GameComponent.getInstance().removeComponent(hpBar);
+		hpBar = new HpBar(this);
+		GameComponent.getInstance().addComponent(hpBar);
+	}
+	
+	@Override
+	public void shoot() {
+		if(reloadCount < reloadDone) {
+			return;
+		}
+		
+		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
+		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
+		
+		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		
+		Bullet bullet = null;
+		
+		for(Buff buff: buffList) {
+			if(buff instanceof FireOrbBuff) {
+				bullet = new FireBullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side, 
+						((FireOrbBuff) buff).getBurnDamage());
+			}
+		}
+		
+		GameComponent.getInstance().addComponent(bullet);
+		
+		reloadCount = 0;
+	}
+}
