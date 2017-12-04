@@ -27,7 +27,7 @@ public class BotNovice extends Bot{
 		
 		if(player.isDead()) {
 			cntStatus = 0;
-			System.out.println("DEAD!!!!");
+//			System.out.println("DEAD!!!!");
 			return;
 		}
 		

@@ -276,7 +276,7 @@ public abstract class Bot {
 			}else {
 				if(tmpForMove == -1) {
 					tmpForMove = rand.nextInt(8);
-					System.out.println("change direction 1");
+//					System.out.println("change direction 1");
 					while(utility.isHitTheWall(tmpForMove)) {
 						tmpForMove = rand.nextInt(8);
 					}
@@ -496,6 +496,8 @@ public abstract class Bot {
 		position.first -= 250;
 		position.second -= 250;
 		int res = utility.checkCoordinate(player, position);
+		if(res == 8)
+			res = -2;
 		move(res);
 	}
 	
