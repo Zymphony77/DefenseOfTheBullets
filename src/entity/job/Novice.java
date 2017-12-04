@@ -295,17 +295,17 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		// Status
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 7.5 * status.getStatus(0);
-		attack = DEFAULT_ATTACK + 10 * status.getStatus(0);
-		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
-		healthRegen = DEFAULT_HEALTH_REGEN + 5 * status.getStatus(1);
-		damageFactor = 1 - 0.02 * status.getStatus(1);
-		bulletHP = DEFAULT_BULLET_HP + 50 * status.getStatus(2);
-		bulletSpeed = DEFAULT_BULLET_SPEED + 20 * status.getStatus(2);
-		speed = DEFAULT_SPEED + 15 * status.getStatus(4);
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
+		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
+		maxHp = DEFAULT_MAX_HP + 400 * status.getStatus(1);
+		healthRegen = DEFAULT_HEALTH_REGEN + 4 * status.getStatus(1);
+		damageFactor = 1 - 0.016 * status.getStatus(1);
+		bulletHP = DEFAULT_BULLET_HP + 40 * status.getStatus(2);
+		bulletSpeed = DEFAULT_BULLET_SPEED + 16 * status.getStatus(2);
+		speed = DEFAULT_SPEED + 12 * status.getStatus(4);
 		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
-		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.035 * status.getStatus(5);
-		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.1 * status.getStatus(5);
+		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.028 * status.getStatus(5);
+		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.08 * status.getStatus(5);
 		
 		// Re-activate Buff
 		for(Buff buff: buffList) {
@@ -345,6 +345,10 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public void setPlayer(boolean isPlayer) {
 		this.isPlayer = isPlayer;
+	}
+	
+	public void setReloadCount() {
+		this.reloadCount = DEFAULT_RELOAD;
 	}
 	
 	public int getRadius() {

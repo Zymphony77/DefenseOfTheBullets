@@ -76,8 +76,8 @@ public class StatusIcon extends Pane {
 	public void drawUpgrade() {
 		upgrade.setOpacity(0.75);
 		upgrade.setOnMouseClicked(event -> {
-			player.getStatus().updateStatus(position);
-			player.getExperience().decreasePointStatus();
+			
+			player.upgradeStatus(position);
 			if(player.getStatus().getStatus(position) >= Status.MAX_STATUS) {
 				undrawUpgrade();
 			}

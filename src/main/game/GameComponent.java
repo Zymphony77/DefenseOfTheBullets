@@ -33,7 +33,7 @@ public class GameComponent {
 	public static final double MAX_SIZE = 7500;
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
-	public static final int MAX_FOOD_COUNT = 1000;
+	public static final int MAX_FOOD_COUNT = 750;
 	
 	private static final GameComponent instance = new GameComponent();
 	
@@ -155,37 +155,16 @@ public class GameComponent {
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-		Novice shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-		addComponent(shootTest);
-		
-		if(side == Side.BLUE) {
-			shootTest = new Novice(spawnPoint(Side.RED), Side.RED);
-			addComponent(shootTest);
-		}else {
-			shootTest = new Novice(spawnPoint(Side.BLUE), Side.BLUE);
-			addComponent(shootTest);
-		}
+//		for(int i = 0; i < 4; i++) {
+//			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
+//			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
+//		}
+//		
+//		if(side == Side.BLUE) {
+//			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
+//		}else {
+//			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
+//		}
 		
 		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
 		addComponent(tower);

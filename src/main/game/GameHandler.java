@@ -101,8 +101,8 @@ public class GameHandler {
 			}
 			
 			for(int i = 0; i < GameComponent.getInstance().getPlayer().getSkillList().size(); ++i) {
-				for(int j = 0; j < 100; ++j) {
-					if(GameComponent.getInstance().getPlayer().getSkillList().get(i).getLevel() <= 100) {
+				for(int j = 0; j < 10; ++j) {
+					if(GameComponent.getInstance().getPlayer().getSkillList().get(i).getLevel() <= 10) {
 						GameComponent.getInstance().getPlayer().upgradeSkill(i + 1);
 					}
 				}
@@ -115,6 +115,8 @@ public class GameHandler {
 			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
 				icon.undrawUpgrade();
 			}
+			
+			GameComponent.getInstance().getPlayer().upgradeAbility();
 		}
 		
 		// INSTANT WIN
@@ -192,6 +194,10 @@ public class GameHandler {
 		
 		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
 		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
+		
+		if(GameComponent.getInstance().getPlayer() instanceof Tank && ((Tank) GameComponent.getInstance().getPlayer()).isBurstBuff()) {
+			return;
+		}
 		
 		GameComponent.getInstance().getPlayer().setDirection(Math.toDegrees(Math.atan2(y, x)));
 		GameComponent.getInstance().getPlayer().rotate();
@@ -293,7 +299,11 @@ public class GameHandler {
 				}
 			}
 			
+			int currentBuff = player.getBuffList().size();
 			player.getBuffList().removeIf(buff -> !buff.isActive());
+			if(currentBuff != player.getBuffList().size()) {
+				player.upgradeAbility();
+			}
 			
 			// Skill
 			for(Skill skill: player.getSkillList()) {
@@ -320,7 +330,6 @@ public class GameHandler {
 	
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
-			bot.getPlayer().upgradeAbility();
 			bot.getPlayer().heal(bot.getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
 			bot.move();
 			bot.getPlayer().move();
@@ -344,7 +353,6 @@ public class GameHandler {
 		double sz;
 		
 		GameComponent.getInstance().getPlayer().heal(GameComponent.getInstance().getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
-		GameComponent.getInstance().getPlayer().upgradeAbility();
 		
 		for(KeyCode key: activeKey) {
 			if(key == KeyCode.UP) {

@@ -31,11 +31,6 @@ public class BotNovice extends Bot{
 			return;
 		}
 		
-		
-		//////// CHEAT
-		if(player.getLevel() < 31)
-			player.gainExp(1000);
-		
 //		System.out.print(player.getExperience().getLevel() + " ");
 		
 		//upgrade

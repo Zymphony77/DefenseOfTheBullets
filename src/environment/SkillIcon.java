@@ -105,6 +105,10 @@ public class SkillIcon extends Pane {
 		upgrade.setOpacity(0.75);
 		upgrade.setOnMouseClicked(event -> {
 			if(event.getButton() == MouseButton.PRIMARY) {
+				if(player.getExperience().getSkillPoint() <= 0) {
+					undrawUpgrade();
+					return;
+				}
 				player.getExperience().decreaseSkillPoint();
 				skill.upgrade();
 				if(!skill.isUpgradable()) {

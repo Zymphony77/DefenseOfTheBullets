@@ -1,7 +1,7 @@
 package entity.property;
 
 public class Status {
-	public static final int MAX_STATUS = 12;
+	public static final int MAX_STATUS = 15;
 	
 	private int[] stat = new int[6];
 	

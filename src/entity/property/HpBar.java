@@ -59,6 +59,12 @@ public class HpBar {
 		
 		gc.strokeRoundRect(0, 0, maxWidth, 5, 2, 2);
 		gc.fillRoundRect(0, 0, width, 5, 2, 2);
+		
+		if(entity instanceof Tank) {
+			gc.setFill(Color.AZURE);
+			width = ((Tank) entity).getHPShield() * maxWidth / 5000;
+			gc.fillRoundRect(0, 0, width, 5, 2, 2);
+		}
 	}
 	
 	public void changeCenter(Pair center) {
