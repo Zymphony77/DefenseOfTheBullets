@@ -12,7 +12,7 @@ public class Burst extends ActiveSkill {
 	private static final int DEFAULT_DURATION = 16;
 	private static final int POSITION = 4;
 	private static final int MAX_LEVEL = 10;
-	private static final Image IMAGE = new Image("resource/image/HasteIcon.png");
+	private static final Image IMAGE = new Image("resource/image/BurstIcon.png");
 	
 	public Burst() {
 		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN);

@@ -22,12 +22,11 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_BULLET_DAMAGE = 75;
 	private static final double DEFAULT_BULLET_SPEED = 200;
 	private static final double DEFAULT_BULLET_HP = 250;
-	private static final double DEFAULT_HEALTH_REGEN = 10;
 	private static final double DEFAULT_CRITICAL_CHANCE = 0.08;
 	private static final double DEFAULT_CRITICAL_DAMAGE = 1.3;
 	private static final int DEFAULT_RELOAD = 20;
-	private static final int CANVAS_SIZE = 60;
-	private static final int RADIUS = 20;
+	protected static final int CANVAS_SIZE = 60;
+	protected static final int RADIUS = 20;
 	
 	protected ArrayList<Skill> skillList;
 	protected ArrayList<Buff> buffList;
@@ -68,7 +67,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
-		skillList.add(new Frenzy());
+		skillList.add(new Heal());
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
@@ -93,7 +92,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		skillList = new ArrayList<Skill>();
 		skillList.add(new Haste());
-		skillList.add(new Frenzy());
+		skillList.add(new Heal());
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
@@ -152,14 +151,6 @@ public class Novice extends Entity implements Movable, Shootable {
 		refPoint.second = Math.min(refPoint.second, (double) GameComponent.MAX_SIZE);
 		refPoint.second = Math.max(refPoint.second, (double) 0);
 		
-		for(Buff buff: buffList) {
-			if(buff instanceof FrenzyBuff && ((FrenzyBuff) buff).isActive()) {
-				((FrenzyBuff) buff).deactivateBuff();
-				buffList.remove(buff);
-				// updateStatus();
-				break;
-			}
-		}
 	}
 	
 	public void heal(double amount) {
@@ -259,6 +250,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public void upgradeSkill(int position) {
+		System.out.println(position);
 		experience.decreaseSkillPoint();
 		skillList.get(position - 1).upgrade();
 	}
@@ -295,16 +287,16 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		// Status
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
-		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
-		maxHp = DEFAULT_MAX_HP + 400 * status.getStatus(1);
-		healthRegen = DEFAULT_HEALTH_REGEN + 4 * status.getStatus(1);
-		damageFactor = 1 - 0.016 * status.getStatus(1);
-		bulletHP = DEFAULT_BULLET_HP + 40 * status.getStatus(2);
-		bulletSpeed = DEFAULT_BULLET_SPEED + 16 * status.getStatus(2);
-		speed = DEFAULT_SPEED + 12 * status.getStatus(4);
-		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
-		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.028 * status.getStatus(5);
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 4 * status.getStatus(0);
+		attack = DEFAULT_ATTACK + 6 * status.getStatus(0);
+		maxHp = DEFAULT_MAX_HP + 350 * status.getStatus(1);
+		healthRegen = DEFAULT_MAX_HP / Main.FRAME_RATE / 60;
+		damageFactor = 1 - 0.013 * status.getStatus(1);
+		bulletHP = DEFAULT_BULLET_HP + 30 * status.getStatus(2);
+		bulletSpeed = DEFAULT_BULLET_SPEED + 14 * status.getStatus(2);
+		speed = DEFAULT_SPEED + 10 * status.getStatus(4);
+		reloadDone = DEFAULT_RELOAD - (int)(0.6*status.getStatus(4));
+		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.025 * status.getStatus(5);
 		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.08 * status.getStatus(5);
 		
 		// Re-activate Buff
@@ -371,6 +363,14 @@ public class Novice extends Entity implements Movable, Shootable {
 		return experience.getLevel();
 	}
 	
+	public double getHealthRegen() {
+		return healthRegen;
+	}
+
+	public void setHealthRegen(double healthRegen) {
+		this.healthRegen = healthRegen;
+	}
+
 	public HpBar getHpBar() {
 		return hpBar;
 	}

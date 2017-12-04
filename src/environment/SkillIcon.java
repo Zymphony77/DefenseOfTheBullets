@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-
+import buff.DouAttBuff;
 import entity.job.*;
 import main.Main;
 import skill.*;
@@ -111,6 +111,9 @@ public class SkillIcon extends Pane {
 				}
 				player.getExperience().decreaseSkillPoint();
 				skill.upgrade();
+				if(skill instanceof DouAtt) {
+					player.addBuff(new DouAttBuff(player, skill.getLevel()));
+				}
 				if(!skill.isUpgradable()) {
 					undrawUpgrade();
 				}

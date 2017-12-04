@@ -151,7 +151,7 @@ public class GameComponent {
 		playerName = name;
 		
 		Novice oldPlayer = new Novice(spawnPoint(side), side);
-		player = new Magician(oldPlayer);
+		player = new Ranger(oldPlayer);
 		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);

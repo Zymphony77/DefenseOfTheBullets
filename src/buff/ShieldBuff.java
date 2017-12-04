@@ -7,7 +7,7 @@ import skill.*;
 
 public class ShieldBuff extends Buff implements Expirable{
 	private static final Skill SKILL = new Shield();
-	private static final Image IMAGE = new Image("resource/image/FrenzyIcon.png");
+	private static final Image IMAGE = new Image("resource/image/ShieldIcon.png");
 	protected int duration;
 	protected int maxDuration;
 	protected int maxHPShield;

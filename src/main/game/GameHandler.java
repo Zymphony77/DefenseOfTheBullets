@@ -330,7 +330,7 @@ public class GameHandler {
 	
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
-			bot.getPlayer().heal(bot.getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
+			bot.getPlayer().heal(bot.getPlayer().getHealthRegen());
 			bot.move();
 			bot.getPlayer().move();
 		}
@@ -352,7 +352,7 @@ public class GameHandler {
 		double y = 0;
 		double sz;
 		
-		GameComponent.getInstance().getPlayer().heal(GameComponent.getInstance().getPlayer().getMaxHp() / 60.0 / Main.FRAME_RATE);
+		GameComponent.getInstance().getPlayer().heal(GameComponent.getInstance().getPlayer().getHealthRegen());
 		
 		for(KeyCode key: activeKey) {
 			if(key == KeyCode.UP) {

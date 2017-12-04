@@ -5,26 +5,25 @@ import javafx.scene.image.Image;
 import entity.job.*;
 import skill.*;
 
-public class BurstBuff extends Buff implements Expirable {
-	private static final Skill SKILL = new Burst();
-	private static final Image IMAGE = new Image("resource/image/BurstIcon.png");
+public class HealBuff extends Buff implements Expirable {
+	private static final Skill SKILL = new Heal();
+	private static final Image IMAGE = new Image("resource/image/HealIcon.png");
 	
 	private int maxDuration;
 	private int duration;
+	private int level;
 	
-	public BurstBuff(Novice player, int maxDuration) {
+	public HealBuff(Novice player, int level,int maxDuration) {
 		super(player, BuffType.BUFF);
 		
-		this.duration = maxDuration;
 		this.maxDuration = maxDuration;
+		this.duration = maxDuration;
+		this.level = level;
 		
 		activateBuff();
 	}
 	
 	public void update() {
-		player.setDirection(duration * 360 / 16);
-		player.rotate();
-		player.setReloadCount();
 		--duration;
 		
 		if(duration <= 0) {
@@ -34,15 +33,19 @@ public class BurstBuff extends Buff implements Expirable {
 	}
 	
 	public void drawEffect() {
-		((Tank) player).setBurstBuff(true);
+		player.setHealthRegen(player.getHealthRegen()*(level + 1));
 	}
 	
 	public void undrawEffect() {
-		((Tank) player).setBurstBuff(false);
+		player.setHealthRegen(player.getHealthRegen()/(level + 1));
 	}
 	
 	public int getDuration() {
 		return duration;
+	}
+	
+	public int getMaxDuration() {
+		return maxDuration;
 	}
 	
 	public Image getImage() {
@@ -51,9 +54,5 @@ public class BurstBuff extends Buff implements Expirable {
 	
 	public Skill getSkill() {
 		return SKILL;
-	}
-
-	public int getMaxDuration() {
-		return maxDuration;
 	}
 }
