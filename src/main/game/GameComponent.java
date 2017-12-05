@@ -61,6 +61,7 @@ public class GameComponent {
 	private Pane bulletPane;
 	private Pane foodPane;
 	private Pane boundaryPane;
+	private ClassPane classPane;
 	private Canvas grid;
 	
 	public GameComponent() {
@@ -76,6 +77,7 @@ public class GameComponent {
 		bulletPane = new Pane();
 		foodPane = new Pane();
 		boundaryPane = new Pane();
+		classPane = new ClassPane();
 		
 		playerList = new ArrayList<Novice>();
 		botList = new ArrayList<Bot>();
@@ -407,6 +409,10 @@ public class GameComponent {
 	
 	public SkillPane getSkillPane() {
 		return skillPane;
+	}
+	
+	public ClassPane getClassPane() {
+		return classPane;
 	}
 	
 	public ExperienceBar getExperienceBar() {
