@@ -1,14 +1,12 @@
 package bot;
 
-import java.util.Random;
-
 import entity.job.Novice;
 import entity.tower.Tower;
 import main.game.GameComponent;
 import entity.bullet.Bullet;
 import utility.Pair;
 
-public class BotTower {
+public abstract class BotTower {
 	public static void update() {
 		for(Tower tower : GameComponent.getInstance().getTowerList()) {
 			eachUpdate(tower);
@@ -16,7 +14,6 @@ public class BotTower {
 	}
 	
 	protected static void eachUpdate(Tower tower) {
-		Random rand = new Random();
 		double distance = Double.MAX_VALUE;
 		Pair res = null;
 		
@@ -26,6 +23,15 @@ public class BotTower {
 					&& tower.getRefPoint().distance(novice.getRefPoint()) <= Tower.BULLET_SPEED * Bullet.LIFE_DURATION) {
 				distance = tower.getRefPoint().distance(novice.getRefPoint());
 				res = novice.getRefPoint();
+			}
+		}
+		
+		for(Bullet bullet : GameComponent.getInstance().getBulletList()) {
+			//check range of bullet
+			if(distance > tower.getRefPoint().distance(bullet.getRefPoint()) && bullet.getSide() != tower.getSide() 
+					&& tower.getRefPoint().distance(bullet.getRefPoint()) <= Tower.BULLET_SPEED * Bullet.LIFE_DURATION) {
+				distance = tower.getRefPoint().distance(bullet.getRefPoint());
+				res = bullet.getRefPoint();
 			}
 		}
 		

@@ -249,7 +249,7 @@ public class GameComponent {
 			if(component instanceof Tank) {
 				botList.add(new BotTank((Tank) component));
 			} else if(component instanceof Magician) {
-				botList.add(new BotMage((Magician) component));
+				botList.add(new BotMagician((Magician) component));
 			} else if(component instanceof Ranger) {
 				botList.add(new BotRanger((Ranger) component));
 			} else {

@@ -10,14 +10,14 @@ public class BotNovice extends Bot{
 	
 	private static final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5, 5, 5, 5, 5, 5};
 	private static final int[] upSkill = new int[] {2, 1, 2, 1, 2, 1, 2, 1, 2, 1};
-	private int cntStatus;
-	private int cntSkill;
+	private int iteratorStatus;
+	private int iteratorSkill;
 	
 	public BotNovice(Novice player)
 	{
 		super(player);
-		cntStatus = 0;
-		cntSkill = 0;
+		iteratorStatus = 0;
+		iteratorSkill = 0;
 		job = Job.NOVICE; //job will change if it have other jobs.
 		prevDirection = 7;
 	}
@@ -27,7 +27,7 @@ public class BotNovice extends Bot{
 		// TODO Auto-generated method stub
 		
 		if(player.isDead()) {
-			cntStatus = 0;
+			iteratorStatus = 0;
 			return;
 		}
 		
@@ -101,12 +101,10 @@ public class BotNovice extends Bot{
 		// TODO Auto-generated method stub
 		try {
 			if(player.getExperience().getSkillPoint() > 0)
-				player.upgradeSkill(upSkill[cntSkill++]);
+				player.upgradeSkill(upSkill[iteratorSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-//			e.printStackTrace();
-			cntSkill = 0;
+			iteratorSkill = 0;
 		}catch(Exception e) {
-//			e.printStackTrace();
 		}
 	}
 
@@ -114,14 +112,12 @@ public class BotNovice extends Bot{
 	protected void upgradeStatus() {
 		// TODO Auto-generated method stub
 		try {
-			if(player.getExperience().getPointStatus() > 0 && cntStatus < upStatus.length) {
-				player.upgradeStatus(upStatus[cntStatus++]);
+			if(player.getExperience().getPointStatus() > 0 && iteratorStatus < upStatus.length) {
+				player.upgradeStatus(upStatus[iteratorStatus++]);
 			}
 		}catch(IndexOutOfBoundsException e) {
-//			e.printStackTrace();
-			cntStatus = 0;
+			iteratorStatus = 0;
 		}catch(Exception e) {
-//			e.printStackTrace();
 		}
 	}
 

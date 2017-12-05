@@ -1,9 +1,6 @@
 package bot;
 
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,7 +10,6 @@ import entity.bullet.Bullet;
 import entity.food.Food;
 import entity.job.Novice;
 import entity.property.Side;
-import entity.property.Status;
 import entity.tower.Tower;
 import main.Main;
 import main.game.GameComponent;
@@ -22,30 +18,26 @@ import utility.Job;
 import utility.Pair;
 
 public abstract class Bot {
-	protected Novice player;
-	protected boolean chkMove = false;
-	protected Job job;
-	protected static ArrayList<Novice> playerFriendList = new ArrayList<Novice>();
-	protected static ArrayList<Novice> playerEnemiesList = new ArrayList<Novice>();
-	protected static ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
-	protected static ArrayList<Tower> towerList = new ArrayList<Tower>();
-	protected static ArrayList<Food> foodList = new ArrayList<Food>();
-	protected int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0, 4};
-	protected int[] change4to8 = new int[] {7, 1, 3, 5, 0};
-	
-	public abstract void move();
-	protected abstract void upgradeSkill();
-	protected abstract void upgradeStatus();
-	protected abstract void upgradeJob();
-	
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
 	protected static final int SIZE_OF_GRID = 15;
 	protected static final int NUMBER_OF_CHANGE_POSITION = Main.FRAME_RATE * 20; // Expected Value is 20 seconds to change;
 	protected static final int SAFETY_ZONE = (int)(GameComponent.MAX_SIZE * 0.1);
 	protected static final double MOVE_HEURISTIC = 2.6; //move heuristic number
+	
+	protected static ArrayList<Novice> playerFriendList = new ArrayList<Novice>();
+	protected static ArrayList<Novice> playerEnemiesList = new ArrayList<Novice>();
+	protected static ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
+	protected static ArrayList<Tower> towerList = new ArrayList<Tower>();
+	protected static ArrayList<Food> foodList = new ArrayList<Food>();
+	protected static int[] change8to4 = new int[] {0, 1, 1, 2, 2, 3, 3, 0, 4};
+	protected static int[] change4to8 = new int[] {7, 1, 3, 5, 0};
+	
 	protected static int[] oppositeDirection = new int[] {4, 5, 6, 7, 0, 1, 2, 3, -1};
 	protected static Grid[][] grid = new Grid[SIZE_OF_GRID + 3][SIZE_OF_GRID + 3];
-	protected static final int GAP_WHEN_ATTACK_TOWER = 300;
+	
+	protected Novice player;
+	protected boolean chkMove = false;
+	protected Job job;
 	
 	protected int status = 0; //none = 0, defense = 1, attack = 2, escape = 3, escape with bullet = 4, farm = 5; 
 	protected int prevDirection = -1;
@@ -56,15 +48,21 @@ public abstract class Bot {
 	protected Queue<Grid> queue = new LinkedBlockingQueue<Grid>();
 	protected static int[][] newPosition = new int[][] {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0} ,{-1, -1}};
 	
-	Random rand = new Random();
+	protected Random rand = new Random();
 	
-	Utility utility;
+	protected Utility utility;
 	
 	public Bot(Novice player) {
 		this.player = player;
 		this.chkMove = false;
 		utility = new Utility(player);
 	}
+	
+	public abstract void move();
+	protected abstract void upgradeSkill();
+	protected abstract void upgradeStatus();
+	protected abstract void upgradeJob();
+	
 	
 	protected void updateGrid() {
 		double timeForOnePixel = 1.0/player.getSpeed() * Main.SCREEN_SIZE / SIZE_OF_GRID;

@@ -5,11 +5,11 @@ import entity.job.Tank;
 public class BotTank extends BotNovice{
 	
 	private static final int[] upSkill = new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-	private int cntSkill;
+	private int iteratorSkill;
 	
 	public BotTank(Tank player) {
 		super(player);
-		cntSkill = 0;
+		iteratorSkill = 0;
 		
 	}
 
@@ -21,19 +21,22 @@ public class BotTank extends BotNovice{
 		
 		player.useSkill(3);
 		
-		super.move();
+		if(player.getLevel() >= 30) {
+			defenseTower();
+		}
+		else {
+			super.move();
+		}
 	}
 
 	@Override
 	protected void upgradeSkill() {
 		try {
 			if(player.getExperience().getSkillPoint() > 0)
-				player.upgradeSkill(upSkill[cntSkill++]);
+				player.upgradeSkill(upSkill[iteratorSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-//			e.printStackTrace();
-			cntSkill = 0;
+			iteratorSkill = 0;
 		}catch(Exception e) {
-//			e.printStackTrace();
 		}
 	}
 	

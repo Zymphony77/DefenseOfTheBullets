@@ -5,11 +5,11 @@ import entity.job.Ranger;
 public class BotRanger extends BotNovice{
 	
 	private static final int[] upSkill = new int[] {4, 4, 4, 4, 3, 4, 3, 3, 3, 4};
-	private int cntSkill;
+	private int iteratorSkill;
 	
 	public BotRanger(Ranger player) {
 		super(player);
-		cntSkill = 0;
+		iteratorSkill = 0;
 		
 	}
 
@@ -19,7 +19,7 @@ public class BotRanger extends BotNovice{
 		//upgradeSkill
 		upgradeSkill();
 		
-		if(cntSkill > 4) {
+		if(iteratorSkill > 4) {
 			player.useSkill(4);
 		}
 		
@@ -30,12 +30,10 @@ public class BotRanger extends BotNovice{
 	protected void upgradeSkill() {
 		try {
 			if(player.getExperience().getSkillPoint() > 0)
-				player.upgradeSkill(upSkill[cntSkill++]);
+				player.upgradeSkill(upSkill[iteratorSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-//			e.printStackTrace();
-			cntSkill = 0;
+			iteratorSkill = 0;
 		}catch(Exception e) {
-//			e.printStackTrace();
 		}
 	}
 	

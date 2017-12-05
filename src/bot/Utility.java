@@ -11,8 +11,8 @@ import main.game.GameComponent;
 import utility.Pair;
 
 public class Utility{
-	Novice player;
-	Random rand = new Random();
+	private Novice player;
+	private Random rand = new Random();
 	
 	public Utility(Novice player) {
 		this.player = player;

@@ -2,16 +2,16 @@ package bot;
 
 import entity.job.Magician;
 
-public class BotMage extends BotNovice{
+public class BotMagician extends BotNovice{
 	
 	private static final int[] upSkill = new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-	private int cntSkill;
+	private int iteratorSkill;
 	private boolean activateBuff;
 	
-	public BotMage(Magician player) {
+	public BotMagician(Magician player) {
 		super(player);
 		activateBuff = false;
-		cntSkill = 0;
+		iteratorSkill = 0;
 		
 	}
 
@@ -33,12 +33,10 @@ public class BotMage extends BotNovice{
 	protected void upgradeSkill() {
 		try {
 			if(player.getExperience().getSkillPoint() > 0)
-				player.upgradeSkill(upSkill[cntSkill++]);
+				player.upgradeSkill(upSkill[iteratorSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-//			e.printStackTrace();
-			cntSkill = 0;
+			iteratorSkill = 0;
 		}catch(Exception e) {
-//			e.printStackTrace();
 		}
 	}
 	
