@@ -156,16 +156,16 @@ public class GameComponent {
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-//		for(int i = 0; i < 4; i++) {
-//			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
-//			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
-//		}
-//		
-//		if(side == Side.BLUE) {
-//			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
-//		}else {
-//			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
-//		}
+		for(int i = 0; i < 4; i++) {
+			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
+			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
+		}
+		
+		if(side == Side.BLUE) {
+			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
+		}else {
+			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
+		}
 		
 		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
 		addComponent(tower);

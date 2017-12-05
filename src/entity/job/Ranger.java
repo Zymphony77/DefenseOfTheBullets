@@ -22,19 +22,22 @@ import utility.Pair;
 
 public class Ranger extends Novice{
 	
-	int RatioDoubleAtt = 0;
+	int RatioDoubleAtt;
 	Random rand = new Random();
 	
 	public Ranger(Pair refPoint, Side side) {
 		super(refPoint, side);
 		// TODO Auto-generated constructor stub
+		RatioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
+		
 	}
 	
 	public Ranger(Pair refPoint, Experience experience, Side side) {
 		super(refPoint, experience, side);
 		// TODO Auto-generated constructor stub
+		RatioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
 	}
@@ -45,6 +48,7 @@ public class Ranger extends Novice{
 		skillList = oldPlayer.getSkillList();
 		buffList = oldPlayer.getBuffList();
 		status = oldPlayer.getStatus();
+		RatioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
 		isMoving = oldPlayer.isMoving;
@@ -71,7 +75,7 @@ public class Ranger extends Novice{
 		reloadCount = 0;
 		
 		if(rand.nextInt(100) < RatioDoubleAtt) {
-			reloadCount = (int)(getReloadDone() * 0.95);
+			reloadCount = (int)(getReloadDone() * 0.90);
 		}
 	}
 	
@@ -80,7 +84,6 @@ public class Ranger extends Novice{
 		System.out.println(position);
 		super.upgradeSkill(position);
 		if(position == 3) {
-			System.out.println("55555");
 			addBuff(new DouAttBuff(this, skillList.get(3).getLevel()));
 		}
 	}

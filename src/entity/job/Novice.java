@@ -250,18 +250,22 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public void upgradeSkill(int position) {
-		System.out.println(position);
 		experience.decreaseSkillPoint();
 		skillList.get(position - 1).upgrade();
 	}
 	
 	/* ------------------- Buff ------------------- */
 	public void addBuff(Buff buff) {
+		Buff tmp = null;
+		
 		for(Buff currentBuff: buffList) {
 			if(currentBuff.getClass() == buff.getClass()) {
-				removeBuff(currentBuff);
+				tmp = currentBuff;
 			}
 		}
+		
+		if(tmp != null)
+			removeBuff(tmp);
 		
 		buffList.add(buff);
 		
