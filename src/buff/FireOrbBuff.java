@@ -7,7 +7,7 @@ import skill.*;
 
 public class FireOrbBuff extends Buff {
 	private static final Skill SKILL = new FireOrb();
-	private static final Image IMAGE = new Image("resource/image/FireOrbIcon.png");
+	private static final Image IMAGE = new Image("image/FireOrbIcon.png");
 	
 	private double burnDamage;
 	

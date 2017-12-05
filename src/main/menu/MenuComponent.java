@@ -17,7 +17,7 @@ import main.Main;
 import main.SceneManager;
 
 public class MenuComponent {
-	public static final Image LEFT_ARROW = new Image("resource/image/LeftArrow.png");
+	public static final Image LEFT_ARROW = new Image("image/LeftArrow.png");
 	
 	private static final MenuComponent instance = new MenuComponent("");
 	
@@ -46,13 +46,13 @@ public class MenuComponent {
 		logoBig.setOpacity(0.08);
 		
 		gc = logoBig.getGraphicsContext2D();
-		gc.drawImage(new Image("resource/image/GameLogo.png"), - Main.SCREEN_SIZE / 10, Main.SCREEN_SIZE * 35 / 750, 
+		gc.drawImage(new Image("image/GameLogo.png"), - Main.SCREEN_SIZE / 10, Main.SCREEN_SIZE * 35 / 750, 
 				Main.SCREEN_SIZE * 6 / 5, Main.SCREEN_SIZE * 2 / 5 * 900 / 1100);
 		
 		Canvas logoSmall = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
 		gc = logoSmall.getGraphicsContext2D();
-		gc.drawImage(new Image("resource/image/GameLogo.png"), Main.SCREEN_SIZE / 50, Main.SCREEN_SIZE / 10, 
+		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 50, Main.SCREEN_SIZE / 10, 
 				Main.SCREEN_SIZE * 24 / 25, Main.SCREEN_SIZE * 2 / 5 * 700 / 1100);
 		
 		backgroundPane.getChildren().addAll(background, logoBig, logoSmall);

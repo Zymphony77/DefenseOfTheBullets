@@ -8,7 +8,7 @@ import main.Main;
 public class IceOrb extends ActiveSkill implements Deactivable {
 	private static final int POSITION = 4;
 	private static final int MAX_LEVEL = 10;
-	private static final Image IMAGE = new Image("resource/image/IceOrbIcon.png");
+	private static final Image IMAGE = new Image("image/IceOrbIcon.png");
 	
 	public IceOrb() {
 		super(POSITION, MAX_LEVEL, 0);

@@ -7,7 +7,7 @@ import skill.*;
 
 public class HealBuff extends Buff implements Expirable {
 	private static final Skill SKILL = new Heal();
-	private static final Image IMAGE = new Image("resource/image/HealIcon.png");
+	private static final Image IMAGE = new Image("image/HealIcon.png");
 	
 	private int maxDuration;
 	private int duration;

@@ -20,7 +20,7 @@ import utility.Pair;
 public class SkillIcon extends Pane {
 	private static final int ICON_SIZE = 40;
 	private static final int TEXT_SIZE = 10;
-	private static final Image PLUS_IMAGE = new Image("resource/image/PlusIcon.png");
+	private static final Image PLUS_IMAGE = new Image("image/PlusIcon.png");
 	
 	private Novice player;
 	private Skill skill;

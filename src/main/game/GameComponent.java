@@ -290,7 +290,7 @@ public class GameComponent {
 		
 		GraphicsContext gc = icon.getGraphicsContext2D();
 		gc.translate(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2);
-		gc.drawImage(new Image("resource/image/" + mode + ".png"), -300, -300, 600, 600);
+		gc.drawImage(new Image("image/" + mode + ".png"), -300, -300, 600, 600);
 		
 		Timeline zoom = new Timeline(new KeyFrame(Duration.millis(10), event -> {
 			icon.setScaleX(icon.getScaleX() + 0.01);

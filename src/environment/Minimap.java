@@ -14,12 +14,12 @@ import entity.tower.*;
 import utility.*;
 
 public class Minimap extends Pane {
-	public static final Image BLUE_TOWER = new Image("resource/image/BlueTower.png");
-	public static final Image RED_TOWER = new Image("resource/image/RedTower.png");
-	public static final Image NEUTRAL_TOWER = new Image("resource/image/NeutralTower.png");
-	public static final Image BLUE_TOWER_BORDER = new Image("resource/image/BlueTowerBorder.png");
-	public static final Image RED_TOWER_BORDER = new Image("resource/image/RedTowerBorder.png");
-	public static final Image NEUTRAL_TOWER_BORDER = new Image("resource/image/NeutralTowerBorder.png");
+	public static final Image BLUE_TOWER = new Image("image/BlueTower.png");
+	public static final Image RED_TOWER = new Image("image/RedTower.png");
+	public static final Image NEUTRAL_TOWER = new Image("image/NeutralTower.png");
+	public static final Image BLUE_TOWER_BORDER = new Image("image/BlueTowerBorder.png");
+	public static final Image RED_TOWER_BORDER = new Image("image/RedTowerBorder.png");
+	public static final Image NEUTRAL_TOWER_BORDER = new Image("image/NeutralTowerBorder.png");
 	public static final int MAP_SIZE = Main.SCREEN_SIZE / 5;
 	public static final double RATIO = MAP_SIZE / (Main.SCREEN_SIZE + GameComponent.MAX_SIZE);
 	

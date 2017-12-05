@@ -9,8 +9,8 @@ import main.game.GameComponent;
 import utility.Pair;
 
 public class IceBullet extends Bullet implements Rotatable {
-	private static final Image RED_ORB = new Image("resource/image/RedIceOrb.png");
-	private static final Image BLUE_ORB = new Image("resource/image/BlueIceOrb.png");
+	private static final Image RED_ORB = new Image("image/RedIceOrb.png");
+	private static final Image BLUE_ORB = new Image("image/BlueIceOrb.png");
 	private static final int RADIUS = 7;
 	
 	protected int direction;

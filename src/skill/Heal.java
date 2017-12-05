@@ -11,7 +11,7 @@ public class Heal extends ActiveSkill {
 	private static final int DEFAULT_DURATION = 10 * Main.FRAME_RATE;
 	private static final int POSITION = 2;
 	private static final int MAX_LEVEL = 5;
-	private static final Image IMAGE = new Image("resource/image/HealIcon.png");
+	private static final Image IMAGE = new Image("image/HealIcon.png");
 	
 	public Heal() {
 		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN);

@@ -19,7 +19,7 @@ public class StatusIcon extends Pane {
 	private static final int MAX_WIDTH = 120;
 	private static final int MAX_HEIGHT = 12;
 	private static final int ICON_SIZE = 10;
-	private static final Image PLUS_IMAGE = new Image("resource/image/PlusIcon.png");
+	private static final Image PLUS_IMAGE = new Image("image/PlusIcon.png");
 	
 	private Novice player;
 	private int position;

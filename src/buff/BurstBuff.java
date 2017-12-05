@@ -7,7 +7,7 @@ import skill.*;
 
 public class BurstBuff extends Buff implements Expirable {
 	private static final Skill SKILL = new Burst();
-	private static final Image IMAGE = new Image("resource/image/BurstIcon.png");
+	private static final Image IMAGE = new Image("image/BurstIcon.png");
 	
 	private int maxDuration;
 	private int duration;

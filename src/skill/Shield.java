@@ -10,7 +10,7 @@ public class Shield extends ActiveSkill {
 	private static final int DEFAULT_DURATION = 15 * Main.FRAME_RATE;
 	private static final int POSITION = 3;
 	private static final int MAX_LEVEL = 10;
-	private static final Image IMAGE = new Image("resource/image/ShieldIcon.png");
+	private static final Image IMAGE = new Image("image/ShieldIcon.png");
 	
 	public Shield() {
 		super(POSITION, MAX_LEVEL, DEFAULT_COOLDOWN);

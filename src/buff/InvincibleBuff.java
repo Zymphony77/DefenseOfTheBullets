@@ -9,7 +9,7 @@ import entity.job.*;
 import skill.*;
 
 public class InvincibleBuff extends Buff implements Expirable {
-	private static final Image IMAGE = new Image("resource/image/InvincibleIcon.png");
+	private static final Image IMAGE = new Image("image/InvincibleIcon.png");
 	
 	private int maxDuration;
 	private int duration;

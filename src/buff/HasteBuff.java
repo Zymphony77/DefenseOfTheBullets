@@ -7,7 +7,7 @@ import skill.*;
 
 public class HasteBuff extends Buff implements Expirable {
 	private static final Skill SKILL = new Haste();
-	private static final Image IMAGE = new Image("resource/image/HasteIcon.png");
+	private static final Image IMAGE = new Image("image/HasteIcon.png");
 	
 	private int maxDuration;
 	private int duration;

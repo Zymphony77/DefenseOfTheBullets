@@ -61,12 +61,12 @@ public class RankingComponent {
 		logoBig.setOpacity(0.08);
 		
 		gc = logoBig.getGraphicsContext2D();
-		gc.drawImage(new Image("resource/image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 450, 35, 900, 300 * 900 / 1100);
+		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 450, 35, 900, 300 * 900 / 1100);
 		
 		Canvas logoSmall = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
 		gc = logoSmall.getGraphicsContext2D();
-		gc.drawImage(new Image("resource/image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 350, 75, 700, 300 * 700 / 1100);
+		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 350, 75, 700, 300 * 700 / 1100);
 		
 		backgroundPane.getChildren().addAll(background, logoBig, logoSmall);
 		

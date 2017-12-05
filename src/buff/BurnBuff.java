@@ -6,7 +6,7 @@ import main.Main;
 import skill.Skill;
 
 public class BurnBuff extends Buff implements Expirable {
-	private static final Image IMAGE = new Image("resource/image/FireOrbIcon.png");
+	private static final Image IMAGE = new Image("image/FireOrbIcon.png");
 	private static final int MAX_DURATION = 2 * Main.FRAME_RATE;
 	
 	private int duration;

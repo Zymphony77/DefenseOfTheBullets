@@ -7,7 +7,7 @@ import skill.*;
 
 public class FrenzyBuff extends Buff implements Expirable{
 	private static final Skill SKILL = new Frenzy();
-	private static final Image IMAGE = new Image("resource/image/FrenzyIcon.png");
+	private static final Image IMAGE = new Image("image/FrenzyIcon.png");
 	private double reloadFactor;
 	private double slow;
 	int duration;

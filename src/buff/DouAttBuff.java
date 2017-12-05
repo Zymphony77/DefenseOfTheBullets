@@ -7,7 +7,7 @@ import skill.*;
 
 public class DouAttBuff extends Buff {
 	private static final Skill SKILL = new Haste();
-	private static final Image IMAGE = new Image("resource/image/DouAttIcon.png");
+	private static final Image IMAGE = new Image("image/DouAttIcon.png");
 	
 	private int level;
 	

@@ -9,8 +9,8 @@ import main.game.GameComponent;
 import utility.Pair;
 
 public class FireBullet extends Bullet implements Rotatable {
-	private static final Image RED_ORB = new Image("resource/image/RedFireOrb.png");
-	private static final Image BLUE_ORB = new Image("resource/image/BlueFireOrb.png");
+	private static final Image RED_ORB = new Image("image/RedFireOrb.png");
+	private static final Image BLUE_ORB = new Image("image/BlueFireOrb.png");
 	private static final int RADIUS = 7;
 	
 	protected double burnDamage;

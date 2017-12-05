@@ -26,7 +26,7 @@ public class BloodPane extends Pane {
 		spillStage = 0;
 		countDown = 3;
 		
-		String path = "resource/image/" + (side == Side.RED? "Red": "Blue") + "BloodSpill";
+		String path = "image/" + (side == Side.RED? "Red": "Blue") + "BloodSpill";
 		bloodSpill = new Canvas[10];
 		for(int i = 0; i < 10; ++i) {
 			bloodSpill[i] = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
@@ -36,7 +36,7 @@ public class BloodPane extends Pane {
 			getChildren().add(bloodSpill[i]);
 		}
 		
-		path = "resource/image/Respawn";
+		path = "image/Respawn";
 		
 		text = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		text.setOpacity(0);
