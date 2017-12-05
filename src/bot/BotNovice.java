@@ -6,9 +6,9 @@ import utility.Job;
 
 public class BotNovice extends Bot{
 	
-	//STR = 1 VIT = 2 DEX = 3 INT = 4 AGI = 5 LUK = 6
+	//STR = 0 VIT = 1 DEX = 2 INT = 3 AGI = 4 LUK = 5
 	
-	private static final int[] upStatus = new int[] {2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 2, 2, 0, 1, 1, 0, 4, 4, 5, 5, 5, 5, 5, 5, 5};
+	private static final int[] upStatus = new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
 	private static final int[] upSkill = new int[] {2, 1, 2, 1, 2, 1, 2, 1, 2, 1};
 	private int iteratorStatus;
 	private int iteratorSkill;
