@@ -25,6 +25,8 @@ public class Novice extends Entity implements Movable, Shootable {
 	private static final double DEFAULT_CRITICAL_CHANCE = 0.08;
 	private static final double DEFAULT_CRITICAL_DAMAGE = 1.3;
 	private static final int DEFAULT_RELOAD = 20;
+	private static final Job JOB = Job.NOVICE;
+	
 	protected static final int CANVAS_SIZE = 60;
 	protected static final int RADIUS = 20;
 	
@@ -392,7 +394,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public Job getJob() {
-		return Job.NOVICE;
+		return JOB;
 	}
 	
 	public boolean isPlayer() {
@@ -405,6 +407,6 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	@Override
 	public String toString() {
-		return "Novice";
+		return JOB.toString();
 	}
 }

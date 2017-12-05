@@ -5,22 +5,26 @@ import java.util.ArrayList;
 import buff.Buff;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import utility.Job;
 
 public class ClassPane extends Pane{
-	ArrayList<ClassIcon> classList;
+	private ArrayList<ClassIcon> classList;
+	private boolean isShowing;
 	
 	public ClassPane() {
 		classList = new ArrayList<ClassIcon>();
+		isShowing = false;
 	}
 	
 	public void showClassPane(){
-		addBuff("tank");
-		addBuff("mage");
-		addBuff("ranger");
+		addClass(Job.TANK);
+		addClass(Job.MAGICIAN);
+		addClass(Job.RANGER);
 		addInComponent();
+		isShowing = true;
 	}
 	
-	public void addBuff(String job) {
+	public void addClass(Job job) {
 		ClassIcon icon = new ClassIcon(job, classList.size());
 		classList.add(icon);
 	}
@@ -34,5 +38,10 @@ public class ClassPane extends Pane{
 	public void clear() {
 		classList.clear();
 		getChildren().clear();
+		isShowing = false;
+	}
+	
+	public boolean isShowing() {
+		return isShowing;
 	}
 }

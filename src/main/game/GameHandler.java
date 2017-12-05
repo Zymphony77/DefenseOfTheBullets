@@ -45,7 +45,6 @@ public class GameHandler {
 	private static boolean changeSceneReady = false;
 	
 	private static Timeline timer;
-	private static int frameCount;
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
@@ -103,10 +102,8 @@ public class GameHandler {
 			}
 			
 			for(int i = 0; i < GameComponent.getInstance().getPlayer().getSkillList().size(); ++i) {
-				for(int j = 0; j < 10; ++j) {
-					if(GameComponent.getInstance().getPlayer().getSkillList().get(i).getLevel() < 10) {
-						GameComponent.getInstance().getPlayer().upgradeSkill(i + 1);
-					}
+				while(GameComponent.getInstance().getPlayer().getSkillList().get(i).isUpgradable()) {
+					GameComponent.getInstance().getPlayer().upgradeSkill(i + 1);
 				}
 			}
 			
@@ -183,8 +180,6 @@ public class GameHandler {
 	}
 	
 	public static void startGame() {
-		frameCount = 0;
-		
 		timer = new Timeline(new KeyFrame(Duration.millis(1000.00 / Main.FRAME_RATE), event -> {
 			GameHandler.update();
 			BotTower.update();
@@ -209,9 +204,47 @@ public class GameHandler {
 		GameComponent.getInstance().getPlayer().rotate();
 	}
 	
-	public static void update() {
-		++frameCount;
+	public static void changeClass(Novice player, Job job) {
+		if(!player.isPlayer()) {
+			for(Bot bot: GameComponent.getInstance().getBotList()) {
+				if(bot.getPlayer() == player) {
+					GameComponent.getInstance().getBotList().remove(bot);
+					break;
+				}
+			}
+		}
 		
+		Novice newPlayer;
+		if(job == Job.TANK) {
+			newPlayer = new Tank(player);
+		} else if(job == Job.MAGICIAN) {
+			newPlayer = new Magician(player);
+		} else {
+			newPlayer = new Ranger(player);
+		}
+		
+		for(Skill skill: newPlayer.getSkillList()) {
+			skill.setCaster(newPlayer);
+		}
+		
+		newPlayer.upgradeAbility();
+		
+		if(newPlayer.isPlayer()) {
+			GameComponent.getInstance().getClassPane().clear();
+			
+			GameComponent.getInstance().setPlayer(newPlayer);
+			GameComponent.getInstance().getSkillPane().setPlayer(newPlayer);
+			GameComponent.getInstance().getStatusPane().setPlayer(newPlayer);
+			GameComponent.getInstance().getExperienceBar().setExperience(newPlayer.getExperience());
+			
+			skillUpgradable = false;
+		}
+		
+		GameComponent.getInstance().addComponent(newPlayer);
+		GameComponent.getInstance().removeComponent(player);
+	}
+	
+	public static void update() {
 		if(activeKey.contains(KeyCode.SPACE) || activeMouse.contains(MouseButton.PRIMARY) || autoshoot) {
 			GameComponent.getInstance().getPlayer().shoot();
 		}
@@ -289,6 +322,11 @@ public class GameHandler {
 			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
 				icon.undrawUpgrade();
 			}
+		}
+		// Job
+		if(GameComponent.getInstance().getPlayer().getJob() == Job.NOVICE && GameComponent.getInstance().getPlayer().getLevel() > 10 &&
+				!GameComponent.getInstance().getClassPane().isShowing()) {
+			GameComponent.getInstance().getClassPane().showClassPane();
 		}
 	}
 	

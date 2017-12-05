@@ -3,24 +3,23 @@ package environment;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import com.sun.j3d.utils.behaviors.sensor.Mouse6DPointerBehavior;
-
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+
+import main.game.*;
 import utility.*;
 
 public class ClassIcon extends Pane {
 	public static final double RADIUS = 10;
 	public static final int ICON_SIZE = 35;
 	
-	private String job;
+	private Job job;
 	private Canvas icon;
 	private int position;
 	
-	public ClassIcon(String job, int position) {
+	public ClassIcon(Job job, int position) {
 		this.job = job;
 		
 		icon = new Canvas(ICON_SIZE, ICON_SIZE);
@@ -31,19 +30,19 @@ public class ClassIcon extends Pane {
 		
 		GraphicsContext gc = icon.getGraphicsContext2D();
 		
-		if(job.equals("tank")) {
+		if(job == Job.TANK) {
 			gc.setFill(Color.DARKGRAY);
 			gc.fillRect(3, 12, 3*RADIUS-2, 5);
 			gc.setFill(Color.GRAY);
 			gc.fillOval(7, 5, 2*RADIUS, 2*RADIUS);
 		}
-		else if(job.equals("mage")) {
+		else if(job == Job.MAGICIAN) {
 			gc.setFill(Color.DARKGRAY);
 			gc.fillRect(RADIUS, 12, 2*RADIUS, 5);
 			gc.setFill(Color.MEDIUMPURPLE);
 			gc.fillOval(5, 5, 2*RADIUS, 2*RADIUS);
 		}
-		else if(job.equals("ranger")) {
+		else if(job == Job.RANGER) {
 			gc.setFill(Color.DARKGRAY);
 			gc.fillRect(RADIUS, 12, 2*RADIUS, 5);
 			gc.setFill(Color.DARKSEAGREEN);
@@ -52,12 +51,12 @@ public class ClassIcon extends Pane {
 		
 		gc.setFill(Color.BLACK);
 		gc.setFont(new Font(8));
-		gc.fillText(job, 7.5, 32);
+		gc.fillText(job.toString(), 7.5, 32);
 		gc.strokeRect(0, 0, icon.getWidth(), icon.getHeight());
 		
 		icon.setOnMouseClicked(event -> {
 			if(event.getButton() == MouseButton.PRIMARY) {
-				
+				GameHandler.changeClass(GameComponent.getInstance().getPlayer(), job);
 			}
 		});
 		

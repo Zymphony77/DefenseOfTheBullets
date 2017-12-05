@@ -50,6 +50,7 @@ public class GameComponent {
 	
 	private Pane endPane;
 	private BloodPane bloodPane;
+	private ClassPane classPane;
 	private BuffPane buffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
@@ -61,11 +62,11 @@ public class GameComponent {
 	private Pane bulletPane;
 	private Pane foodPane;
 	private Pane boundaryPane;
-	private ClassPane classPane;
 	private Canvas grid;
 	
 	public GameComponent() {
 		endPane = new Pane();
+		classPane = new ClassPane();
 		buffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
@@ -77,7 +78,6 @@ public class GameComponent {
 		bulletPane = new Pane();
 		foodPane = new Pane();
 		boundaryPane = new Pane();
-		classPane = new ClassPane();
 		
 		playerList = new ArrayList<Novice>();
 		botList = new ArrayList<Bot>();
@@ -152,8 +152,7 @@ public class GameComponent {
 	public void initialize(Side side, String name) {
 		playerName = name;
 		
-		Novice oldPlayer = new Novice(spawnPoint(side), side);
-		player = new Tank(oldPlayer);
+		player = new Novice(spawnPoint(side), side);
 		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
@@ -243,10 +242,21 @@ public class GameComponent {
 			playerList.add((Novice) component);
 			playerPane.getChildren().add(((Entity) component).getCanvas());
 			
-			if((Novice) component != player) {
-				botList.add(new BotNovice((Novice) component));
-				((Novice) component).setPlayer(false);
+			if(player == component) {
+				return;
 			}
+			
+			if(component instanceof Tank) {
+				botList.add(new BotTank((Tank) component));
+			} else if(component instanceof Magician) {
+				botList.add(new BotMage((Magician) component));
+			} else if(component instanceof Ranger) {
+				botList.add(new BotRanger((Ranger) component));
+			} else {
+				botList.add(new BotNovice((Novice) component));
+			}
+			
+			((Novice) component).setPlayer(false);
 		} else if(component instanceof Bullet) {
 			bulletList.add((Bullet) component);
 			bulletPane.getChildren().add(((Entity) component).getCanvas());

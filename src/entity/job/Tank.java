@@ -16,9 +16,11 @@ import skill.Burst;
 import skill.Frenzy;
 import skill.Haste;
 import skill.Shield;
+import utility.Job;
 import utility.Pair;
 
 public class Tank extends Novice{
+	private static final Job JOB = Job.TANK;
 	
 	protected double HPShield;
 	protected boolean isBurstBuff;
@@ -132,9 +134,13 @@ public class Tank extends Novice{
 	public void setBurstBuff(boolean isBurstBuff) {
 		this.isBurstBuff = isBurstBuff;
 	}
+	
+	public Job getJob() {
+		return JOB;
+	}
 
 	@Override
-	public String toString() {
-		return "Tank";
-	}
+	 public String toString() {
+		 return JOB.toString();
+	 }
 }

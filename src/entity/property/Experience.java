@@ -22,9 +22,12 @@ public class Experience {
 	public void updateLevel() {
 		while(level < MAX_LEVEL && currentExp >= getMaxExp()) {
 			currentExp -= getMaxExp();
-			pointStatus++;
-			++skillPoint;
 			++level;
+			pointStatus++;
+			
+			if(level <= 10 || level % 2 == 1) {
+				++skillPoint;
+			}
 		}
 	}
 	

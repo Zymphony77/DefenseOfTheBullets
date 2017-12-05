@@ -14,6 +14,7 @@ import buff.Buff;
 import buff.DouAttBuff;
 import entity.job.*;
 import main.Main;
+import main.game.GameComponent;
 import skill.*;
 import utility.Pair;
 
@@ -133,6 +134,22 @@ public class SkillIcon extends Pane {
 	}
 	
 	public boolean isUpgradable() {
-		return skill.isUpgradable();
+		if(!skill.isUpgradable()) {
+			return false;
+		}
+		
+		if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() <= 0) {
+			return false;
+		}
+		
+		if(skill.getPosition() > 4 && GameComponent.getInstance().getPlayer().getExperience().getSpentSkillPoint() < 30) {
+			return false;
+		}
+		
+		if(skill.getPosition() > 2 && GameComponent.getInstance().getPlayer().getExperience().getSpentSkillPoint() < 10) {
+			return false;
+		}
+		
+		return true;
 	}
 }

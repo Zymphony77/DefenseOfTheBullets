@@ -10,15 +10,25 @@ import entity.bullet.*;
 import entity.property.*;
 import main.game.GameComponent;
 import skill.*;
+import utility.Job;
 import utility.Pair;
 
 public class Magician extends Novice {
 	private static final int CANVAS_SIZE = 60;
 	private static final int RADIUS = 20;
+	private static final Job JOB = Job.MAGICIAN;
+	
 	public Magician(Novice oldPlayer) {
 		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
+		skillList = oldPlayer.getSkillList();
+		buffList = oldPlayer.getBuffList();
+		status = oldPlayer.getStatus();
 		skillList.add(new FireOrb());
 		skillList.add(new IceOrb());
+		isMoving = oldPlayer.isMoving;
+		isPlayer = oldPlayer.isPlayer;
+		moveDirection = oldPlayer.moveDirection;
+		reloadCount = oldPlayer.reloadCount;
 	}
 	
 	@Override
@@ -96,5 +106,14 @@ public class Magician extends Novice {
 		 }
 		 
 		 super.useSkill(position);
+	 }
+	 
+	 public Job getJob() {
+			return JOB;
+		}
+	 
+	 @Override
+	 public String toString() {
+		 return JOB.toString();
 	 }
 }

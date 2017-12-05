@@ -31,6 +31,10 @@ public class BotNovice extends Bot{
 			return;
 		}
 		
+		if(player.getLevel() > 10) {
+			upgradeJob();
+		}
+		
 		//upgrade
 		upgradeStatus();
 		

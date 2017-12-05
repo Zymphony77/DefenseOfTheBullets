@@ -18,12 +18,14 @@ import skill.DouAtt;
 import skill.Frenzy;
 import skill.Haste;
 import skill.Skill;
+import utility.Job;
 import utility.Pair;
 
 public class Ranger extends Novice{
+	private static final Job JOB = Job.RANGER;
 	
-	int RatioDoubleAtt;
-	Random rand = new Random();
+	protected int RatioDoubleAtt;
+	protected Random rand = new Random();
 	
 	public Ranger(Pair refPoint, Side side) {
 		super(refPoint, side);
@@ -94,9 +96,13 @@ public class Ranger extends Novice{
 	public void setRatioDoubleAtt(int ratioDoubleAtt) {
 		RatioDoubleAtt = ratioDoubleAtt;
 	}
+	
+	public Job getJob() {
+		return JOB;
+	}
 
 	@Override
-	public String toString() {
-		return "Ranger";
-	}
+	 public String toString() {
+		 return JOB.toString();
+	 }
 }

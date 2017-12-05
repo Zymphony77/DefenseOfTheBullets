@@ -1,13 +1,13 @@
 package bot;
 
-import entity.job.Tank;
+import entity.job.Ranger;
 
 public class BotRanger extends BotNovice{
 	
 	private static final int[] upSkill = new int[] {4, 4, 4, 4, 3, 4, 3, 3, 3, 4};
 	private int cntSkill;
 	
-	public BotRanger(Tank player) {
+	public BotRanger(Ranger player) {
 		super(player);
 		cntSkill = 0;
 		
