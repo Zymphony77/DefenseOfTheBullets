@@ -80,6 +80,7 @@ public class HpBar {
 	
 	public void die() {
 		canvas.setOpacity(0);
+		GameComponent.getInstance().getHpBarPane().getChildren().remove(canvas);
 	}
 	
 	public Entity getEntity() {

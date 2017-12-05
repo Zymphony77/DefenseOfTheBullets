@@ -33,14 +33,20 @@ public class SkillPane extends Pane {
 	}
 	
 	public void setPlayer(Novice player) {
+		clear();
 		this.player = player;
 		
 		// Filling backwards to prevent "Overlaying Canvases" which
 		// (GUESS) cause the canvases underneath to NOT be able to pick Event
 		for(int i = player.getSkillList().size() - 1; i >= 0; --i) {
 			SkillIcon icon = new SkillIcon(player, player.getSkillList().get(i));
-			getChildren().add(icon);
 			iconList.add(icon);
+			getChildren().add(icon);
+			if(icon.isUpgradable()) {
+				icon.drawUpgrade();
+			} else {
+				icon.undrawUpgrade();
+			}
 		}
 	}
 	

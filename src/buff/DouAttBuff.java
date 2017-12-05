@@ -6,7 +6,7 @@ import entity.job.*;
 import skill.*;
 
 public class DouAttBuff extends Buff {
-	private static final Skill SKILL = new Haste();
+	private static final Skill SKILL = new DouAtt();
 	private static final Image IMAGE = new Image("image/DouAttIcon.png");
 	
 	private int level;

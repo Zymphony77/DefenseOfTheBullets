@@ -24,13 +24,15 @@ import utility.Pair;
 public class Ranger extends Novice{
 	private static final Job JOB = Job.RANGER;
 	
-	protected int RatioDoubleAtt;
+	protected int ratioDoubleAtt;
+	protected int shootingState; 
 	protected Random rand = new Random();
 	
 	public Ranger(Pair refPoint, Side side) {
 		super(refPoint, side);
 		// TODO Auto-generated constructor stub
-		RatioDoubleAtt = 0;
+		ratioDoubleAtt = 0;
+		shootingState = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
 		
@@ -39,7 +41,7 @@ public class Ranger extends Novice{
 	public Ranger(Pair refPoint, Experience experience, Side side) {
 		super(refPoint, experience, side);
 		// TODO Auto-generated constructor stub
-		RatioDoubleAtt = 0;
+		ratioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
 	}
@@ -50,7 +52,7 @@ public class Ranger extends Novice{
 		skillList = oldPlayer.getSkillList();
 		buffList = oldPlayer.getBuffList();
 		status = oldPlayer.getStatus();
-		RatioDoubleAtt = 0;
+		ratioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
 		isMoving = oldPlayer.isMoving;
@@ -60,14 +62,37 @@ public class Ranger extends Novice{
 	}
 	
 	//--------------UI-------------\\
+	public void draw() {
+		canvas.setWidth(CANVAS_SIZE);
+		canvas.setHeight(CANVAS_SIZE);
+		
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		if(GameComponent.getInstance().getPlayer() != null) {
+			changeCenter(GameComponent.getInstance().getPlayer().getRefPoint());
+		}
+		
+		gc.setFill(Color.DARKGRAY);
+		gc.fillRect(2*RADIUS, CANVAS_SIZE / 2 - 9, RADIUS, 8);
+		gc.fillRect(2*RADIUS, CANVAS_SIZE / 2, RADIUS, 8);
+		gc.setFill(Color.DARKSEAGREEN);
+		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
+		
+		GameComponent.getInstance().removeComponent(hpBar);
+		hpBar = new HpBar(this);
+		GameComponent.getInstance().addComponent(hpBar);
+	}
+	
 	@Override
 	public void shoot() {
 		if(reloadCount < reloadDone) {
 			return;
 		}
 		
-		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
-		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
+		double x = refPoint.first + Math.cos(Math.toRadians(direction) + (shootingState == 0? 1: -1) * 
+				Math.atan2(4, RADIUS + 17))*(Math.sqrt(Math.pow((RADIUS + 17), 2) + Math.pow(4, 2)));
+		double y = refPoint.second + Math.sin(Math.toRadians(direction) + (shootingState == 0? 1: -1) * 
+				Math.atan2(4, RADIUS + 17))*(Math.sqrt(Math.pow((RADIUS + 17), 2) + Math.pow(4, 2)));
 		
 		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		
@@ -75,8 +100,9 @@ public class Ranger extends Novice{
 		GameComponent.getInstance().addComponent(bullet);
 		
 		reloadCount = 0;
+		shootingState = 1 - shootingState;
 		
-		if(rand.nextInt(100) < RatioDoubleAtt) {
+		if(rand.nextInt(100) < ratioDoubleAtt) {
 			reloadCount = (int)(getReloadDone() * 0.90);
 		}
 	}
@@ -90,11 +116,11 @@ public class Ranger extends Novice{
 	}
 
 	public int getRatioDoubleAtt() {
-		return RatioDoubleAtt;
+		return ratioDoubleAtt;
 	}
 
 	public void setRatioDoubleAtt(int ratioDoubleAtt) {
-		RatioDoubleAtt = ratioDoubleAtt;
+		this.ratioDoubleAtt = ratioDoubleAtt;
 	}
 	
 	public Job getJob() {

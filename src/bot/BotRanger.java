@@ -32,10 +32,10 @@ public class BotRanger extends BotNovice{
 			if(player.getExperience().getSkillPoint() > 0)
 				player.upgradeSkill(upSkill[cntSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			cntSkill = 0;
 		}catch(Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 	

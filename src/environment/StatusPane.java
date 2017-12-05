@@ -27,6 +27,7 @@ public class StatusPane extends Pane {
 	}
 	
 	public void setPlayer(Novice player) {
+		clear();
 		this.player = player;
 		
 		// Fill backwards to avoid "Overlapping Canvases"
@@ -34,6 +35,11 @@ public class StatusPane extends Pane {
 			StatusIcon icon = new StatusIcon(player, i);
 			iconList.add(icon);
 			getChildren().add(icon);
+			if(icon.isUpgradable()) {
+				icon.drawUpgrade();
+			} else {
+				icon.undrawUpgrade();
+			}
 		}
 	}
 	

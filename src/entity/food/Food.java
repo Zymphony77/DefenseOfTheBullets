@@ -81,6 +81,8 @@ public class Food extends Entity implements Rotatable {
 		if(realKiller != null) {
 			realKiller.gainExp(foodExp);
 		}
+		
+		GameComponent.getInstance().getFoodPane().getChildren().remove(canvas);
 	}
 	
 	public int getRadius() {

@@ -26,6 +26,7 @@ public class StatusIcon extends Pane {
 	
 	private Canvas icon;
 	private Canvas upgrade;
+	private boolean isCurrentlyUpgradable;
 	
 	public StatusIcon(Novice player, int position) {
 		this.player = player;
@@ -46,6 +47,8 @@ public class StatusIcon extends Pane {
 		gc.setFill(Color.MOCCASIN);
 		gc.fillOval(0, 0, ICON_SIZE, ICON_SIZE);
 		gc.drawImage(PLUS_IMAGE, 0, 0, ICON_SIZE, ICON_SIZE);
+		
+		isCurrentlyUpgradable = true;
 		
 		drawIcon();
 		undrawUpgrade();
@@ -74,6 +77,11 @@ public class StatusIcon extends Pane {
 	}
 	
 	public void drawUpgrade() {
+		if(isCurrentlyUpgradable) {
+			return;
+		}
+		
+		isCurrentlyUpgradable = true;
 		upgrade.setOpacity(0.75);
 		upgrade.setOnMouseClicked(event -> {
 			
@@ -85,6 +93,11 @@ public class StatusIcon extends Pane {
 	}
 	
 	public void undrawUpgrade() {
+		if(!isCurrentlyUpgradable) {
+			return;
+		}
+		
+		isCurrentlyUpgradable = false;
 		upgrade.setOpacity(0);
 		upgrade.setOnMouseClicked(event -> {});
 	}

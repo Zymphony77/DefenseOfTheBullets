@@ -27,6 +27,7 @@ public class SkillIcon extends Pane {
 	private Skill skill;
 	private Canvas icon;
 	private Canvas upgrade;
+	private boolean isCurrentlyUpgradable;
 	
 	public SkillIcon(Novice player, Skill skill) {
 		this.player = player;
@@ -49,6 +50,8 @@ public class SkillIcon extends Pane {
 		gc.fillOval(0, 0, ICON_SIZE / 2, ICON_SIZE / 2);
 		gc.drawImage(PLUS_IMAGE, ICON_SIZE / 12, ICON_SIZE / 12, 
 				ICON_SIZE / 3, ICON_SIZE / 3);
+		
+		isCurrentlyUpgradable = true;
 		
 		drawIcon();
 		undrawUpgrade();
@@ -104,6 +107,11 @@ public class SkillIcon extends Pane {
 	}
 	
 	public void drawUpgrade() {
+		if(isCurrentlyUpgradable) {
+			return;
+		}
+		
+		isCurrentlyUpgradable = true;
 		upgrade.setOpacity(0.75);
 		upgrade.setOnMouseClicked(event -> {
 			if(event.getButton() == MouseButton.PRIMARY) {
@@ -124,6 +132,11 @@ public class SkillIcon extends Pane {
 	}
 	
 	public void undrawUpgrade() {
+		if(!isCurrentlyUpgradable) {
+			return;
+		}
+		
+		isCurrentlyUpgradable = false;
 		upgrade.setOpacity(0);
 		upgrade.setOnMouseClicked(event -> {});
 	}

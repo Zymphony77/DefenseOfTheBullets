@@ -38,8 +38,6 @@ public class GameHandler {
 	private static HashSet<MouseButton> activeMouse = new HashSet<MouseButton>();
 	private static HashMap<Novice, Integer> deadPlayer = new HashMap<Novice, Integer>();
 	private static boolean autoshoot = false;
-	private static boolean skillUpgradable = false;
-	private static boolean statusUpgradable = false;
 	private static boolean justDead = false;
 	private static boolean isEnd = false;
 	private static boolean changeSceneReady = false;
@@ -77,7 +75,7 @@ public class GameHandler {
 			
 			String keyName = event.getCode().toString();
 			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1));
-			if(skillNumber <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
+			if(0 < skillNumber && skillNumber <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
 				GameComponent.getInstance().getPlayer().useSkill(skillNumber);
 			}
 		}
@@ -204,46 +202,6 @@ public class GameHandler {
 		GameComponent.getInstance().getPlayer().rotate();
 	}
 	
-	public static void changeClass(Novice player, Job job) {
-		if(!player.isPlayer()) {
-			for(Bot bot: GameComponent.getInstance().getBotList()) {
-				if(bot.getPlayer() == player) {
-					GameComponent.getInstance().getBotList().remove(bot);
-					break;
-				}
-			}
-		}
-		
-		Novice newPlayer;
-		if(job == Job.TANK) {
-			newPlayer = new Tank(player);
-		} else if(job == Job.MAGICIAN) {
-			newPlayer = new Magician(player);
-		} else {
-			newPlayer = new Ranger(player);
-		}
-		
-		for(Skill skill: newPlayer.getSkillList()) {
-			skill.setCaster(newPlayer);
-		}
-		
-		newPlayer.upgradeAbility();
-		
-		if(newPlayer.isPlayer()) {
-			GameComponent.getInstance().getClassPane().clear();
-			
-			GameComponent.getInstance().setPlayer(newPlayer);
-			GameComponent.getInstance().getSkillPane().setPlayer(newPlayer);
-			GameComponent.getInstance().getStatusPane().setPlayer(newPlayer);
-			GameComponent.getInstance().getExperienceBar().setExperience(newPlayer.getExperience());
-			
-			skillUpgradable = false;
-		}
-		
-		GameComponent.getInstance().addComponent(newPlayer);
-		GameComponent.getInstance().removeComponent(player);
-	}
-	
 	public static void update() {
 		if(activeKey.contains(KeyCode.SPACE) || activeMouse.contains(MouseButton.PRIMARY) || autoshoot) {
 			GameComponent.getInstance().getPlayer().shoot();
@@ -257,6 +215,7 @@ public class GameHandler {
 		moveCenter(GameComponent.getInstance().getPlayer().getRefPoint());
 		checkCollision();
 		clearDeadComponent();
+		changeClass();
 		checkEnding();
 		
 		GameComponent.getInstance().generateFood();
@@ -275,6 +234,7 @@ public class GameHandler {
 					
 					GameComponent.getInstance().getSkillPane().clear();
 					GameComponent.getInstance().getStatusPane().clear();
+					GameComponent.getInstance().getClassPane().clear();
 					
 					GameComponent.getInstance().setPlayer(newPlayer);
 					GameComponent.getInstance().getStatusPane().setPlayer(newPlayer);
@@ -296,33 +256,22 @@ public class GameHandler {
 	
 	private static void checkPlayerUpgrade() {
 		// Status
-		if(GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0 && !statusUpgradable) {
-			statusUpgradable = true;
-			for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
-				if(icon.isUpgradable()) {
-					icon.drawUpgrade();
-				}
-			}
-		} else if(GameComponent.getInstance().getPlayer().getExperience().getPointStatus() == 0 && statusUpgradable) {
-			statusUpgradable = false;
-			for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
+		for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
+			if(icon.isUpgradable() && GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0) {
+				icon.drawUpgrade();
+			} else {
 				icon.undrawUpgrade();
 			}
 		}
 		// Skill
-		if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() > 0 && !skillUpgradable) {
-			skillUpgradable = true;
-			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
-				if(icon.isUpgradable()) {
-					icon.drawUpgrade();
-				}
-			}
-		} else if(GameComponent.getInstance().getPlayer().getExperience().getSkillPoint() == 0 && skillUpgradable){
-			skillUpgradable = false;
-			for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
+		for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
+			if(icon.isUpgradable()) {
+				icon.drawUpgrade();
+			} else {
 				icon.undrawUpgrade();
 			}
 		}
+		
 		// Job
 		if(GameComponent.getInstance().getPlayer().getJob() == Job.NOVICE && GameComponent.getInstance().getPlayer().getLevel() > 10 &&
 				!GameComponent.getInstance().getClassPane().isShowing()) {
@@ -577,6 +526,74 @@ public class GameHandler {
 		GameComponent.getInstance().getMinimap().update();
 	}
 	
+	public static void changeClass() {
+		ArrayList<Novice> newPlayerList = new ArrayList<Novice>();
+		
+		for(Novice player: GameComponent.getInstance().getPlayerList()) {
+			if(!player.isChangeJobRequested()) {
+				continue;
+			}
+			
+			if(!player.isPlayer()) {
+				for(Bot bot: GameComponent.getInstance().getBotList()) {
+					if(bot.getPlayer() == player) {
+						GameComponent.getInstance().getBotList().remove(bot);
+						break;
+					}
+				}
+			}
+			
+			Novice newPlayer;
+			if(player.getNewJob() == Job.TANK) {
+				newPlayer = new Tank(player);
+			} else if(player.getNewJob() == Job.MAGICIAN) {
+				newPlayer = new Magician(player);
+			} else {
+				newPlayer = new Ranger(player);
+			}
+			
+			for(Skill skill: newPlayer.getSkillList()) {
+				skill.setCaster(newPlayer);
+			}
+			
+			newPlayer.upgradeAbility();
+			
+			if(newPlayer.isPlayer()) {
+				GameComponent.getInstance().getClassPane().clear();
+				
+				GameComponent.getInstance().setPlayer(newPlayer);
+				GameComponent.getInstance().getSkillPane().setPlayer(newPlayer);
+				GameComponent.getInstance().getStatusPane().setPlayer(newPlayer);
+				GameComponent.getInstance().getExperienceBar().setExperience(newPlayer.getExperience());
+				
+				for(StatusIcon icon: GameComponent.getInstance().getStatusPane().getIconList()) {
+					icon.requestFocus();
+				}
+				
+				for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
+					icon.requestFocus();
+				}
+			}
+			
+			newPlayerList.add(newPlayer);
+		}
+		
+		GameComponent.getInstance().getPlayerList().removeIf(player -> {
+			if(player.isChangeJobRequested()) {
+				GameComponent.getInstance().getPlayerPane().getChildren().remove(player.getCanvas());
+				GameComponent.getInstance().getHpBarPane().getChildren().remove(player.getHpBar().getCanvas());
+				return true;
+			} else {
+				return false;
+			}
+		});
+		
+		for(Novice newPlayer: newPlayerList) {
+			GameComponent.getInstance().addComponent(newPlayer);
+			newPlayer.requestChangeJob(null);
+		}
+	}
+	
 	private static void checkEnding() {
 		Side side = Side.NEUTRAL;
 		for(Tower tower: GameComponent.getInstance().getTowerList()) {
@@ -631,8 +648,6 @@ public class GameHandler {
 	
 	public static void rebornReset() {
 		autoshoot = false;
-		skillUpgradable = false;
-		statusUpgradable = false;
 		justDead = false;
 	}
 	

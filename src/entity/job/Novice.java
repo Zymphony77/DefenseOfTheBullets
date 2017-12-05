@@ -46,7 +46,9 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	protected boolean isMoving;
 	protected boolean isPlayer;
+	protected boolean isChangeJobRequested;
 	protected double moveDirection;
+	protected Job newJob;
 	
 	protected HpBar hpBar;
 	protected Experience experience;
@@ -65,6 +67,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		isMoving = false;
 		isPlayer = true;
+		isChangeJobRequested = false;
 		moveDirection = 0;
 		
 		skillList = new ArrayList<Skill>();
@@ -112,7 +115,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		gc.setFill(Color.DARKGRAY);
-		gc.fillRect(2*RADIUS, 25, RADIUS, 10);
+		gc.fillRect(2*RADIUS, CANVAS_SIZE / 2 - 5, RADIUS, 10);
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
@@ -200,6 +203,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		for(Buff buff: buffList) {
 			buff.deactivateBuff();
 		}
+		
+		GameComponent.getInstance().getPlayerPane().getChildren().remove(canvas);
 	}
 	
 	public void shoot() {
@@ -323,6 +328,16 @@ public class Novice extends Entity implements Movable, Shootable {
 			}
 		}
 	}
+	/* ------------------- Change Job ------------------- */
+	public void requestChangeJob(Job newJob) {
+		if(newJob == null) {
+			isChangeJobRequested = false;
+			return;
+		}
+		
+		this.newJob = newJob;
+		isChangeJobRequested = true;
+	}
 	
 	/* ------------------- Getters&Setters ------------------- */
 	public Status getStatus() {
@@ -397,12 +412,20 @@ public class Novice extends Entity implements Movable, Shootable {
 		return JOB;
 	}
 	
+	public Job getNewJob() {
+		return newJob;
+	}
+	
 	public boolean isPlayer() {
 		return isPlayer;
 	}
 	
 	public boolean isMoving() {
 		return isMoving;
+	}
+	
+	public boolean isChangeJobRequested() {
+		return isChangeJobRequested;
 	}
 	
 	@Override

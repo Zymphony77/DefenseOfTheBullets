@@ -29,7 +29,7 @@ public abstract class ActiveSkill extends Skill {
 	
 	@Override
 	public boolean isReady() {
-		return  (super.isReady() && remainingCooldown == 0);
+		return  (super.isReady() && remainingCooldown <= 0);
 	}
 	
 	public int getMaxCooldown() {

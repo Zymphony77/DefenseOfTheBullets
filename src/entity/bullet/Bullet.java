@@ -75,6 +75,12 @@ public class Bullet extends Entity implements Movable {
 		}
 	}
 	
+	@Override
+	public void die() {
+		super.die();
+		GameComponent.getInstance().getBulletPane().getChildren().remove(canvas);
+	}
+	
 	public void changeCenter(Pair center) {
 		canvas.setTranslateX(refPoint.first - RADIUS - center.first + Main.SCREEN_SIZE / 2);
 		canvas.setTranslateY(refPoint.second - RADIUS - center.second + Main.SCREEN_SIZE / 2);

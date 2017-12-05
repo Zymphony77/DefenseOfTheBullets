@@ -22,7 +22,7 @@ public class BurstBuff extends Buff implements Expirable {
 	}
 	
 	public void update() {
-		player.setDirection(duration * 360 / 16);
+		player.setDirection(duration * 360 / 15);
 		player.rotate();
 		player.setReloadCount();
 		player.shoot();

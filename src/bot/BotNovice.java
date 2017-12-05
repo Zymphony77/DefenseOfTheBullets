@@ -31,7 +31,7 @@ public class BotNovice extends Bot{
 			return;
 		}
 		
-		if(player.getLevel() > 10) {
+		if(player.getLevel() > 10 && player.getJob() == Job.NOVICE) {
 			upgradeJob();
 		}
 		
@@ -103,10 +103,10 @@ public class BotNovice extends Bot{
 			if(player.getExperience().getSkillPoint() > 0)
 				player.upgradeSkill(upSkill[cntSkill++]);
 		}catch(IndexOutOfBoundsException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			cntSkill = 0;
 		}catch(Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
@@ -118,10 +118,10 @@ public class BotNovice extends Bot{
 				player.upgradeStatus(upStatus[cntStatus++]);
 			}
 		}catch(IndexOutOfBoundsException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			cntStatus = 0;
 		}catch(Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
@@ -129,13 +129,12 @@ public class BotNovice extends Bot{
 	protected void upgradeJob() {
 		// TODO Auto-generated method stub
 		int tmp = rand.nextInt(3);
-		if(tmp == 0)
-			GameHandler.changeClass(player, Job.TANK);
-		else if(tmp == 1) {
-			GameHandler.changeClass(player, Job.MAGICIAN);
-		}
-		else {
-			GameHandler.changeClass(player, Job.MAGICIAN);
+		if(tmp == 0) {
+			player.requestChangeJob(Job.TANK);
+		} else if(tmp == 1) {
+			player.requestChangeJob(Job.MAGICIAN);
+		} else {
+			player.requestChangeJob(Job.RANGER);
 		}
 	}
 	
