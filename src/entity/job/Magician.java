@@ -73,13 +73,16 @@ public class Magician extends Novice {
 			}
 			
 			if(buff instanceof IceOrbBuff) {
-				bullet = new IceBullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
+				bullet = new IceBullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, 
+						side, ((IceOrbBuff) buff).getSlowFactor());
 				break;
 			}
 		}
 		
 		if(bullet == null) {
 			bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
+		} else {
+			bullet.setAttack(bullet.getAttack() * (1.25 + 0.05 * status.getStatus(4)));
 		}
 		
 		GameComponent.getInstance().addComponent(bullet);

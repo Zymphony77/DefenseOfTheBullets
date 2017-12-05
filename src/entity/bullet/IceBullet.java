@@ -13,16 +13,19 @@ public class IceBullet extends Bullet implements Rotatable {
 	private static final Image BLUE_ORB = new Image("image/BlueIceOrb.png");
 	private static final int RADIUS = 7;
 	
-	protected int direction;
+	protected int rotateDirection;
+	protected double slowFactor;
 	
-	public IceBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, double speed, Side side) {
+	public IceBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, 
+			double speed, Side side, double slowFactor) {
 		super(shooter, refPoint, maxHp, direction, attack, speed, side);
-		direction = 0;
+		this.slowFactor = slowFactor;
+		rotateDirection = 0;
 	}
 	
 	public void rotate() {
-		direction = (direction + 11) % 360;
-		canvas.setRotate(direction);
+		rotateDirection = (rotateDirection + 11) % 360;
+		canvas.setRotate(rotateDirection);
 	}
 	
 	@Override
@@ -46,5 +49,9 @@ public class IceBullet extends Bullet implements Rotatable {
 	@Override
 	public int getRadius() {
 		return RADIUS;
+	}
+	
+	public double getSlowFactor() {
+		return slowFactor;
 	}
 }

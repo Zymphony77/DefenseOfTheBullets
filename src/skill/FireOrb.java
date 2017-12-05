@@ -19,7 +19,7 @@ public class FireOrb extends ActiveSkill implements Deactivable {
 	}
 	
 	protected void activateEffect() {
-		caster.addBuff(new FireOrbBuff(caster, 100));
+		caster.addBuff(new FireOrbBuff(caster, 100 * level));
 	}
 	
 	public void deactivateEffect() {

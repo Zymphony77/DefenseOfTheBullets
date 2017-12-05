@@ -7,7 +7,7 @@ import entity.job.Novice;
 import main.Main;
 
 public class Burst extends ActiveSkill {
-	private static final int DEFAULT_COOLDOWN = 60 * Main.FRAME_RATE;
+	private static final int DEFAULT_COOLDOWN = 40 * Main.FRAME_RATE;
 	private static final double COOLDOWN_PER_LEVEL = 4;
 	private static final int DEFAULT_DURATION = 15;
 	private static final int POSITION = 4;

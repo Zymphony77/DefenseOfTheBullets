@@ -167,7 +167,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		takeDamage(entity, entity.getAttack());
 	}
 	
-	protected void takeDamage(Entity entity, double damage) {
+	public void takeDamage(Entity entity, double damage) {
 		damage *= damageFactor;
 		
 		if(hp - damage > 1e-4) {
@@ -176,6 +176,13 @@ public class Novice extends Entity implements Movable, Shootable {
 		} else {
 			hp = 0;
 			die(entity);
+			return;
+		}
+		
+		if(entity instanceof IceBullet) {
+			addBuff(new SlowBuff(this, ((IceBullet) entity).getSlowFactor()));
+		} else if(entity instanceof FireBullet) {
+			addBuff(new BurnBuff(this, ((FireBullet) entity).getBurnDamage(), (Magician) ((Bullet) entity).getShooter()));
 		}
 	}
 	
@@ -197,8 +204,6 @@ public class Novice extends Entity implements Movable, Shootable {
 		if(realKiller != null) {
 			realKiller.gainExp(experience.getGainedExperience() / 3);		// Adjust given EXP here
 		}
-		
-		// change lv
 		
 		for(Buff buff: buffList) {
 			buff.deactivateBuff();
@@ -277,7 +282,11 @@ public class Novice extends Entity implements Movable, Shootable {
 		buffList.add(buff);
 		
 		if(GameComponent.getInstance().getPlayer() == this) {
-			GameComponent.getInstance().getBuffPane().addBuff(buff);
+			if(buff.getBuffType() == BuffType.BUFF) {
+				GameComponent.getInstance().getBuffPane().addBuff(buff);
+			} else {
+				GameComponent.getInstance().getDebuffPane().addBuff(buff);
+			}
 		}
 	}
 	

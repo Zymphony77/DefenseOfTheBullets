@@ -52,6 +52,7 @@ public class GameComponent {
 	private BloodPane bloodPane;
 	private ClassPane classPane;
 	private BuffPane buffPane;
+	private BuffPane debuffPane;
 	private StatusPane statusPane;
 	private SkillPane skillPane;
 	private ExperienceBar expBar;
@@ -68,6 +69,7 @@ public class GameComponent {
 		endPane = new Pane();
 		classPane = new ClassPane();
 		buffPane = new BuffPane();
+		debuffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
 		expBar = new ExperienceBar();
@@ -411,6 +413,10 @@ public class GameComponent {
 	
 	public BuffPane getBuffPane() {
 		return buffPane;
+	}
+	
+	public BuffPane getDebuffPane() {
+		return debuffPane;
 	}
 	
 	public StatusPane getStatusPane() {

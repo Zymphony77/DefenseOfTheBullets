@@ -287,8 +287,6 @@ public class GameHandler {
 			for(Buff buff: player.getBuffList()) {
 				if(buff instanceof Expirable) {
 					((Expirable) buff).update();
-				} else if(buff instanceof IntervalAffectable) {
-					((IntervalAffectable) buff).update();
 				}
 			}
 			
@@ -517,12 +515,12 @@ public class GameHandler {
 		GameComponent.getInstance().getBulletList().removeIf(deathPredicate);
 		GameComponent.getInstance().getFoodList().removeIf(deathPredicate);
 		
-		for(Novice player: GameComponent.getInstance().getPlayerList()) {
-			player.getBuffList().removeIf(buff -> {
-				return !buff.isActive();
-			});
-		}
-		
+//		for(Novice player: GameComponent.getInstance().getPlayerList()) {
+//			player.getBuffList().removeIf(buff -> {
+//				return !buff.isActive();
+//			});
+//		}
+//		
 		GameComponent.getInstance().getMinimap().update();
 	}
 	

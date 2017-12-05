@@ -19,7 +19,7 @@ public class IceOrb extends ActiveSkill implements Deactivable {
 	}
 	
 	protected void activateEffect() {
-		caster.addBuff(new IceOrbBuff(caster));
+		caster.addBuff(new IceOrbBuff(caster, 0.8 - 0.05 * level));
 	}
 	
 	public void deactivateEffect() {

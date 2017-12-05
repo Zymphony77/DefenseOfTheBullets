@@ -36,10 +36,12 @@ public class BurstBuff extends Buff implements Expirable {
 	
 	public void drawEffect() {
 		((Tank) player).setBurstBuff(true);
+		player.setBulletDamage(player.getBulletDamage() * 1.25);
 	}
 	
 	public void undrawEffect() {
 		((Tank) player).setBurstBuff(false);
+		player.setBulletDamage(player.getBulletDamage() / 1.25);
 	}
 	
 	public int getDuration() {

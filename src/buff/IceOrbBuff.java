@@ -9,8 +9,11 @@ public class IceOrbBuff extends Buff {
 	private static final Skill SKILL = new IceOrb();
 	private static final Image IMAGE = new Image("image/IceOrbIcon.png");
 	
-	public IceOrbBuff(Novice caster) {
-		super(caster, BuffType.BUFF);
+	private double slowFactor;
+	
+	public IceOrbBuff(Novice player, double slowFactor) {
+		super(player, BuffType.BUFF);
+		this.slowFactor = slowFactor;
 		
 		activateBuff();
 	}
@@ -29,5 +32,9 @@ public class IceOrbBuff extends Buff {
 	
 	public Skill getSkill() {
 		return SKILL;
+	}
+	
+	public double getSlowFactor() {
+		return slowFactor;
 	}
 }

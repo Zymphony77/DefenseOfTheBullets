@@ -15,8 +15,8 @@ public class FrenzyBuff extends Buff implements Expirable{
 	
 	public FrenzyBuff(Novice player, int level, int duration) {
 		super(player, BuffType.BUFF);
-		this.reloadFactor = 1.5 + 0.1 * level;
-		this.slow = 1.1 - 0.1 * level;
+		this.reloadFactor = 1.25 + 0.075 * level;
+		this.slow = 1.0 - 0.1 * level;
 		this.maxDuration = duration;
 		this.duration = duration;
 		activateBuff();

@@ -62,7 +62,7 @@ public class HpBar {
 		
 		if(entity instanceof Tank) {
 			gc.setFill(Color.AZURE);
-			width = ((Tank) entity).getHPShield() * maxWidth / 5000;
+			width = ((Tank) entity).getHPShield() * maxWidth / entity.getMaxHp();
 			gc.fillRoundRect(0, 0, width, 5, 2, 2);
 		}
 	}

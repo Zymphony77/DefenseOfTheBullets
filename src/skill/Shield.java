@@ -21,7 +21,7 @@ public class Shield extends ActiveSkill {
 	}
 	
 	protected void activateEffect() {
-		caster.addBuff(new ShieldBuff(caster, 500 + (200 * level), DEFAULT_DURATION));
+		caster.addBuff(new ShieldBuff(caster, 400 * level, DEFAULT_DURATION));
 	}
 	
 	public Image getImage() {

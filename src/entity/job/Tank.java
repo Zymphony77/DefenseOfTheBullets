@@ -106,7 +106,7 @@ public class Tank extends Novice{
 	}
 
 	@Override
-	protected void takeDamage(Entity entity, double damage) {
+	public void takeDamage(Entity entity, double damage) {
 		// TODO Auto-generated method stub
 		damage *= damageFactor;
 		

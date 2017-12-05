@@ -18,7 +18,7 @@ public class DouAttBuff extends Buff {
 	}
 	
 	public void drawEffect() {
-		((Ranger) player).setRatioDoubleAtt(4 * level);
+		((Ranger) player).setRatioDoubleAtt(2.5 * level);
 	}
 	
 	public void undrawEffect() {

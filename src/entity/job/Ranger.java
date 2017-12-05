@@ -24,7 +24,7 @@ import utility.Pair;
 public class Ranger extends Novice{
 	private static final Job JOB = Job.RANGER;
 	
-	protected int ratioDoubleAtt;
+	protected double ratioDoubleAtt;
 	protected int shootingState; 
 	protected Random rand = new Random();
 	
@@ -102,7 +102,7 @@ public class Ranger extends Novice{
 		reloadCount = 0;
 		shootingState = 1 - shootingState;
 		
-		if(rand.nextInt(100) < ratioDoubleAtt) {
+		if(rand.nextDouble() * 100.0 < ratioDoubleAtt) {
 			reloadCount = (int)(getReloadDone() * 0.90);
 		}
 	}
@@ -115,11 +115,11 @@ public class Ranger extends Novice{
 		}
 	}
 
-	public int getRatioDoubleAtt() {
+	public double getRatioDoubleAtt() {
 		return ratioDoubleAtt;
 	}
 
-	public void setRatioDoubleAtt(int ratioDoubleAtt) {
+	public void setRatioDoubleAtt(double ratioDoubleAtt) {
 		this.ratioDoubleAtt = ratioDoubleAtt;
 	}
 	

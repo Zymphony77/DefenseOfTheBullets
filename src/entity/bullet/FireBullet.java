@@ -49,4 +49,8 @@ public class FireBullet extends Bullet implements Rotatable {
 	public int getRadius() {
 		return RADIUS;
 	}
+	
+	public double getBurnDamage() {
+		return burnDamage;
+	}
 }
