@@ -21,7 +21,7 @@ public class BotRanger extends BotNovice{
 		//upgradeSkill
 		upgradeSkill();
 		
-		if(iteratorSkill > 4) {
+		if(player.getSkillList().get(3).getLevel() >= 4) {
 			player.useSkill(4);
 		}
 		
@@ -47,8 +47,7 @@ public class BotRanger extends BotNovice{
 		}catch(IndexOutOfBoundsException e) {
 			iteratorStatus = 0;
 		}catch(Exception e) {
+			iteratorStatus = 0;
 		}
 	}
-	
-	
 }

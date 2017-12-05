@@ -22,7 +22,9 @@ public class BotTank extends BotNovice{
 		upgradeSkill();
 		
 		player.useSkill(3);
-		player.useSkill(4);
+		if(player.getSkillList().get(3).getLevel() > 1) {
+			player.useSkill(4);
+		}
 		
 		if(player.getLevel() >= 30) {
 			defenseTower();
@@ -51,6 +53,7 @@ public class BotTank extends BotNovice{
 		}catch(IndexOutOfBoundsException e) {
 			iteratorStatus = 0;
 		}catch(Exception e) {
+			iteratorStatus = 0;
 		}
 	}
 	

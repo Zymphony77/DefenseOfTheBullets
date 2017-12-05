@@ -26,15 +26,6 @@ public abstract class BotTower {
 			}
 		}
 		
-		for(Bullet bullet : GameComponent.getInstance().getBulletList()) {
-			//check range of bullet
-			if(distance > tower.getRefPoint().distance(bullet.getRefPoint()) && bullet.getSide() != tower.getSide() 
-					&& tower.getRefPoint().distance(bullet.getRefPoint()) <= Tower.BULLET_SPEED * Bullet.LIFE_DURATION) {
-				distance = tower.getRefPoint().distance(bullet.getRefPoint());
-				res = bullet.getRefPoint();
-			}
-		}
-		
 		if(res != null) {
 			double dir = Math.atan2(res.second - tower.getRefPoint().second, res.first - tower.getRefPoint().first);
 			

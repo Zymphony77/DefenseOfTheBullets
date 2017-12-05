@@ -50,6 +50,7 @@ public class BotMagician extends BotNovice{
 		}catch(IndexOutOfBoundsException e) {
 			iteratorStatus = 0;
 		}catch(Exception e) {
+			iteratorStatus = 0;
 		}
 	}
 	
