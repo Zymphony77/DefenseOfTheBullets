@@ -291,17 +291,17 @@ public class Novice extends Entity implements Movable, Shootable {
 		}
 		
 		// Status
-		bulletDamage = DEFAULT_BULLET_DAMAGE + 4 * status.getStatus(0);
-		attack = DEFAULT_ATTACK + 6 * status.getStatus(0);
-		maxHp = DEFAULT_MAX_HP + 350 * status.getStatus(1);
+		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
+		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
+		maxHp = DEFAULT_MAX_HP + 450 * status.getStatus(1);
 		healthRegen = DEFAULT_MAX_HP / Main.FRAME_RATE / 60;
-		damageFactor = 1 - 0.013 * status.getStatus(1);
-		bulletHP = DEFAULT_BULLET_HP + 30 * status.getStatus(2);
-		bulletSpeed = DEFAULT_BULLET_SPEED + 14 * status.getStatus(2);
+		damageFactor = 1 - 0.016 * status.getStatus(1);
+		bulletHP = DEFAULT_BULLET_HP + 40 * status.getStatus(2);
+		bulletSpeed = DEFAULT_BULLET_SPEED + 15 * status.getStatus(2);
 		speed = DEFAULT_SPEED + 10 * status.getStatus(4);
-		reloadDone = DEFAULT_RELOAD - (int)(0.6*status.getStatus(4));
-		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.025 * status.getStatus(5);
-		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.08 * status.getStatus(5);
+		reloadDone = DEFAULT_RELOAD - status.getStatus(4);
+		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.03 * status.getStatus(5);
+		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.1 * status.getStatus(5);
 		
 		// Re-activate Buff
 		for(Buff buff: buffList) {

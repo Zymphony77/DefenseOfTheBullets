@@ -1,6 +1,7 @@
 package bot;
 
 import entity.job.Novice;
+import main.game.GameHandler;
 import utility.Job;
 
 public class BotNovice extends Bot{
@@ -27,11 +28,8 @@ public class BotNovice extends Bot{
 		
 		if(player.isDead()) {
 			cntStatus = 0;
-//			System.out.println("DEAD!!!!");
 			return;
 		}
-		
-//		System.out.print(player.getExperience().getLevel() + " ");
 		
 		//upgrade
 		upgradeStatus();
@@ -41,6 +39,9 @@ public class BotNovice extends Bot{
 		
 		//update Grid
 		updateGrid();
+		
+		//upgrade Skill
+		upgradeSkill();
 		
 		if(destination != null && !utility.isVisible(destination)) {
 			destination = null;
@@ -61,6 +62,17 @@ public class BotNovice extends Bot{
 			farm();
 		}
 		else if(!player.isMoving()) {
+			///choose target to closest food
+			target = chooseClosestTarget();
+			
+			//change direction to target\\
+			if(target != null) {
+				utility.changeDirectionToTarget(utility.getRef(player, target));
+				player.rotate();
+				player.shoot();
+			}else {
+				war();
+			}
 			return;
 		}
 		else {
@@ -88,7 +100,7 @@ public class BotNovice extends Bot{
 				player.upgradeSkill(upSkill[cntSkill++]);
 		}catch(IndexOutOfBoundsException e) {
 			e.printStackTrace();
-			cntStatus = 0;
+			cntSkill = 0;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -112,6 +124,15 @@ public class BotNovice extends Bot{
 	@Override
 	protected void upgradeJob() {
 		// TODO Auto-generated method stub
+		int tmp = rand.nextInt(3);
+		if(tmp == 0)
+			GameHandler.changeClass(player, Job.TANK);
+		else if(tmp == 1) {
+			GameHandler.changeClass(player, Job.MAGICIAN);
+		}
+		else {
+			GameHandler.changeClass(player, Job.MAGICIAN);
+		}
 	}
 	
 

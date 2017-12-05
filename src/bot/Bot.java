@@ -156,7 +156,6 @@ public abstract class Bot {
 	protected void move(int dir) {
 		if(dir == -2) {
 			player.stopMoving();
-			player.useSkill(2);
 			return;
 		}
 				
@@ -371,6 +370,7 @@ public abstract class Bot {
 //		}
 		
 		player.useSkill(1);
+		player.useSkill(2);
 
 		int[] bullet = new int[9];
 		
