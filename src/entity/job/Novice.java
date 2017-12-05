@@ -242,6 +242,10 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		for(Buff buff: buffList) {
 			if(buff.getSkill() != null && buff.getSkill().getClass() == skill.getClass()) {
+				if(skill instanceof Deactivable) {
+					((Deactivable) skill).deactivateEffect();
+					removeBuff(buff);
+				}
 				return;
 			}
 		}
@@ -256,16 +260,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	/* ------------------- Buff ------------------- */
 	public void addBuff(Buff buff) {
-		Buff tmp = null;
-		
-		for(Buff currentBuff: buffList) {
-			if(currentBuff.getClass() == buff.getClass()) {
-				tmp = currentBuff;
-			}
-		}
-		
-		if(tmp != null)
-			removeBuff(tmp);
+		buffList.removeIf(currentBuff -> currentBuff.getClass() == buff.getClass());
 		
 		buffList.add(buff);
 		

@@ -20,8 +20,7 @@ public class Bullet extends Entity implements Movable {
 	protected Entity shooter;
 	protected int lifeCycleCount;
 	
-	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, 
-			double speed, Side side) {
+	public Bullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, double speed, Side side) {
 		super(refPoint, maxHp, direction, side);
 		
 		this.attack = attack;

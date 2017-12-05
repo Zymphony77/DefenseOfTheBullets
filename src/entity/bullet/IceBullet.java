@@ -8,22 +8,20 @@ import javafx.scene.canvas.GraphicsContext;
 import main.game.GameComponent;
 import utility.Pair;
 
-public class FireBullet extends Bullet implements Rotatable {
-	private static final Image RED_ORB = new Image("resource/image/RedFireOrb.png");
-	private static final Image BLUE_ORB = new Image("resource/image/BlueFireOrb.png");
+public class IceBullet extends Bullet implements Rotatable {
+	private static final Image RED_ORB = new Image("resource/image/RedIceOrb.png");
+	private static final Image BLUE_ORB = new Image("resource/image/BlueIceOrb.png");
 	private static final int RADIUS = 7;
 	
-	protected double burnDamage;
 	protected int direction;
 	
-	public FireBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, double speed, Side side, double burnDamage) {
+	public IceBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, double speed, Side side) {
 		super(shooter, refPoint, maxHp, direction, attack, speed, side);
-		this.burnDamage = burnDamage;
 		direction = 0;
 	}
 	
 	public void rotate() {
-		direction = (direction + 97) % 360;
+		direction = (direction + 11) % 360;
 		canvas.setRotate(direction);
 	}
 	
