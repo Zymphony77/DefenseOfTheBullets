@@ -8,7 +8,7 @@ public class BotNovice extends Bot{
 	
 	//STR = 0 VIT = 1 DEX = 2 INT = 3 AGI = 4 LUK = 5
 	
-	private static final int[] upStatus = new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
+	private static final int[] upStatus = new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1};
 	private static final int[] upSkill = new int[] {2, 1, 2, 1, 2, 1, 2, 1, 2, 1};
 	private int iteratorStatus;
 	private int iteratorSkill;
@@ -100,11 +100,14 @@ public class BotNovice extends Bot{
 	protected void upgradeSkill() {
 		// TODO Auto-generated method stub
 		try {
-			if(player.getExperience().getSkillPoint() > 0)
+			if(player.getExperience().getSkillPoint() > 0 && iteratorSkill < upSkill.length)
 				player.upgradeSkill(upSkill[iteratorSkill++]);
 		}catch(IndexOutOfBoundsException e) {
 			iteratorSkill = 0;
+			System.out.println("BUG11" + player.getLevel());
 		}catch(Exception e) {
+			iteratorSkill = 0;
+			System.out.println("BUG12" + player.getLevel());
 		}
 	}
 
@@ -117,7 +120,10 @@ public class BotNovice extends Bot{
 			}
 		}catch(IndexOutOfBoundsException e) {
 			iteratorStatus = 0;
+			System.out.println("BUG21" + player.getLevel());
 		}catch(Exception e) {
+			iteratorStatus = 0;
+			System.out.println("BUG21" + player.getLevel());
 		}
 	}
 

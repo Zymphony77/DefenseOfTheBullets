@@ -39,6 +39,7 @@ public class SceneManager {
 		wholePane.getChildren().add(GameComponent.getInstance().getBloodPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getSkillPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getStatusPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getDebuffPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getBuffPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getClassPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getEndPane());

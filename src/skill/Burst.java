@@ -8,7 +8,7 @@ import main.Main;
 
 public class Burst extends ActiveSkill {
 	private static final int DEFAULT_COOLDOWN = 40 * Main.FRAME_RATE;
-	private static final double COOLDOWN_PER_LEVEL = 4;
+	private static final double COOLDOWN_PER_LEVEL = 3;
 	private static final int DEFAULT_DURATION = 15;
 	private static final int POSITION = 4;
 	private static final int MAX_LEVEL = 10;

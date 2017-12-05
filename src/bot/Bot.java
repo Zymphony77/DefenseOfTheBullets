@@ -16,6 +16,7 @@ import main.game.GameComponent;
 import utility.Grid;
 import utility.Job;
 import utility.Pair;
+import skill.*;
 
 public abstract class Bot {
 	protected static final double VISION = Main.SCREEN_SIZE/2.0;
@@ -367,8 +368,13 @@ public abstract class Bot {
 //			return;
 //		}
 		
-		player.useSkill(1);
-		player.useSkill(2);
+		if(((ActiveSkill) player.getSkillList().get(0)).isReady()) {
+			player.useSkill(1);
+		}
+		
+		if(((ActiveSkill) player.getSkillList().get(1)).isReady()) {
+			player.useSkill(2);
+		}
 
 		int[] bullet = new int[9];
 		

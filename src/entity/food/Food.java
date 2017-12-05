@@ -15,7 +15,7 @@ import utility.*;
 
 public class Food extends Entity implements Rotatable {
 	public static final int CANVAS_SIZE = 20;
-	public static final int FOOD_EXP = 10;
+	public static final int FOOD_EXP = 100;
 	
 	private int rotateDirection;
 	private int foodExp;

@@ -1,6 +1,7 @@
 package bot;
 
 import entity.job.Magician;
+import skill.*;
 
 public class BotMagician extends BotNovice{
 	
@@ -20,10 +21,8 @@ public class BotMagician extends BotNovice{
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
-		//upgradeSkill
-		upgradeSkill();
 		
-		if(activateBuff == false) {
+		if(activateBuff == false && ((ActiveSkill) player.getSkillList().get(2)).isReady()) {
 			activateBuff = true;
 			player.useSkill(3);
 		}
@@ -34,23 +33,29 @@ public class BotMagician extends BotNovice{
 	@Override
 	protected void upgradeSkill() {
 		try {
-			if(player.getExperience().getSkillPoint() > 0)
+			if(player.getExperience().getSkillPoint() > 0 && iteratorSkill < upSkill.length) {
 				player.upgradeSkill(upSkill[iteratorSkill++]);
+			}
 		}catch(IndexOutOfBoundsException e) {
 			iteratorSkill = 0;
+			System.out.println("BugMagicianSkill 1" + player.getLevel());
 		}catch(Exception e) {
+			iteratorSkill = 0;
+			System.out.println("BugMagicianSkill 2" + player.getLevel());
 		}
 	}
 	
 	@Override
 	protected void upgradeStatus() {
 		try {
-			if(player.getExperience().getPointStatus() > 0)
+			if(player.getExperience().getPointStatus() > 0 && iteratorStatus < upStatus.length) {
 				player.upgradeStatus(upStatus[iteratorStatus++]);
+			}
 		}catch(IndexOutOfBoundsException e) {
 			iteratorStatus = 0;
+			System.out.println("BugMagicianStatus 1" + player.getLevel());
 		}catch(Exception e) {
-			iteratorStatus = 0;
+			System.out.println("BugMagicianStatus 2" + player.getLevel());
 		}
 	}
 	

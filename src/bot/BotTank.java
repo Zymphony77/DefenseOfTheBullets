@@ -1,6 +1,7 @@
 package bot;
 
 import entity.job.Tank;
+import skill.*;
 
 public class BotTank extends BotNovice{
 	
@@ -18,13 +19,13 @@ public class BotTank extends BotNovice{
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
-		//upgradeSkill
-		upgradeSkill();
 		
-		player.useSkill(3);
-		if(player.getSkillList().get(3).getLevel() > 1) {
-			player.useSkill(4);
-		}
+//		if(((ActiveSkill) player.getSkillList().get(2)).isReady()) {
+//			player.useSkill(3);
+//		}
+//		if(((ActiveSkill) player.getSkillList().get(3)).isReady()) {
+//			player.useSkill(4);
+//		}
 		
 		if(player.getLevel() >= 30) {
 			defenseTower();
@@ -37,22 +38,29 @@ public class BotTank extends BotNovice{
 	@Override
 	protected void upgradeSkill() {
 		try {
-			if(player.getExperience().getSkillPoint() > 0)
+			if(player.getExperience().getSkillPoint() > 0 && iteratorSkill < upSkill.length) {
 				player.upgradeSkill(upSkill[iteratorSkill++]);
+			}
 		}catch(IndexOutOfBoundsException e) {
+			System.out.println("BugTankSkill 1" + player.getLevel());
 			iteratorSkill = 0;
 		}catch(Exception e) {
+			System.out.println("BugTankSkill 2" + player.getLevel());
+			iteratorSkill = 0;
 		}
 	}
 	
 	@Override
 	protected void upgradeStatus() {
 		try {
-			if(player.getExperience().getPointStatus() > 0)
+			if(player.getExperience().getPointStatus() > 0 && iteratorStatus < upStatus.length) {
 				player.upgradeStatus(upStatus[iteratorStatus++]);
+			}
 		}catch(IndexOutOfBoundsException e) {
+			System.out.println("BugTankStatus 1" + player.getLevel());
 			iteratorStatus = 0;
 		}catch(Exception e) {
+			System.out.println("BugTankStatus 2" + player.getLevel());
 			iteratorStatus = 0;
 		}
 	}

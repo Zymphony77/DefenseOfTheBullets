@@ -295,7 +295,11 @@ public class Novice extends Entity implements Movable, Shootable {
 		buffList.remove(buff);
 		
 		if(GameComponent.getInstance().getPlayer() == this) {
-			GameComponent.getInstance().getBuffPane().removeBuff(buff);
+			if(buff.getBuffType() == BuffType.BUFF) {
+				GameComponent.getInstance().getBuffPane().removeBuff(buff);
+			} else {
+				GameComponent.getInstance().getDebuffPane().removeBuff(buff);
+			}
 		}
 	}
 	
@@ -314,7 +318,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		damageFactor = 1 - 0.016 * status.getStatus(1);
 		bulletHP = DEFAULT_BULLET_HP + 30 * status.getStatus(2);
 		bulletSpeed = DEFAULT_BULLET_SPEED + 15 * status.getStatus(2);
-		speed = DEFAULT_SPEED + 10 * status.getStatus(4);
+		speed = DEFAULT_SPEED + 5 * status.getStatus(4);
 		reloadDone = DEFAULT_RELOAD - (int)(0.6667*status.getStatus(4));
 		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.02 * status.getStatus(5);
 		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.1 * status.getStatus(5);

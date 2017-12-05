@@ -311,12 +311,14 @@ public class GameHandler {
 			tower.reload();
 			tower.heal(tower.getMaxHp() / 200 / Main.FRAME_RATE);
 		}
-		// Status Panel
+		// StatusPane
 		GameComponent.getInstance().getStatusPane().update();
-		// SkillPanel
+		// SkillPane
 		GameComponent.getInstance().getSkillPane().update();
-		// BuffPanel
+		// BuffPane
 		GameComponent.getInstance().getBuffPane().update();
+		// DebuffPane
+		GameComponent.getInstance().getDebuffPane().update();
 	}
 	
 	private static void moveComponent() {
@@ -413,13 +415,13 @@ public class GameHandler {
 		ArrayList<Bullet> bulletList = GameComponent.getInstance().getBulletList();
 		ArrayList<Food> foodList = GameComponent.getInstance().getFoodList();
 		
-		pairwiseCheckCollision(bulletList, bulletList);
+//		pairwiseCheckCollision(bulletList, bulletList);
 		pairwiseCheckCollision(bulletList, foodList);
 		pairwiseCheckCollision(bulletList, towerList);
 		pairwiseCheckCollision(bulletList, playerList);
 		pairwiseCheckCollision(playerList, foodList);
 		pairwiseCheckCollision(playerList, towerList);
-		pairwiseCheckCollision(playerList, playerList);
+//		pairwiseCheckCollision(playerList, playerList);
 		
 		if(GameComponent.getInstance().getPlayer().isDead() && !justDead) {
 			justDead = true;
