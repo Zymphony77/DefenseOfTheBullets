@@ -82,6 +82,10 @@ public class Experience {
 		return skillPoint;
 	}
 	
+	public int getSpentSkillPoint() {
+		return spentSkillPoint;
+	}
+	
 	public boolean decreasePointStatus() {
 		if(pointStatus > 0) {
 			pointStatus--;

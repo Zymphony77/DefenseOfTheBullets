@@ -11,7 +11,7 @@ public class DouAttBuff extends Buff {
 	
 	private int level;
 	
-	public DouAttBuff(Novice player,int level) {
+	public DouAttBuff(Novice player, int level) {
 		super(player, BuffType.BUFF);
 		this.level = level;
 		activateBuff();

@@ -70,8 +70,8 @@ public class BuffIcon extends Pane {
 	}
 	
 	public Pair getShift() {
-		return new Pair(3 + (ICON_SIZE + 3) * (position), 
-				3 + (buff.getBuffType() == BuffType.BUFF? 0: 1) * (ICON_SIZE + 4));
+		return new Pair(10 + (ICON_SIZE + 3) * (position), 
+				10 + (buff.getBuffType() == BuffType.BUFF? 0: 1) * (ICON_SIZE + 5));
 	}
 	
 	public Buff getBuff() {

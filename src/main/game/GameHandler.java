@@ -104,7 +104,7 @@ public class GameHandler {
 			
 			for(int i = 0; i < GameComponent.getInstance().getPlayer().getSkillList().size(); ++i) {
 				for(int j = 0; j < 10; ++j) {
-					if(GameComponent.getInstance().getPlayer().getSkillList().get(i).getLevel() <= 10) {
+					if(GameComponent.getInstance().getPlayer().getSkillList().get(i).getLevel() < 10) {
 						GameComponent.getInstance().getPlayer().upgradeSkill(i + 1);
 					}
 				}

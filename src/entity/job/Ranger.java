@@ -81,10 +81,9 @@ public class Ranger extends Novice{
 	
 	@Override
 	public void upgradeSkill(int position) {
-		System.out.println(position);
 		super.upgradeSkill(position);
 		if(position == 3) {
-			addBuff(new DouAttBuff(this, skillList.get(3).getLevel()));
+			addBuff(new DouAttBuff(this, skillList.get(2).getLevel()));
 		}
 	}
 

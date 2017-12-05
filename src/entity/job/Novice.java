@@ -260,7 +260,12 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	/* ------------------- Buff ------------------- */
 	public void addBuff(Buff buff) {
-		buffList.removeIf(currentBuff -> currentBuff.getClass() == buff.getClass());
+		for(Buff currentBuff: buffList) {
+			if(currentBuff.getClass() == buff.getClass()) {
+				removeBuff(currentBuff);
+				break;
+			}
+		}
 		
 		buffList.add(buff);
 		
