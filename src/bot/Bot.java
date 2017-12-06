@@ -457,6 +457,8 @@ public abstract class Bot {
 	protected void defenseTower() {
 		status = 1;
 		
+		status = 2;
+		
 		Tower tmp = null;
 		double distance = Double.MAX_VALUE;
 		for(Tower tower : GameComponent.getInstance().getTowerList()) {
@@ -469,8 +471,14 @@ public abstract class Bot {
 			attackTower();
 			return;
 		}
-		
-		int res = getDirectionWithArea(change8to4[utility.checkCoordinate(player, new Pair(utility.getRef(player, tmp)))]);
+		if(tmp.getHp() < 0.2*tmp.getMaxHp()){
+			attackTower();
+			return;
+		}
+		Pair position = new Pair(utility.getRef(player, tmp));
+		int res = utility.checkCoordinate(player, position);
+		if(res == 8)
+			res = -2;
 		move(res);
 	}
 

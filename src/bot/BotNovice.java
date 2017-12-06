@@ -8,7 +8,7 @@ public class BotNovice extends Bot{
 	
 	//STR = 0 VIT = 1 DEX = 2 INT = 3 AGI = 4 LUK = 5
 	
-	private static final int[] upStatus = new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1};
+	private static final int[] upStatus = new int[] {4, 1, 4, 1, 2, 4, 1, 4, 4, 4, 2, 2};
 	private static final int[] upSkill = new int[] {2, 1, 2, 1, 2, 1, 2, 1, 2, 1};
 	private int iteratorStatus;
 	private int iteratorSkill;
