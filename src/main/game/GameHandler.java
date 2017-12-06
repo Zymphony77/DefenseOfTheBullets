@@ -28,6 +28,7 @@ import entity.tower.*;
 import environment.*;
 import main.Main;
 import main.SceneManager;
+import main.ranking.RankingComponent;
 import skill.*;
 import utility.*;
 
@@ -47,6 +48,8 @@ public class GameHandler {
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
 			reset();
+			GameComponent.getInstance().stopSound();
+			RankingComponent.getInstance().startSound();
 			SceneManager.setRankingScene();
 		}
 		

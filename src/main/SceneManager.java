@@ -58,6 +58,7 @@ public class SceneManager {
 		primaryStage.setScene(gameScene);
 		primaryStage.setOnCloseRequest(event -> {
 			GameHandler.stopTimer();
+			GameComponent.getInstance().stopSound();
 			for(Thread thread: GameComponent.getInstance().getThreadList()) {
 				thread.interrupt();
 			}

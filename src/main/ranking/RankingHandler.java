@@ -8,6 +8,8 @@ import main.game.GameComponent;
 public class RankingHandler {
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER) {
+			RankingComponent.getInstance().stopSound();
+			// Start MenuSound
 			SceneManager.setMenuScene();
 			
 			GameComponent.getInstance().reset();

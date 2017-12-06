@@ -36,9 +36,10 @@ public class GameComponent {
 	public static final int GRID_SIZE = 25;
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
 	public static final int MAX_FOOD_COUNT = 750;
+	public static final int MAX_TRACK_NUMBER = 3;
 	
-	public static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/GameplayStart.mp3").toString());
-	public static final Media LOOP_SOUND = new Media(ClassLoader.getSystemResource("sound/GameplayLoop.mp3").toString());
+	public static final Media[] START_SOUND;
+	public static final Media[] LOOP_SOUND;
 	
 	private static final GameComponent instance = new GameComponent();
 	
@@ -52,7 +53,10 @@ public class GameComponent {
 	
 	private Novice player;
 	private String playerName;
-	private MediaPlayer mp;
+	
+	private int trackNumber;
+	private MediaPlayer startMP;
+	private MediaPlayer loopMP;
 	
 	private Pane endPane;
 	private BloodPane bloodPane;
@@ -70,6 +74,16 @@ public class GameComponent {
 	private Pane foodPane;
 	private Pane boundaryPane;
 	private Canvas grid;
+	
+	static {
+		START_SOUND = new Media[MAX_TRACK_NUMBER];
+		LOOP_SOUND = new Media[MAX_TRACK_NUMBER];
+		
+		for(int i = 0; i < MAX_TRACK_NUMBER; ++i) {
+			START_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayStart" + i + ".wav").toString());
+			LOOP_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayLoop" + i + ".wav").toString());
+		}
+	}
 	
 	public GameComponent() {
 		endPane = new Pane();
@@ -202,14 +216,16 @@ public class GameComponent {
 		
 		bloodPane = new BloodPane(side);
 		
-		mp = new MediaPlayer(START_SOUND);
-		mp.setCycleCount(1);
-		mp.setOnEndOfMedia(() -> {
-			mp = new MediaPlayer(LOOP_SOUND);
-			mp.setCycleCount(MediaPlayer.INDEFINITE);
-			mp.play();
+		trackNumber = (new Random()).nextInt(MAX_TRACK_NUMBER);
+		
+		startMP = new MediaPlayer(START_SOUND[trackNumber]);
+		loopMP = new MediaPlayer(LOOP_SOUND[trackNumber]);
+		startMP.setCycleCount(1);
+		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
+		startMP.setOnEndOfMedia(() -> {
+			loopMP.play();
 		});
-		mp.play();
+		startMP.play();
 	}
 	
 	public void generateFood() {
@@ -340,6 +356,16 @@ public class GameComponent {
 			delay.playFromStart();
 		});
 		zoom.playFromStart();
+	}
+	
+	public void stopSound() {
+		if(startMP != null) {
+			startMP.stop();
+		}
+	
+		if(loopMP != null) {
+			loopMP.stop();
+		}
 	}
 	
 	public void reset() {

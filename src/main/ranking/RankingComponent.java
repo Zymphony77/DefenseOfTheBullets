@@ -1,6 +1,8 @@
 package main.ranking;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -39,9 +41,15 @@ public class RankingComponent {
 	
 	private static final RankingComponent instance = new RankingComponent();
 	
+	private static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/RankingStart.wav").toString());
+	private static final Media LOOP_SOUND = new Media(ClassLoader.getSystemResource("sound/RankingLoop.wav").toString());
+	
 	private Side winnerSide;
 	private Pane backgroundPane;
 	private Pane rankingPane;
+	
+	private MediaPlayer startMP;
+	private MediaPlayer loopMP;
 	
 	private ArrayList<PlayerWithName> winnerList;
 	private ArrayList<PlayerWithName> loserList;
@@ -160,6 +168,27 @@ public class RankingComponent {
 		gc.fillText("Press [ENTER] to continue", Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE - 35);
 		
 		rankingPane.getChildren().add(ranking);
+	}
+	
+	public void startSound() {
+		startMP = new MediaPlayer(START_SOUND);
+		loopMP = new MediaPlayer(LOOP_SOUND);
+		startMP.setCycleCount(1);
+		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
+		startMP.setOnEndOfMedia(() -> {
+			loopMP.play();
+		});
+		startMP.play();
+	}
+	
+	public void stopSound() {
+		if(startMP != null) {
+			startMP.stop();
+		}
+	
+		if(loopMP != null) {
+			loopMP.stop();
+		}
 	}
 	
 	public void reset() {
