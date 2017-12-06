@@ -20,12 +20,12 @@ public class BotTank extends BotNovice{
 	public void move() {
 		// TODO Auto-generated method stub
 		
-//		if(((ActiveSkill) player.getSkillList().get(2)).isReady()) {
-//			player.useSkill(3);
-//		}
-//		if(((ActiveSkill) player.getSkillList().get(3)).isReady()) {
-//			player.useSkill(4);
-//		}
+		if(((ActiveSkill) player.getSkillList().get(2)).isReady()) {
+			player.useSkill(3);
+		}
+		if(((ActiveSkill) player.getSkillList().get(3)).isReady()) {
+			player.useSkill(4);
+		}
 		
 		if(player.getLevel() >= 30) {
 			defenseTower();

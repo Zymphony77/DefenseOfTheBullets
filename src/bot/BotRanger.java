@@ -20,9 +20,9 @@ public class BotRanger extends BotNovice{
 	public void move() {
 		// TODO Auto-generated method stub
 		
-//		if(((ActiveSkill) player.getSkillList().get(3)).isReady()) {
-//			player.useSkill(4);
-//		}
+		if(((ActiveSkill) player.getSkillList().get(3)).isReady()) {
+			player.useSkill(4);
+		}
 		
 		super.move();
 	}
