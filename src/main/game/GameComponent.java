@@ -4,6 +4,8 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -35,6 +37,9 @@ public class GameComponent {
 	public static final int GRID_NUMBER = Main.SCREEN_SIZE / GRID_SIZE;
 	public static final int MAX_FOOD_COUNT = 750;
 	
+	public static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/GameplayStart.mp3").toString());
+	public static final Media LOOP_SOUND = new Media(ClassLoader.getSystemResource("sound/GameplayLoop.mp3").toString());
+	
 	private static final GameComponent instance = new GameComponent();
 	
 	private ArrayList<Novice> playerList;
@@ -47,6 +52,7 @@ public class GameComponent {
 	
 	private Novice player;
 	private String playerName;
+	private MediaPlayer mp;
 	
 	private Pane endPane;
 	private BloodPane bloodPane;
@@ -195,6 +201,15 @@ public class GameComponent {
 		}
 		
 		bloodPane = new BloodPane(side);
+		
+		mp = new MediaPlayer(START_SOUND);
+		mp.setCycleCount(1);
+		mp.setOnEndOfMedia(() -> {
+			mp = new MediaPlayer(LOOP_SOUND);
+			mp.setCycleCount(MediaPlayer.INDEFINITE);
+			mp.play();
+		});
+		mp.play();
 	}
 	
 	public void generateFood() {
