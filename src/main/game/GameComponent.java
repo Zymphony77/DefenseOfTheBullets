@@ -40,6 +40,8 @@ public class GameComponent {
 	
 	public static final Media[] START_SOUND;
 	public static final Media[] LOOP_SOUND;
+	public static final Media SHAKE_SOUND;
+	public static final Media[] RESULT_SOUND;
 	
 	private static final GameComponent instance = new GameComponent();
 	
@@ -57,6 +59,8 @@ public class GameComponent {
 	private int trackNumber;
 	private MediaPlayer startMP;
 	private MediaPlayer loopMP;
+	private MediaPlayer shakeMP;
+	private MediaPlayer resultMP;
 	
 	private Pane endPane;
 	private BloodPane bloodPane;
@@ -83,6 +87,12 @@ public class GameComponent {
 			START_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayStart" + i + ".wav").toString());
 			LOOP_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayLoop" + i + ".wav").toString());
 		}
+		
+		SHAKE_SOUND = new Media(ClassLoader.getSystemResource("sound/ShakeSound.wav").toString());
+		
+		RESULT_SOUND = new Media[2];
+		RESULT_SOUND[0] = new Media(ClassLoader.getSystemResource("sound/VictorySound.wav").toString());
+		RESULT_SOUND[1] = new Media(ClassLoader.getSystemResource("sound/DefeatSound.wav").toString());
 	}
 	
 	public GameComponent() {
@@ -216,16 +226,7 @@ public class GameComponent {
 		
 		bloodPane = new BloodPane(side);
 		
-		trackNumber = (new Random()).nextInt(MAX_TRACK_NUMBER);
-		
-		startMP = new MediaPlayer(START_SOUND[trackNumber]);
-		loopMP = new MediaPlayer(LOOP_SOUND[trackNumber]);
-		startMP.setCycleCount(1);
-		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
-		startMP.setOnEndOfMedia(() -> {
-			loopMP.play();
-		});
-		startMP.play();
+		playBGM();
 	}
 	
 	public void generateFood() {
@@ -337,6 +338,8 @@ public class GameComponent {
 		gc.translate(Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2);
 		gc.drawImage(new Image("image/" + mode + ".png"), -300, -300, 600, 600);
 		
+		playResultSound(mode);
+		
 		Timeline zoom = new Timeline(new KeyFrame(Duration.millis(10), event -> {
 			icon.setScaleX(icon.getScaleX() + 0.01);
 			icon.setScaleY(icon.getScaleY() + 0.01);
@@ -344,7 +347,7 @@ public class GameComponent {
 		}));
 		zoom.setCycleCount(100);
 		zoom.setOnFinished(event -> {
-			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(2.5), e1 -> {}));
+			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(3.5), e1 -> {}));
 			delay.setCycleCount(1);
 			delay.setOnFinished(e2 -> {
 				gc.setFont(Font.font("Telugu MN", 20));
@@ -358,7 +361,32 @@ public class GameComponent {
 		zoom.playFromStart();
 	}
 	
-	public void stopSound() {
+	public void playBGM() {
+		trackNumber = (new Random()).nextInt(MAX_TRACK_NUMBER);
+		
+		startMP = new MediaPlayer(START_SOUND[trackNumber]);
+		loopMP = new MediaPlayer(LOOP_SOUND[trackNumber]);
+		startMP.setCycleCount(1);
+		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
+		startMP.setOnEndOfMedia(() -> {
+			loopMP.play();
+		});
+		startMP.play();
+	}
+	
+	public void playShakeSound() {
+		shakeMP = new MediaPlayer(SHAKE_SOUND);
+		shakeMP.setCycleCount(1);
+		shakeMP.play();
+	}
+	
+	public void playResultSound(String mode) {
+		resultMP = new MediaPlayer(RESULT_SOUND[mode.equals("Victory")? 0: 1]);
+		resultMP.setCycleCount(1);
+		resultMP.play();
+	}
+	
+	public void stopBGM() {
 		if(startMP != null) {
 			startMP.stop();
 		}
@@ -368,9 +396,23 @@ public class GameComponent {
 		}
 	}
 	
+	public void stopSound() {
+		stopBGM();
+		
+		if(shakeMP != null) {
+			shakeMP.stop();
+		}
+		
+		if(resultMP != null) {
+			resultMP.stop();
+		}
+	}
+	
 	public void reset() {
 		endPane = new Pane();
+		classPane = new ClassPane();
 		buffPane = new BuffPane();
+		debuffPane = new BuffPane();
 		statusPane = new StatusPane();
 		skillPane = new SkillPane();
 		expBar = new ExperienceBar();

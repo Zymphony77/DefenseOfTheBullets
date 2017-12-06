@@ -79,6 +79,9 @@ public class SceneManager {
 		menuScene.setOnKeyPressed(event -> MenuHandler.keyPressed(event));
 		
 		primaryStage.setScene(menuScene);
+		primaryStage.setOnCloseRequest(event -> {
+			MenuComponent.getInstance().stopSound();
+		});
 	}
 	
 	public static void setRankingScene() {
@@ -92,6 +95,9 @@ public class SceneManager {
 		rankingScene.setOnKeyPressed(event -> RankingHandler.keyPressed(event));
 		
 		primaryStage.setScene(rankingScene);
+		primaryStage.setOnCloseRequest(event -> {
+			MenuComponent.getInstance().stopSound();
+		});
 	}
 	
 	public static void setStage(Stage primaryStage) {

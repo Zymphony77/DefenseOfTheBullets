@@ -26,9 +26,9 @@ import entity.job.*;
 import entity.property.*;
 import entity.tower.*;
 import environment.*;
-import main.Main;
-import main.SceneManager;
-import main.ranking.RankingComponent;
+import main.*;
+import main.menu.*;
+import main.ranking.*;
 import skill.*;
 import utility.*;
 
@@ -49,7 +49,7 @@ public class GameHandler {
 		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
 			reset();
 			GameComponent.getInstance().stopSound();
-			RankingComponent.getInstance().startSound();
+			MenuComponent.getInstance().startSound();
 			SceneManager.setRankingScene();
 		}
 		
@@ -625,6 +625,9 @@ public class GameHandler {
 		updateDeadPlayer();
 		stopTimer();
 		
+		GameComponent.getInstance().stopBGM();
+		GameComponent.getInstance().playShakeSound();
+		
 		Random random = new Random();
 		Pair pos = GameComponent.getInstance().getPlayer().getRefPoint();
 		Timeline shake = new Timeline(new KeyFrame(Duration.millis(20), event -> {
@@ -633,7 +636,7 @@ public class GameHandler {
 		shake.setCycleCount(50);
 		shake.setOnFinished(event -> {
 			moveCenter(pos);
-			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1), e1 -> {}));
+			Timeline delay = new Timeline(new KeyFrame(Duration.seconds(2), e1 -> {}));
 			delay.setCycleCount(1);
 			delay.setOnFinished(e2 -> GameComponent.getInstance().setEnding(mode));
 			delay.playFromStart();

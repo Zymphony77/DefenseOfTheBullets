@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -19,7 +21,15 @@ import main.SceneManager;
 public class MenuComponent {
 	public static final Image LEFT_ARROW = new Image("image/LeftArrow.png");
 	
+	private static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuStart.wav").toString());
+	private static final Media LOOP_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuLoop.wav").toString());
+	private static final Media TRANSITION_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuTransitionSound.wav").toString());
+	
 	private static final MenuComponent instance = new MenuComponent("");
+
+	private MediaPlayer startMP;
+	private MediaPlayer loopMP;
+	private MediaPlayer transitionMP;
 	
 	private Pane backgroundPane;
 	private Pane namePane;
@@ -29,7 +39,7 @@ public class MenuComponent {
 	private Canvas blue;
 	private Canvas moveBack;
 	private String name;
-
+	
 	public MenuComponent(String name) {
 		this.name = name;
 		
@@ -123,6 +133,12 @@ public class MenuComponent {
 		moveBack.setOnMouseClicked(event -> MenuHandler.moveCanvasBack());
 		
 		sidePane.getChildren().addAll(red, blue, moveBack);
+		
+		startMP = new MediaPlayer(START_SOUND);
+		loopMP = new MediaPlayer(LOOP_SOUND);
+		transitionMP = new MediaPlayer(TRANSITION_SOUND);
+		
+		startSound();
 	}
 	
 	public void addCharacter(KeyEvent input) throws Exception {
@@ -186,9 +202,36 @@ public class MenuComponent {
 		gc.clearRect(0, Main.SCREEN_SIZE * 7 / 10, Main.SCREEN_SIZE, Main.SCREEN_SIZE * 3 / 10);
 	}
 	
+	public void startSound() {
+		startMP.setCycleCount(1);
+		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
+		startMP.setOnEndOfMedia(() -> {
+			loopMP.play();
+		});
+		startMP.play();
+	}
+	
+	public void startTransitionSound() {
+		transitionMP.setCycleCount(1);
+		transitionMP.play();
+	}
+	
+	public void stopSound() {
+		if(startMP != null) {
+			startMP.stop();
+		}
+	
+		if(loopMP != null) {
+			loopMP.stop();
+		}
+		
+	}
+	
 	public void resetName() {
 		name = "";
 		drawName();
+		
+		transitionMP = new MediaPlayer(TRANSITION_SOUND);
 	}
 	
 	public static MenuComponent getInstance() {
