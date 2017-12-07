@@ -29,7 +29,7 @@ public class BotTank extends BotNovice{
 		
 		super.move();
 		
-		if(player.getLevel() >= 35) {
+		if(player.getLevel() >= 35 && player.getHp() >= 0.5 * player.getMaxHp()) {
 			defenseTower();
 		}
 	}
