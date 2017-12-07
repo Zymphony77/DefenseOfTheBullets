@@ -19,16 +19,19 @@ public class Magician extends Novice {
 	private static final Job JOB = Job.MAGICIAN;
 	
 	public Magician(Novice oldPlayer) {
-		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
-		skillList = oldPlayer.getSkillList();
-		buffList = oldPlayer.getBuffList();
-		status = oldPlayer.getStatus();
+//		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
+//		skillList = oldPlayer.getSkillList();
+//		buffList = oldPlayer.getBuffList();
+//		status = oldPlayer.getStatus();
+//		skillList.add(new FireOrb());
+//		skillList.add(new IceOrb());
+//		isMoving = oldPlayer.isMoving;
+//		isPlayer = oldPlayer.isPlayer;
+//		moveDirection = oldPlayer.moveDirection;
+//		reloadCount = oldPlayer.reloadCount;
+		super(oldPlayer);
 		skillList.add(new FireOrb());
 		skillList.add(new IceOrb());
-		isMoving = oldPlayer.isMoving;
-		isPlayer = oldPlayer.isPlayer;
-		moveDirection = oldPlayer.moveDirection;
-		reloadCount = oldPlayer.reloadCount;
 	}
 	
 	@Override

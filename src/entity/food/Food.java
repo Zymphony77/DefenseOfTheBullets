@@ -88,4 +88,8 @@ public class Food extends Entity implements Rotatable {
 	public int getRadius() {
 		return CANVAS_SIZE / 2;
 	}
+	
+	public int getMaxRadius() {
+		return getRadius();
+	}
 }

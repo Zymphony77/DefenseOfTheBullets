@@ -11,7 +11,7 @@ import utility.Pair;
 public class IceBullet extends Bullet implements Rotatable {
 	private static final Image RED_ORB = new Image("image/RedIceOrb.png");
 	private static final Image BLUE_ORB = new Image("image/BlueIceOrb.png");
-	private static final int RADIUS = 7;
+	public static final int RADIUS = 9;
 	
 	protected int rotateDirection;
 	protected double slowFactor;
@@ -30,7 +30,7 @@ public class IceBullet extends Bullet implements Rotatable {
 	
 	@Override
 	public void draw() {
-		int SIZE = 2*RADIUS + 10;
+		int SIZE = 2*RADIUS;
 		
 		canvas.setWidth(SIZE);
 		canvas.setHeight(SIZE);

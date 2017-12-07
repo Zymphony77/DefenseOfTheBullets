@@ -18,11 +18,11 @@ import entity.property.Side;
 import utility.*;
 
 public class Tower extends Entity implements Shootable {
-	private static final int MAX_HP = 100000;
-	private static final int CANVAS_SIZE = 200;
-	private static final int RELOAD_DONE = 5;
-	
+	public static final int CANVAS_SIZE = 200;
 	public static final int RADIUS = 75;
+	
+	public static final int MAX_HP = 100000;
+	public static final int RELOAD_DONE = 5;
 	public static final int BULLET_HP = 250;
 	public static final int BULLET_SPEED = 300;
 	public static final int BULLET_DAMAGE = 125;
@@ -124,6 +124,10 @@ public class Tower extends Entity implements Shootable {
 	
 	public int getRadius() {
 		return RADIUS;
+	}
+	
+	public int getMaxRadius() {
+		return getRadius();
 	}
 	
 	public void reload() {

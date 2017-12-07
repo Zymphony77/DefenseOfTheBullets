@@ -17,17 +17,29 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Comparator;
 
 import main.Main;
 import main.game.GameComponent;
 import entity.job.*;
 import entity.property.*;
+import utility.*;
 
 public class RankingComponent {
 	private static final class PlayerWithName {
+		public static final double ICON_SIZE = Main.SCREEN_SIZE / 30.0;
+		public static final HashMap<Job, Image> ICON = new HashMap<Job, Image>();
+		
 		private Novice player;
 		private String name;
+		
+		static {
+			ICON.put(Job.NOVICE, new Image("image/NoviceIcon.png"));
+			ICON.put(Job.TANK, new Image("image/TankIcon.png"));
+			ICON.put(Job.MAGICIAN, new Image("image/MagicianIcon.png"));
+			ICON.put(Job.RANGER, new Image("image/RangerIcon.png"));
+		}
 		
 		public PlayerWithName(Novice player, String name) {
 			this.player = player;
@@ -36,6 +48,10 @@ public class RankingComponent {
 		
 		public Novice getPlayer() {
 			return player;
+		}
+		
+		public int getScore() {
+			return 2 * player.getKill() - 3 * player.getDeath();
 		}
 		
 		public String getName() {
@@ -50,13 +66,13 @@ public class RankingComponent {
 	private Pane rankingPane;
 	private Canvas background;
 	
-	private ArrayList<PlayerWithName> winnerList;
-	private ArrayList<PlayerWithName> loserList;
+	private ArrayList<PlayerWithName> playerList;
 	
 	private Timeline mover;
 	private int moveCount;
 	
 	public RankingComponent() {
+		
 		winnerSide = GameComponent.getInstance().getTowerList().get(0).getSide();
 		
 		backgroundPane = new Pane();
@@ -70,105 +86,121 @@ public class RankingComponent {
 		logoBig.setOpacity(0.08);
 		
 		gc = logoBig.getGraphicsContext2D();
-		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 450, 35, 900, 300 * 900 / 1100);
+		gc.drawImage(new Image("image/GameLogo.png"), - Main.SCREEN_SIZE / 10, Main.SCREEN_SIZE * 35 / 750, 
+				Main.SCREEN_SIZE * 6 / 5, Main.SCREEN_SIZE * 2 / 5 * 900 / 1100);
 		
 		Canvas logoSmall = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
 		gc = logoSmall.getGraphicsContext2D();
-		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 2 - 350, 75, 700, 300 * 700 / 1100);
+		gc.drawImage(new Image("image/GameLogo.png"), Main.SCREEN_SIZE / 50, Main.SCREEN_SIZE / 10, 
+				Main.SCREEN_SIZE * 24 / 25, Main.SCREEN_SIZE * 2 / 5 * 700 / 1100);
 		
 		backgroundPane.getChildren().addAll(background, logoBig, logoSmall);
 		
 		rankingPane = new Pane();
-		winnerList = new ArrayList<PlayerWithName>();
-		loserList = new ArrayList<PlayerWithName>();
+		playerList = new ArrayList<PlayerWithName>();
 		calculateRanking();
 		drawRanking();
 	}
 	
 	public void calculateRanking() {
 		int cnt = 1;
-		winnerList.clear();
-		loserList.clear();
+		playerList.clear();
 		
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
-			if(player.getSide() == winnerSide) {
-				winnerList.add(new PlayerWithName(player, player.isPlayer()? GameComponent.getInstance().getPlayerName(): "Homemade AI #" + (cnt++)));
-			} else {
-				loserList.add(new PlayerWithName(player, player.isPlayer()? GameComponent.getInstance().getPlayerName(): "Homemade AI #" + (cnt++)));
-			}
+			playerList.add(new PlayerWithName(player, player.isPlayer()? 
+					GameComponent.getInstance().getPlayerName(): "Homemade AI #" + (cnt++)));
 		}
 		
-		Comparator<PlayerWithName> comparator = new Comparator<PlayerWithName>() {
+		playerList.sort(new Comparator<PlayerWithName>() {
 			@Override
 			public int compare(PlayerWithName player1, PlayerWithName player2) {
-				if(player1.getPlayer().getLevel() < player2.getPlayer().getLevel()) {
-					return 1;
-				} else if(player1.getPlayer().getLevel() > player2.getPlayer().getLevel()) {
+				if(player1.getPlayer().getLevel() > player2.getPlayer().getLevel()) {
 					return -1;
-				} else {
-					return 0;
+				} else if(player1.getPlayer().getLevel() < player2.getPlayer().getLevel()) {
+					return 1;
+				}  else if(player1.getScore() > player2.getScore()) {
+					return -1;
+				} else if(player1.getScore() < player2.getScore()) {
+					return 1;
+				} else if(player1.getPlayer().getKill() > player2.getPlayer().getKill()) {
+					return -1;
+				} else if(player1.getPlayer().getKill() < player2.getPlayer().getKill()) {
+					return 1;
+				} else if(player1.getPlayer().getDeath() < player2.getPlayer().getDeath()) {
+					return -1;
+				} else if(player1.getPlayer().getDeath() > player2.getPlayer().getDeath()) {
+					return 1;
+				} else if(player1.getPlayer().getSide() != player2.getPlayer().getSide()) {
+					if(player1.getPlayer().getSide() == winnerSide) {
+						return -1;
+					} else {
+						return 1;
+					}
 				}
+				return 0;
 			}
-		};
-		
-		winnerList.sort(comparator);
-		loserList.sort(comparator);
+		});
 	}
 	
 	public void drawRanking() {
 		Canvas ranking = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		Canvas text = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
+		ranking.setOpacity(0.7);
+		
+		// Background
 		GraphicsContext gc = ranking.getGraphicsContext2D();
 		
-		if(winnerSide == Side.BLUE) {
-			gc.setFill(Color.rgb(189, 218, 242));
-		} else {
-			gc.setFill(Color.rgb(239, 190, 171));
-		}
-		gc.fillRect(25, 300, 348, 98);
-		gc.fillRect(25, 402, 348, 278);
+		gc.setFill(Color.rgb(30, 30, 30));
+		gc.fillRect(Main.SCREEN_SIZE / 20, Main.SCREEN_SIZE * 3 / 8.0, Main.SCREEN_SIZE * 9 / 10.0, Main.SCREEN_SIZE / 15.0);
 		
-		if(winnerSide == Side.RED) {
-			gc.setFill(Color.rgb(189, 218, 242));
-		} else {
-			gc.setFill(Color.rgb(239, 190, 171));
+		for(int i = 0; i < playerList.size(); ++i) {
+			if(playerList.get(i).getPlayer().getSide() == Side.BLUE) {
+				gc.setFill(Color.rgb(23, 74, 109));
+			} else {
+				gc.setFill(Color.rgb(78, 15, 15));
+			}
+			gc.fillRect(Main.SCREEN_SIZE / 20.0, Main.SCREEN_SIZE * 5 / 11.0 + (3 + Main.SCREEN_SIZE / 24.0) * i, 
+					Main.SCREEN_SIZE * 9 / 10.0, Main.SCREEN_SIZE / 24.0);
 		}
-		gc.fillRect(377, 300, 348, 98);
-		gc.fillRect(377, 402, 348, 278);
 		
-		gc.setFill(Color.BLACK);
-		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 40));
+		//Table
+		gc = text.getGraphicsContext2D();
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
 		
-		gc.fillText("VICTORY", 199, 349);
-		gc.fillText("DEFEAT", 551, 349);
+		//Table header
+		gc.setFont(Font.font("Telugu MN", FontWeight.LIGHT, 20));
+		gc.setFill(Color.gray(0.85));
+		gc.fillText("#", Main.SCREEN_SIZE / 10.0, Main.SCREEN_SIZE * 49 / 120.0);
+		gc.fillText("Job", Main.SCREEN_SIZE / 5.0, Main.SCREEN_SIZE * 49 / 120.0);
+		gc.fillText("Name", Main.SCREEN_SIZE * 4 / 10.0, Main.SCREEN_SIZE * 49 / 120.0);
+		gc.fillText("Lv.", Main.SCREEN_SIZE * 9 / 15.0, Main.SCREEN_SIZE * 49 / 120.0);
+		gc.fillText("Kill", Main.SCREEN_SIZE * 11 / 15.0, Main.SCREEN_SIZE * 49 / 120.0);
+		gc.fillText("Death", Main.SCREEN_SIZE * 13 / 15.0, Main.SCREEN_SIZE * 49 / 120.0);
 		
-		gc.setFill(Color.DIMGRAY);
-		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_BOLD, 20));
-		for(int i = 0; i < 5; ++i) {
-			gc.setTextAlign(TextAlignment.LEFT);
-			gc.fillText(winnerList.get(i).getName(), 50, 450 + 50*i);
-			gc.fillText("Lv.", 275, 450 + 50*i);
-			gc.setTextAlign(TextAlignment.RIGHT);
-			gc.fillText("" + winnerList.get(i).getPlayer().getLevel(), 325, 450 + 50*i);
+		// Table Content
+		gc.setFont(Font.font("Telugu MN", FontWeight.EXTRA_LIGHT, 16));
+		for(int i = 0; i < playerList.size(); ++i) {
+			double y = Main.SCREEN_SIZE * 5 / 11.0 + (3 + Main.SCREEN_SIZE / 24.0) * i + Main.SCREEN_SIZE / 48.0;
+			gc.fillText("" + (i + 1), Main.SCREEN_SIZE / 10.0, y);
+			gc.drawImage(PlayerWithName.ICON.get(playerList.get(i).getPlayer().getJob()), 
+					Main.SCREEN_SIZE / 5.0 - PlayerWithName.ICON_SIZE / 2, y - Main.SCREEN_SIZE / 60.0, 
+					PlayerWithName.ICON_SIZE, PlayerWithName.ICON_SIZE);
+			gc.fillText(playerList.get(i).getName(), Main.SCREEN_SIZE * 4 / 10.0, y);
+			gc.fillText("" + playerList.get(i).getPlayer().getLevel(), Main.SCREEN_SIZE * 9 / 15.0, y);
+			gc.fillText("" + playerList.get(i).getPlayer().getKill(), Main.SCREEN_SIZE * 11 / 15.0, y);
+			gc.fillText("" + playerList.get(i).getPlayer().getDeath(), Main.SCREEN_SIZE * 13 / 15.0, y);
 		}
 		
-		for(int i = 0; i < 5; ++i) {
-			gc.setTextAlign(TextAlignment.LEFT);
-			gc.fillText(loserList.get(i).getName(), 425, 450 + 50*i);
-			gc.fillText("Lv.", 650, 450 + 50*i);
-			gc.setTextAlign(TextAlignment.RIGHT);
-			gc.fillText("" + loserList.get(i).getPlayer().getLevel(), 700, 450 + 50*i);
-		}
-		
+		// Footer
 		gc.setFill(Color.BLACK);
 		gc.setFont(Font.font("Telugu MN", 20));
 		gc.setTextAlign(TextAlignment.CENTER);
-		gc.fillText("Press [ENTER] to continue", Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE - 35);
+		gc.fillText("Press [ENTER] to continue", Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE * 24 / 25.0);
 		
-		rankingPane.getChildren().add(ranking);
+		rankingPane.getChildren().addAll(ranking, text);
 	}
 	
 	public void moveBackground() {
@@ -186,8 +218,7 @@ public class RankingComponent {
 	}
 	
 	public void reset() {
-		winnerList.clear();
-		loserList.clear();
+		playerList.clear();
 		rankingPane.getChildren().clear();
 		calculateRanking();
 		drawRanking();

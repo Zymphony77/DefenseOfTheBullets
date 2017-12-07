@@ -28,37 +28,42 @@ public class Ranger extends Novice{
 	protected int shootingState; 
 	protected Random rand = new Random();
 	
-	public Ranger(Pair refPoint, Side side) {
-		super(refPoint, side);
-		// TODO Auto-generated constructor stub
-		ratioDoubleAtt = 0;
-		shootingState = 0;
-		skillList.add(new DouAtt());
-		skillList.add(new Frenzy());
-		
-	}
-	
-	public Ranger(Pair refPoint, Experience experience, Side side) {
-		super(refPoint, experience, side);
-		// TODO Auto-generated constructor stub
-		ratioDoubleAtt = 0;
-		skillList.add(new DouAtt());
-		skillList.add(new Frenzy());
-	}
+//	public Ranger(Pair refPoint, Side side) {
+//		super(refPoint, side);
+//		// TODO Auto-generated constructor stub
+//		ratioDoubleAtt = 0;
+//		shootingState = 0;
+//		skillList.add(new DouAtt());
+//		skillList.add(new Frenzy());
+//		
+//	}
+//	
+//	public Ranger(Pair refPoint, Experience experience, Side side) {
+//		super(refPoint, experience, side);
+//		// TODO Auto-generated constructor stub
+//		ratioDoubleAtt = 0;
+//		skillList.add(new DouAtt());
+//		skillList.add(new Frenzy());
+//	}
 	
 	public Ranger(Novice oldPlayer) {
 		// TODO Auto-generated constructor stub
-		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
-		skillList = oldPlayer.getSkillList();
-		buffList = oldPlayer.getBuffList();
-		status = oldPlayer.getStatus();
+//		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
+//		skillList = oldPlayer.getSkillList();
+//		buffList = oldPlayer.getBuffList();
+//		status = oldPlayer.getStatus();
+//		ratioDoubleAtt = 0;
+//		skillList.add(new DouAtt());
+//		skillList.add(new Frenzy());
+//		isMoving = oldPlayer.isMoving;
+//		isPlayer = oldPlayer.isPlayer;
+//		moveDirection = oldPlayer.moveDirection;
+//		reloadCount = oldPlayer.reloadCount;
+		super(oldPlayer);
+		
 		ratioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
-		isMoving = oldPlayer.isMoving;
-		isPlayer = oldPlayer.isPlayer;
-		moveDirection = oldPlayer.moveDirection;
-		reloadCount = oldPlayer.reloadCount;
 	}
 	
 	//--------------UI-------------\\

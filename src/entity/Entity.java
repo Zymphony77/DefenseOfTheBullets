@@ -90,4 +90,5 @@ public abstract class Entity {
 	}
 	
 	public abstract int getRadius();
+	public abstract int getMaxRadius();
 }

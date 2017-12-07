@@ -25,38 +25,41 @@ public class Tank extends Novice{
 	protected double HPShield;
 	protected boolean isBurstBuff;
 
-	public Tank(Pair refPoint, Side side) {
-		super(refPoint, side);
-		// TODO Auto-generated constructor stub
-		skillList.add(new Shield());
-		skillList.add(new Burst());
-		isBurstBuff = false;
-		HPShield = 0;
-	}
-	
-	public Tank(Pair refPoint, Experience experience, Side side) {
-		super(refPoint, experience, side);
-		// TODO Auto-generated constructor stub
-		skillList.add(new Shield());
-		skillList.add(new Burst());
-		isBurstBuff = false;
-		HPShield = 0;
-	}
+//	public Tank(Pair refPoint, Side side) {
+//		super(refPoint, side);
+//		// TODO Auto-generated constructor stub
+//		skillList.add(new Shield());
+//		skillList.add(new Burst());
+//		isBurstBuff = false;
+//		HPShield = 0;
+//	}
+//	
+//	public Tank(Pair refPoint, Experience experience, Side side) {
+//		super(refPoint, experience, side);
+//		// TODO Auto-generated constructor stub
+//		skillList.add(new Shield());
+//		skillList.add(new Burst());
+//		isBurstBuff = false;
+//		HPShield = 0;
+//	}
 	
 	public Tank(Novice oldPlayer) {
 		// TODO Auto-generated constructor stub
-		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
-		skillList = oldPlayer.getSkillList();
-		buffList = oldPlayer.getBuffList();
-		status = oldPlayer.getStatus();
-		skillList.add(new Shield());
-		skillList.add(new Burst());
-		isMoving = oldPlayer.isMoving;
-		isPlayer = oldPlayer.isPlayer;
-		moveDirection = oldPlayer.moveDirection;
-		reloadCount = oldPlayer.reloadCount;
+//		super(oldPlayer.getRefPoint(), oldPlayer.getExperience(), oldPlayer.getSide());
+//		skillList = oldPlayer.getSkillList();
+//		buffList = oldPlayer.getBuffList();
+//		status = oldPlayer.getStatus();
+//		skillList.add(new Shield());
+//		skillList.add(new Burst());
+//		isMoving = oldPlayer.isMoving;
+//		isPlayer = oldPlayer.isPlayer;
+//		moveDirection = oldPlayer.moveDirection;
+//		reloadCount = oldPlayer.reloadCount;
+		super(oldPlayer);
 		isBurstBuff = false;
 		HPShield = 0;
+		skillList.add(new Shield());
+		skillList.add(new Burst());
 	}
 	
 	//--------------UI-------------\\

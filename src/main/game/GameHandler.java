@@ -262,7 +262,8 @@ public class GameHandler {
 				GameComponent.getInstance().getBloodPane().undrawDeadScene();
 				player.getExperience().reborn();
 				
-				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), player.getSide());
+				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), 
+						player.getSide(), player.getKill(), player.getDeath());
 				
 				if(player.isPlayer()) {
 					rebornReset();
@@ -486,7 +487,7 @@ public class GameHandler {
 			}
 		});
 		pairwiseCheckCollision(list, 0, GameComponent.MAX_SIZE, 
-				list1.get(0).getRadius() + list2.get(0).getRadius());
+				Math.max(list1.get(0).getMaxRadius(), list2.get(0).getMaxRadius()) * 2);
 	}
 	
 	private static void pairwiseCheckCollision(ArrayList<? extends Entity> entityList, 
