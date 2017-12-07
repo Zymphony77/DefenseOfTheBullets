@@ -5,7 +5,7 @@ import skill.*;
 
 public class BotTank extends BotNovice{
 	
-	private static final int[] upStatus = new int[] {1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 0, 1, 0, 1, 2, 0, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 5, 5, 5, 5, 1, 1, 0, 0, 0, 5, 5, 0, 0};
+	private static final int[] upStatus = new int[] {1, 4, 1, 4, 0, 4, 1, 4, 0, 4, 0, 1, 0, 1, 2, 0, 1, 2, 1, 2, 1, 2, 0, 1, 0, 1, 1, 5, 5, 5, 5, 1, 1, 0, 1, 1, 5, 5, 0, 0};
 	private static final int[] upSkill = new int[] {3, 3, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4};
 	private int iteratorSkill;
 	private int iteratorStatus;
@@ -27,11 +27,10 @@ public class BotTank extends BotNovice{
 			player.useSkill(4);
 		}
 		
-		if(player.getLevel() >= 30) {
+		super.move();
+		
+		if(player.getLevel() >= 35) {
 			defenseTower();
-		}
-		else {
-			super.move();
 		}
 	}
 

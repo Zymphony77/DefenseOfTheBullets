@@ -483,8 +483,6 @@ public abstract class Bot {
 	}
 
 	protected void attackTower() {
-		///not done not done not done :)
-
 		if(player.getHp() < player.getMaxHp() * 0.5) {
 			destination = null;
 			escape();
