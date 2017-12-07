@@ -119,14 +119,7 @@ public class SkillIcon extends Pane {
 					undrawUpgrade();
 					return;
 				}
-				player.getExperience().decreaseSkillPoint();
-				skill.upgrade();
-				if(skill instanceof DouAtt) {
-					player.addBuff(new DouAttBuff(player, skill.getLevel()));
-				}
-				if(!skill.isUpgradable()) {
-					undrawUpgrade();
-				}
+				player.upgradeSkill(skill.getPosition());
 			}
 		});
 	}
@@ -164,5 +157,9 @@ public class SkillIcon extends Pane {
 		}
 		
 		return true;
+	}
+	
+	public int getPosition() {
+		return skill.getPosition();
 	}
 }

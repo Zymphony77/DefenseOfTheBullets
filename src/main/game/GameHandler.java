@@ -53,6 +53,14 @@ public class GameHandler {
 			SceneManager.setRankingScene();
 		}
 		
+		if(event.getCode() == KeyCode.SHIFT) {
+			activeKey.add(KeyCode.SHIFT);
+		}
+		
+		if(event.getCode() == KeyCode.CONTROL || event.getCode() == KeyCode.COMMAND) {
+			activeKey.add(KeyCode.CONTROL);
+		}
+		
 		if(event.getCode() == KeyCode.SPACE) {
 			activeKey.add(KeyCode.SPACE);
 		}
@@ -73,13 +81,28 @@ public class GameHandler {
 			activeKey.add(KeyCode.RIGHT);
 		}
 		
-		if(event.getCode().isDigitKey()) {
+		if(event.getCode().isDigitKey() && !activeKey.contains(event.getCode())) {
 			activeKey.add(event.getCode());
 			
 			String keyName = event.getCode().toString();
-			int skillNumber = Integer.parseInt(keyName.substring(keyName.length() - 1));
-			if(0 < skillNumber && skillNumber <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
-				GameComponent.getInstance().getPlayer().useSkill(skillNumber);
+			int number = Integer.parseInt(keyName.substring(keyName.length() - 1));
+			if(activeKey.contains(KeyCode.CONTROL)) {
+				if(0 < number && number <= 6 && GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0 && 
+						GameComponent.getInstance().getStatusPane().getIconList().get(number - 1).isUpgradable()) {
+					GameComponent.getInstance().getPlayer().upgradeStatus(number - 1);
+				}
+			} else if(activeKey.contains(KeyCode.SHIFT)) {
+				if(0 < number && number <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
+					for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
+						if(icon.getPosition() == number && icon.isUpgradable()) {
+							GameComponent.getInstance().getPlayer().upgradeSkill(number);
+						}
+					}
+				}
+			} else {
+				if(0 < number && number <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
+					GameComponent.getInstance().getPlayer().useSkill(number);
+				}
 			}
 		}
 		
@@ -141,6 +164,14 @@ public class GameHandler {
 	public static void keyReleased(KeyEvent event) {
 		if(event.getCode() == KeyCode.SPACE) {
 			activeKey.remove(KeyCode.SPACE);
+		}
+		
+		if(event.getCode() == KeyCode.SHIFT) {
+			activeKey.remove(KeyCode.SHIFT);
+		}
+		
+		if(event.getCode() == KeyCode.CONTROL || event.getCode() == KeyCode.COMMAND) {
+			activeKey.remove(KeyCode.CONTROL);
 		}
 		
 		if(event.getCode() == KeyCode.UP || event.getCode() == KeyCode.W) {
