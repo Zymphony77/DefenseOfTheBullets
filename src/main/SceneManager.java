@@ -80,6 +80,7 @@ public class SceneManager {
 		
 		primaryStage.setScene(menuScene);
 		primaryStage.setOnCloseRequest(event -> {
+			MenuComponent.getInstance().stopBackground();
 			MenuComponent.getInstance().stopSound();
 		});
 	}
@@ -96,6 +97,7 @@ public class SceneManager {
 		
 		primaryStage.setScene(rankingScene);
 		primaryStage.setOnCloseRequest(event -> {
+			RankingComponent.getInstance().stopBackground();
 			MenuComponent.getInstance().stopSound();
 		});
 	}

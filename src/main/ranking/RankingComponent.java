@@ -7,6 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,20 +48,23 @@ public class RankingComponent {
 	private Side winnerSide;
 	private Pane backgroundPane;
 	private Pane rankingPane;
+	private Canvas background;
 	
 	private ArrayList<PlayerWithName> winnerList;
 	private ArrayList<PlayerWithName> loserList;
+	
+	private Timeline mover;
+	private int moveCount;
 	
 	public RankingComponent() {
 		winnerSide = GameComponent.getInstance().getTowerList().get(0).getSide();
 		
 		backgroundPane = new Pane();
 		
-		Canvas background = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		background = new Canvas(Main.SCREEN_SIZE + 300, Main.SCREEN_SIZE + 200);
 		
 		GraphicsContext gc = background.getGraphicsContext2D();
-		gc.setFill(Color.gray(0.7));
-		gc.fillRect(0, 0, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		gc.drawImage(new Image("image/MenuBackground.jpg"), 0, 0);
 		
 		Canvas logoBig = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		logoBig.setOpacity(0.08);
@@ -164,6 +171,20 @@ public class RankingComponent {
 		rankingPane.getChildren().add(ranking);
 	}
 	
+	public void moveBackground() {
+		mover = new Timeline(new KeyFrame(Duration.millis(15), event -> {
+			moveCount = (moveCount + 1) % 200;
+			background.setTranslateX(-209 * moveCount / 200.0);
+			background.setTranslateY(-121 * moveCount / 200.0);
+		}));
+		mover.setCycleCount(Animation.INDEFINITE);
+		mover.play();
+	}
+	
+	public void stopBackground() {
+		mover.stop();
+	}
+	
 	public void reset() {
 		winnerList.clear();
 		loserList.clear();
@@ -182,5 +203,9 @@ public class RankingComponent {
 	
 	public Pane getRankingPane() {
 		return rankingPane;
+	}
+	
+	public int getMoveCount() {
+		return moveCount;
 	}
 }

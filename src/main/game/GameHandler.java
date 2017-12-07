@@ -50,6 +50,7 @@ public class GameHandler {
 			reset();
 			GameComponent.getInstance().stopSound();
 			MenuComponent.getInstance().startSound();
+			RankingComponent.getInstance().moveBackground();
 			SceneManager.setRankingScene();
 		}
 		
@@ -449,13 +450,11 @@ public class GameHandler {
 		ArrayList<Bullet> bulletList = GameComponent.getInstance().getBulletList();
 		ArrayList<Food> foodList = GameComponent.getInstance().getFoodList();
 		
-//		pairwiseCheckCollision(bulletList, bulletList);
 		pairwiseCheckCollision(bulletList, foodList);
 		pairwiseCheckCollision(bulletList, towerList);
 		pairwiseCheckCollision(bulletList, playerList);
 		pairwiseCheckCollision(playerList, foodList);
 		pairwiseCheckCollision(playerList, towerList);
-//		pairwiseCheckCollision(playerList, playerList);
 		
 		if(GameComponent.getInstance().getPlayer().isDead() && !justDead) {
 			justDead = true;

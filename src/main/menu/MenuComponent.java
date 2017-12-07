@@ -1,6 +1,8 @@
 package main.menu;
 
-import entity.property.Side;
+import javafx.animation.Timeline;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,10 +15,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
+import javafx.util.Duration;
 import exception.*;
+import entity.property.Side;
 import main.Main;
-import main.SceneManager;
 
 public class MenuComponent {
 	public static final Image LEFT_ARROW = new Image("image/LeftArrow.png");
@@ -34,11 +36,15 @@ public class MenuComponent {
 	private Pane backgroundPane;
 	private Pane namePane;
 	private Pane sidePane;
+	private Canvas background;
 	private Canvas text;
 	private Canvas red;
 	private Canvas blue;
 	private Canvas moveBack;
 	private String name;
+	
+	private Timeline mover;
+	private int moveCount;
 	
 	public MenuComponent(String name) {
 		this.name = name;
@@ -46,11 +52,10 @@ public class MenuComponent {
 		// backgroundPane
 		backgroundPane = new Pane();
 		
-		Canvas background = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		background = new Canvas(Main.SCREEN_SIZE + 300, Main.SCREEN_SIZE + 200);
 		
 		GraphicsContext gc = background.getGraphicsContext2D();
-		gc.setFill(Color.gray(0.7));
-		gc.fillRect(0, 0, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		gc.drawImage(new Image("image/MenuBackground.jpg"), 0, 0);
 		
 		Canvas logoBig = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		logoBig.setOpacity(0.08);
@@ -71,6 +76,7 @@ public class MenuComponent {
 		namePane = new Pane();
 		
 		text = new Canvas(Main.SCREEN_SIZE, Main.SCREEN_SIZE);
+		text.setOpacity(0.8);
 		name = "";
 		drawName();
 		
@@ -139,6 +145,7 @@ public class MenuComponent {
 		transitionMP = new MediaPlayer(TRANSITION_SOUND);
 		
 		startSound();
+		moveBackground();
 	}
 	
 	public void addCharacter(KeyEvent input) throws Exception {
@@ -176,7 +183,7 @@ public class MenuComponent {
 		gc.setFill(Color.BLACK);
 		gc.fillText("Enter Your Name", Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE / 2);
 		
-		gc.setFill(Color.gray(0.925));
+		gc.setFill(Color.gray(0.75));
 		gc.fillRoundRect((Main.SCREEN_SIZE - 450) / 2, Main.SCREEN_SIZE / 7.5 * 4, 450, Main.SCREEN_SIZE / 7.5, 20, 20);
 		
 		gc.setFont(Font.font("Telugu MN", 40));
@@ -200,6 +207,20 @@ public class MenuComponent {
 	public void clearErrorMessage() {
 		GraphicsContext gc = text.getGraphicsContext2D();
 		gc.clearRect(0, Main.SCREEN_SIZE * 7 / 10, Main.SCREEN_SIZE, Main.SCREEN_SIZE * 3 / 10);
+	}
+	
+	public void moveBackground() {
+		mover = new Timeline(new KeyFrame(Duration.millis(15), event -> {
+			moveCount = (moveCount + 1) % 200;
+			background.setTranslateX(-209 * moveCount / 200.0);
+			background.setTranslateY(-121 * moveCount / 200.0);
+		}));
+		mover.setCycleCount(Animation.INDEFINITE);
+		mover.play();
+	}
+	
+	public void stopBackground() {
+		mover.stop();
 	}
 	
 	public void startSound() {
@@ -232,6 +253,10 @@ public class MenuComponent {
 		drawName();
 		
 		transitionMP = new MediaPlayer(TRANSITION_SOUND);
+	}
+	
+	public void setMoveCount(int moveCount) {
+		this.moveCount = moveCount;
 	}
 	
 	public static MenuComponent getInstance() {

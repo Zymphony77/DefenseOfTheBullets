@@ -85,6 +85,7 @@ public class MenuHandler {
 	}
 	
 	public static void moveToGameScene(String name, Side side) {
+		MenuComponent.getInstance().stopBackground();
 		MenuComponent.getInstance().stopSound();
 		MenuComponent.getInstance().startTransitionSound();
 		SceneManager.setGameScene(name, side);
