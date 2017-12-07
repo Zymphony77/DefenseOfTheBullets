@@ -108,8 +108,7 @@ public class RankingComponent {
 		playerList.clear();
 		
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
-			playerList.add(new PlayerWithName(player, player.isPlayer()? 
-					GameComponent.getInstance().getPlayerName(): "Homemade AI #" + (cnt++)));
+			playerList.add(new PlayerWithName(player, player.getName()));
 		}
 		
 		playerList.sort(new Comparator<PlayerWithName>() {

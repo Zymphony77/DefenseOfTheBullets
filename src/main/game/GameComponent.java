@@ -21,12 +21,12 @@ import bot.*;
 import entity.*;
 import entity.bullet.*;
 import entity.job.*;
-import entity.property.HpBar;
-import entity.property.Side;
+import entity.property.*;
 import entity.food.*;
 import entity.tower.*;
 import environment.*;
 import main.Main;
+import main.SceneManager;
 import main.ranking.RankingComponent;
 import skill.*;
 import utility.*;
@@ -38,9 +38,9 @@ public class GameComponent {
 	public static final int MAX_FOOD_COUNT = 750;
 	public static final int MAX_TRACK_NUMBER = 3;
 	
+	public static final Media SHAKE_SOUND = new Media(ClassLoader.getSystemResource("sound/ShakeSound.wav").toString());
 	public static final Media[] START_SOUND;
 	public static final Media[] LOOP_SOUND;
-	public static final Media SHAKE_SOUND;
 	public static final Media[] RESULT_SOUND;
 	
 	private static final GameComponent instance = new GameComponent();
@@ -54,7 +54,6 @@ public class GameComponent {
 	private Canvas[] boundaryList;
 	
 	private Novice player;
-	private String playerName;
 	
 	private int trackNumber;
 	private MediaPlayer startMP;
@@ -71,6 +70,7 @@ public class GameComponent {
 	private SkillPane skillPane;
 	private ExperienceBar expBar;
 	private Minimap minimap;
+	private Pane identityPane;
 	private Pane hpBarPane;
 	private Pane playerPane;
 	private Pane towerPane;
@@ -88,8 +88,6 @@ public class GameComponent {
 			LOOP_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayLoop" + i + ".wav").toString());
 		}
 		
-		SHAKE_SOUND = new Media(ClassLoader.getSystemResource("sound/ShakeSound.wav").toString());
-		
 		RESULT_SOUND = new Media[2];
 		RESULT_SOUND[0] = new Media(ClassLoader.getSystemResource("sound/VictorySound.wav").toString());
 		RESULT_SOUND[1] = new Media(ClassLoader.getSystemResource("sound/DefeatSound.wav").toString());
@@ -104,6 +102,7 @@ public class GameComponent {
 		skillPane = new SkillPane();
 		expBar = new ExperienceBar();
 		minimap = new Minimap();
+		identityPane = new Pane();
 		hpBarPane = new Pane();
 		playerPane = new Pane();
 		towerPane = new Pane();
@@ -131,6 +130,13 @@ public class GameComponent {
 		}
 		
 		addBoundary();
+		
+		new Thread(() -> {
+			startMP = new MediaPlayer(SHAKE_SOUND);
+			loopMP = new MediaPlayer(SHAKE_SOUND);
+			shakeMP = new MediaPlayer(SHAKE_SOUND);
+			resultMP = new MediaPlayer(SHAKE_SOUND);
+		}).start();
 	}
 	
 	private void addBoundary() {
@@ -182,38 +188,42 @@ public class GameComponent {
 	}
 	
 	public void initialize(Side side, String name) {
-		playerName = name;
-		
-		player = new Novice(spawnPoint(side), side);
+		player = new Novice(spawnPoint(side), side, name);
 		expBar.setName(name);
 		expBar.setExperience(player.getExperience());
 		addComponent(player);
 		
-		for(int i = 0; i < 4; i++) {
-			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
-			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
+		int[] bucket = new int[9];
+		Random random = new Random();
+		
+		for(int i = 0; i < 9; i++) {
+			int x;
+			while(true) {
+				x = random.nextInt(9);
+				if(bucket[x] == 0) {
+					bucket[x] = 1;
+					++x;
+					break;
+				}
+			}
+			
+			if((i + (side == Side.RED? 1: 0)) % 2 == 0) {
+				addComponent(new Novice(spawnPoint(Side.RED), Side.RED, "Homemade AI #" + x));
+			} else {
+				addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE, "Homemade AI #" + x));
+			}
 		}
 		
-		if(side == Side.BLUE) {
-			addComponent(new Novice(spawnPoint(Side.RED), Side.RED));
-		}else {
-			addComponent(new Novice(spawnPoint(Side.BLUE), Side.BLUE));
-		}
-		
-		Tower tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
-		addComponent(tower);
-		
-		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
-		addComponent(tower);
-		
-		tower = new Tower(new Pair(GameComponent.MAX_SIZE * 4.0 / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL);
-		addComponent(tower);
-		
-		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 5.0), Side.NEUTRAL);
-		addComponent(tower);
-		
-		tower = new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE * 4.0 / 5.0), Side.NEUTRAL);
-		addComponent(tower);
+		// Central
+		addComponent(new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL));
+		// West
+		addComponent(new Tower(new Pair(GameComponent.MAX_SIZE / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL));
+		// East
+		addComponent(new Tower(new Pair(GameComponent.MAX_SIZE * 4.0 / 5.0, GameComponent.MAX_SIZE / 2.0), Side.NEUTRAL));
+		// North
+		addComponent(new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE / 5.0), Side.NEUTRAL));
+		// South
+		addComponent(new Tower(new Pair(GameComponent.MAX_SIZE / 2.0, GameComponent.MAX_SIZE * 4.0 / 5.0), Side.NEUTRAL));
 		
 		minimap.drawViewBox();
 		skillPane.setPlayer(player);
@@ -221,6 +231,7 @@ public class GameComponent {
 		generateFood();
 		
 		for(Novice each: playerList) {
+			each.drawIdentity();
 			each.addBuff(new InvincibleBuff(each));
 		}
 		
@@ -302,6 +313,8 @@ public class GameComponent {
 		} else if(component instanceof Food) {
 			foodList.add((Food) component);
 			foodPane.getChildren().add(((Food) component).getCanvas());
+		} else if(component instanceof Identity) {
+			identityPane.getChildren().add(((Identity) component).getCanvas());
 		}
 	}
 	
@@ -321,6 +334,8 @@ public class GameComponent {
 		} else if(component instanceof Food) {
 			foodList.remove((Food) component);
 			foodPane.getChildren().remove(((Food) component).getCanvas());
+		} else if(component instanceof Identity) {
+			identityPane.getChildren().remove(((Identity) component).getCanvas());
 		}
 	}
 	
@@ -366,6 +381,8 @@ public class GameComponent {
 		
 		startMP = new MediaPlayer(START_SOUND[trackNumber]);
 		loopMP = new MediaPlayer(LOOP_SOUND[trackNumber]);
+		startMP.setMute(SceneManager.isMuted());
+		loopMP.setMute(SceneManager.isMuted());
 		startMP.setCycleCount(1);
 		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
 		startMP.setOnEndOfMedia(() -> {
@@ -376,36 +393,35 @@ public class GameComponent {
 	
 	public void playShakeSound() {
 		shakeMP = new MediaPlayer(SHAKE_SOUND);
+		shakeMP.setMute(SceneManager.isMuted());
 		shakeMP.setCycleCount(1);
 		shakeMP.play();
 	}
 	
 	public void playResultSound(String mode) {
 		resultMP = new MediaPlayer(RESULT_SOUND[mode.equals("Victory")? 0: 1]);
+		resultMP.setMute(SceneManager.isMuted());
 		resultMP.setCycleCount(1);
 		resultMP.play();
 	}
 	
 	public void stopBGM() {
-		if(startMP != null) {
-			startMP.stop();
-		}
+		startMP.stop();
+		loopMP.stop();
+	}
 	
-		if(loopMP != null) {
-			loopMP.stop();
-		}
+	public void setMute(boolean isMuted) {
+		startMP.setMute(isMuted);
+		loopMP.setMute(isMuted);
+		shakeMP.setMute(isMuted);
+		resultMP.setMute(isMuted);
 	}
 	
 	public void stopSound() {
 		stopBGM();
 		
-		if(shakeMP != null) {
-			shakeMP.stop();
-		}
-		
-		if(resultMP != null) {
-			resultMP.stop();
-		}
+		shakeMP.stop();
+		resultMP.stop();
 	}
 	
 	public void reset() {
@@ -417,6 +433,7 @@ public class GameComponent {
 		skillPane = new SkillPane();
 		expBar = new ExperienceBar();
 		minimap = new Minimap();
+		identityPane = new Pane();
 		hpBarPane = new Pane();
 		playerPane = new Pane();
 		towerPane = new Pane();
@@ -444,6 +461,13 @@ public class GameComponent {
 		}
 		
 		addBoundary();
+		
+		new Thread(() -> {
+			startMP = new MediaPlayer(SHAKE_SOUND);
+			loopMP = new MediaPlayer(SHAKE_SOUND);
+			shakeMP = new MediaPlayer(SHAKE_SOUND);
+			resultMP = new MediaPlayer(SHAKE_SOUND);
+		}).start();
 	}
 	
 	public static GameComponent getInstance() {
@@ -522,6 +546,10 @@ public class GameComponent {
 		return minimap;
 	}
 	
+	public Pane getIdentityPane() {
+		return identityPane;
+	}
+	
 	public Pane getHpBarPane() {
 		return hpBarPane;
 	}
@@ -552,9 +580,5 @@ public class GameComponent {
 	
 	public Canvas getGrid() {
 		return grid;
-	}
-	
-	public String getPlayerName() {
-		return playerName;
 	}
 }

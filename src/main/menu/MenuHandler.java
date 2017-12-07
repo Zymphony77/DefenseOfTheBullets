@@ -22,14 +22,26 @@ import utility.*;
 public class MenuHandler {
 	private static int shift;
 	private static boolean onSideScreen;
+	private static boolean isMPressed;
 	
 	static {
 		shift = 0;
 		onSideScreen = false;
+		isMPressed = false;
 	}
 	
 	public static void keyPressed(KeyEvent event) {
+		if(event.getCode() == KeyCode.ESCAPE) {
+			SceneManager.closeProgram();
+			return;
+		}
+		
 		if(onSideScreen) {
+			if(event.getCode() == KeyCode.M && !isMPressed) {
+				isMPressed = true;
+				SceneManager.setMuted(!SceneManager.isMuted());
+			}
+			
 			return;
 		}
 		
@@ -42,6 +54,12 @@ public class MenuHandler {
 			MenuComponent.getInstance().clearErrorMessage();
 		} catch(Exception e) {
 			MenuComponent.getInstance().setErrorMessage(e.getMessage());
+		}
+	}
+	
+	public static void keyReleased(KeyEvent event) {
+		if(event.getCode() == KeyCode.M) {
+			isMPressed = false;
 		}
 	}
 	

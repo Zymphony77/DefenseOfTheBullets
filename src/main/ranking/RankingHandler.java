@@ -7,7 +7,14 @@ import main.game.GameComponent;
 import main.menu.MenuComponent;
 
 public class RankingHandler {
+	private static boolean isMPressed = false;
+	
 	public static void keyPressed(KeyEvent event) {
+		if(event.getCode() == KeyCode.M && !isMPressed) {
+			isMPressed = true;
+			SceneManager.setMuted(!SceneManager.isMuted());
+		}
+		
 		if(event.getCode() == KeyCode.ENTER) {
 			// Start MenuSound
 			RankingComponent.getInstance().stopBackground();
@@ -16,6 +23,12 @@ public class RankingHandler {
 			SceneManager.setMenuScene();
 			
 			GameComponent.getInstance().reset();
+		}
+	}
+	
+	public static void keyReleased(KeyEvent event) {
+		if(event.getCode() == KeyCode.M) {
+			isMPressed = false;
 		}
 	}
 }

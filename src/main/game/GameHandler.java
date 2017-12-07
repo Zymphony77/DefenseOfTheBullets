@@ -112,6 +112,11 @@ public class GameHandler {
 			autoshoot = !autoshoot;
 		}
 		
+		if(event.getCode() == KeyCode.M && !activeKey.contains(event.getCode())) {
+			activeKey.add(KeyCode.M);
+			SceneManager.setMuted(!SceneManager.isMuted());
+		}
+		
 		// CHEAT -- FOR TESTING PURPOSES
 		
 		// OVER MAX STATUS
@@ -191,8 +196,12 @@ public class GameHandler {
 			activeKey.remove(KeyCode.RIGHT);
 		}
 		
-		if(event.getCode() == KeyCode.E ) {
+		if(event.getCode() == KeyCode.E) {
 			activeKey.remove(KeyCode.E);
+		}
+		
+		if(event.getCode() == KeyCode.M) {
+			activeKey.remove(KeyCode.M);
 		}
 		
 		if(event.getCode().isDigitKey()) {
@@ -263,7 +272,7 @@ public class GameHandler {
 				player.getExperience().reborn();
 				
 				Novice newPlayer = new Novice(GameComponent.spawnPoint(player.getSide()), player.getExperience(), 
-						player.getSide(), player.getKill(), player.getDeath());
+						player.getSide(), player.getKill(), player.getDeath(), player.getName());
 				
 				if(player.isPlayer()) {
 					rebornReset();
@@ -280,6 +289,7 @@ public class GameHandler {
 					newPlayer.setPlayer(false);
 				}
 				
+				newPlayer.drawIdentity();
 				newPlayer.addBuff(new InvincibleBuff(newPlayer));
 				GameComponent.getInstance().addComponent(newPlayer);
 			}
@@ -415,10 +425,11 @@ public class GameHandler {
 	}
 	
 	private static void moveCenter(Pair center) {
-		// Player and HpBar
+		// Player, HpBar and Identity
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
 			player.changeCenter(center);
 			player.getHpBar().changeCenter(center);
+			player.getIdentity().changeCenter(center);
 		}
 		// Tower and HpBar
 		for(Tower tower: GameComponent.getInstance().getTowerList()) {
@@ -590,6 +601,7 @@ public class GameHandler {
 				skill.setCaster(newPlayer);
 			}
 			
+			newPlayer.drawIdentity();
 			newPlayer.upgradeAbility();
 			
 			if(newPlayer.isPlayer()) {
@@ -616,6 +628,7 @@ public class GameHandler {
 			if(player.isChangeJobRequested()) {
 				GameComponent.getInstance().getPlayerPane().getChildren().remove(player.getCanvas());
 				GameComponent.getInstance().getHpBarPane().getChildren().remove(player.getHpBar().getCanvas());
+				GameComponent.getInstance().getIdentityPane().getChildren().remove(player.getIdentity().getCanvas());
 				return true;
 			} else {
 				return false;

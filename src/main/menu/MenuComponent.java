@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -19,8 +20,11 @@ import javafx.util.Duration;
 import exception.*;
 import entity.property.Side;
 import main.Main;
+import main.SceneManager;
 
 public class MenuComponent {
+	public static final Image MUTE = new Image("image/MuteIcon.png");
+	public static final Image UNMUTE = new Image("image/UnmuteIcon.png");
 	public static final Image LEFT_ARROW = new Image("image/LeftArrow.png");
 	
 	private static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuStart.wav").toString());
@@ -41,6 +45,7 @@ public class MenuComponent {
 	private Canvas red;
 	private Canvas blue;
 	private Canvas moveBack;
+	private Canvas mute;
 	private String name;
 	
 	private Timeline mover;
@@ -80,13 +85,24 @@ public class MenuComponent {
 		name = "";
 		drawName();
 		
-		namePane.getChildren().add(text);
+		mute = new Canvas(35, 35);
+		mute.setTranslateY(Main.SCREEN_SIZE - 35);
+		
+		drawMute();
+		
+		mute.setOnMouseClicked(event -> {
+			if(event.getButton() == MouseButton.PRIMARY) {
+				SceneManager.setMuted(!SceneManager.isMuted());
+			}
+		});
+		
+		namePane.getChildren().addAll(text, mute);
 		
 		// sidePane
 		sidePane = new Pane();
 		
 		red = new Canvas(203, 203);
-		red.setTranslateX(Main.SCREEN_SIZE);
+		red.setTranslateX(2 * Main.SCREEN_SIZE);
 		red.setTranslateY(Main.SCREEN_SIZE * 13 / 30);
 		
 		gc = red.getGraphicsContext2D();
@@ -101,7 +117,7 @@ public class MenuComponent {
 		gc.strokeRoundRect(3, 3, 197, 197, 44, 44);
 		
 		blue = new Canvas(203, 203);
-		blue.setTranslateX(Main.SCREEN_SIZE);
+		blue.setTranslateX(2 * Main.SCREEN_SIZE);
 		blue.setTranslateY(Main.SCREEN_SIZE * 13 / 30);
 		
 		gc = blue.getGraphicsContext2D();
@@ -116,7 +132,7 @@ public class MenuComponent {
 		gc.strokeRoundRect(3, 3, 197, 197, 44, 44);
 		
 		moveBack = new Canvas(100, 100);
-		moveBack.setTranslateX(Main.SCREEN_SIZE);
+		moveBack.setTranslateX(2 * Main.SCREEN_SIZE);
 		moveBack.setTranslateY(Main.SCREEN_SIZE * 23 / 30);
 		
 		gc = moveBack.getGraphicsContext2D();
@@ -140,11 +156,14 @@ public class MenuComponent {
 		
 		sidePane.getChildren().addAll(red, blue, moveBack);
 		
-		startMP = new MediaPlayer(START_SOUND);
-		loopMP = new MediaPlayer(LOOP_SOUND);
-		transitionMP = new MediaPlayer(TRANSITION_SOUND);
+		new Thread(() -> {
+			startMP = new MediaPlayer(START_SOUND);
+			loopMP = new MediaPlayer(LOOP_SOUND);
+			transitionMP = new MediaPlayer(TRANSITION_SOUND);
+			
+			startSound();
+		}).start();
 		
-		startSound();
 		moveBackground();
 	}
 	
@@ -193,6 +212,15 @@ public class MenuComponent {
 		gc.fillText(name, Main.SCREEN_SIZE / 2, Main.SCREEN_SIZE * 3 / 5);
 	}
 	
+	public void drawMute() {
+		mute.getGraphicsContext2D().clearRect(0, 0, 35, 35);
+		if(SceneManager.isMuted()) {
+			mute.getGraphicsContext2D().drawImage(MUTE, 0, 0, 35, 35);
+		} else {
+			mute.getGraphicsContext2D().drawImage(UNMUTE, 0, 0, 35, 35);
+		}
+	}
+	
 	public void setErrorMessage(String error) {
 		clearErrorMessage();
 		
@@ -224,6 +252,8 @@ public class MenuComponent {
 	}
 	
 	public void startSound() {
+		startMP.setMute(SceneManager.isMuted());
+		loopMP.setMute(SceneManager.isMuted());
 		startMP.setCycleCount(1);
 		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
 		startMP.setOnEndOfMedia(() -> {
@@ -233,8 +263,15 @@ public class MenuComponent {
 	}
 	
 	public void startTransitionSound() {
+		transitionMP.setMute(SceneManager.isMuted());
 		transitionMP.setCycleCount(1);
 		transitionMP.play();
+	}
+	
+	public void setMute(boolean isMuted) {
+		startMP.setMute(isMuted);
+		loopMP.setMute(isMuted);
+		transitionMP.setMute(isMuted);
 	}
 	
 	public void stopSound() {

@@ -44,21 +44,25 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected double criticalChance;
 	protected Status status;
 	
+	protected String name;
+	protected int kill;
+	protected int death;
+	
 	protected boolean isMoving;
 	protected boolean isPlayer;
 	protected boolean isChangeJobRequested;
 	protected double moveDirection;
-	protected int kill;
-	protected int death;
 	protected Job newJob;
 	
 	protected HpBar hpBar;
+	protected Identity identity;
 	protected Experience experience;
 	protected int reloadCount;
 	
 	/* ------------------- Constructor ------------------- */
-	public Novice(Pair refPoint, Side side) {
+	public Novice(Pair refPoint, Side side, String name) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
+		this.name = name;
 		
 		buffList = new ArrayList<Buff>();
 		
@@ -85,11 +89,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		experience = new Experience(1, 0);
 	}
 	
-	public Novice(Pair refPoint, Experience experience, Side side, int kill, int death) {
+	public Novice(Pair refPoint, Experience experience, Side side, int kill, int death, String name) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
 		this.experience = experience;
 		this.kill = kill;
 		this.death = death;
+		this.name = name;
 		
 		buffList = new ArrayList<Buff>();
 		
@@ -112,6 +117,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public Novice(Novice oldPlayer) {
 		super(oldPlayer.getRefPoint(), oldPlayer.getMaxHp(), oldPlayer.getDirection(), oldPlayer.getSide());
+		name = oldPlayer.name;
 		experience = oldPlayer.getExperience();
 		skillList = oldPlayer.getSkillList();
 		buffList = oldPlayer.getBuffList();
@@ -120,6 +126,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		isPlayer = oldPlayer.isPlayer;
 		moveDirection = oldPlayer.moveDirection;
 		reloadCount = oldPlayer.reloadCount;
+		kill = oldPlayer.kill;
+		death = oldPlayer.death;
 	}
 	
 	/* ------------------- UI ------------------- */
@@ -138,9 +146,13 @@ public class Novice extends Entity implements Movable, Shootable {
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
-		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		GameComponent.getInstance().addComponent(hpBar);
+	}
+	
+	public void drawIdentity() {
+		identity = new Identity(this);
+		GameComponent.getInstance().addComponent(identity);
 	}
 	
 	public void changeCenter(Pair center) {
@@ -208,6 +220,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	public void die(Entity killer) {
 		super.die();
 		hpBar.die();
+		identity.die();
 		++death;
 		reloadCount = 0;
 		
@@ -255,6 +268,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public void gainExp(double exp) {
 		experience.addExp(exp);
+		identity.draw();
 	}
 	
 	/* ------------------- Skill ------------------- */
@@ -335,7 +349,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
 		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
-		healthRegen = DEFAULT_MAX_HP / Main.FRAME_RATE / 60;
+		healthRegen = maxHp / Main.FRAME_RATE / 60;
 		damageFactor = 1 - 0.016 * status.getStatus(1);
 		bulletHP = DEFAULT_BULLET_HP + 30 * status.getStatus(2);
 		bulletSpeed = DEFAULT_BULLET_SPEED + 15 * status.getStatus(2);
@@ -488,6 +502,14 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	public int getDeath() {
 		return death;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public Identity getIdentity() {
+		return identity;
 	}
 
 	@Override

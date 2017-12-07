@@ -1,14 +1,17 @@
 package main;
 
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 import utility.*;
+
 import bot.*;
 import entity.property.Side;
 import main.*;
@@ -22,6 +25,8 @@ public class SceneManager {
 	private static Scene menuScene;
 	private static Scene rankingScene;
 	
+	private static boolean isMuted = false;;
+	
 	public static void setGameScene(String name, Side side) {
 		GameComponent.getInstance().initialize(side, name);
 		
@@ -34,6 +39,7 @@ public class SceneManager {
 		wholePane.getChildren().add(GameComponent.getInstance().getTowerPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getPlayerPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getHpBarPane());
+		wholePane.getChildren().add(GameComponent.getInstance().getIdentityPane());
 		wholePane.getChildren().add(GameComponent.getInstance().getMinimap());
 		wholePane.getChildren().add(GameComponent.getInstance().getExperienceBar());
 		wholePane.getChildren().add(GameComponent.getInstance().getBloodPane());
@@ -77,6 +83,7 @@ public class SceneManager {
 		menuScene = new Scene(wholePane, Main.SCREEN_SIZE, Main.SCREEN_SIZE);
 		
 		menuScene.setOnKeyPressed(event -> MenuHandler.keyPressed(event));
+		menuScene.setOnKeyReleased(event -> MenuHandler.keyReleased(event));
 		
 		primaryStage.setScene(menuScene);
 		primaryStage.setOnCloseRequest(event -> {
@@ -104,5 +111,21 @@ public class SceneManager {
 	
 	public static void setStage(Stage primaryStage) {
 		SceneManager.primaryStage = primaryStage;
+	}
+	
+	public static void setMuted(boolean isMuted) {
+		SceneManager.isMuted = isMuted;
+		MenuComponent.getInstance().drawMute();
+		MenuComponent.getInstance().setMute(isMuted);
+		GameComponent.getInstance().setMute(isMuted);
+	}
+	
+	public static boolean isMuted() {
+		return isMuted;
+	}
+	
+	public static void closeProgram() {
+		primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+		Platform.exit();
 	}
 }
