@@ -11,6 +11,7 @@ import entity.property.HpBar;
 import entity.property.Side;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import main.Main;
 import main.game.GameComponent;
 import skill.Burst;
 import skill.Frenzy;
@@ -120,6 +121,13 @@ public class Tank extends Novice{
 			HPShield = 0;
 			super.takeDamage(entity, damage);
 		}
+	}
+	
+	@Override
+	public void upgradeAbility() {
+		super.upgradeAbility();
+		maxHp = 8000 + 750 * status.getStatus(1);
+		healthRegen = maxHp / Main.FRAME_RATE / 50;
 	}
 
 	public double getHPShield() {

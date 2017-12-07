@@ -335,7 +335,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
 		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
 		maxHp = DEFAULT_MAX_HP + 500 * status.getStatus(1);
-		healthRegen = DEFAULT_MAX_HP / Main.FRAME_RATE / 60;
+		healthRegen = maxHp / Main.FRAME_RATE / 60;
 		damageFactor = 1 - 0.016 * status.getStatus(1);
 		bulletHP = DEFAULT_BULLET_HP + 30 * status.getStatus(2);
 		bulletSpeed = DEFAULT_BULLET_SPEED + 15 * status.getStatus(2);
