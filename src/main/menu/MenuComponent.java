@@ -29,7 +29,7 @@ public class MenuComponent {
 	
 	private static final Media START_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuStart.wav").toString());
 	private static final Media LOOP_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuLoop.wav").toString());
-	private static final Media TRANSITION_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuTransitionSound.wav").toString());
+	private static final Media TRANSITION_SOUND = new Media(ClassLoader.getSystemResource("sound/MenuTransitionSound.mp3").toString());
 	
 	private static final MenuComponent instance = new MenuComponent("");
 

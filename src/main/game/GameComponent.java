@@ -38,9 +38,8 @@ public class GameComponent {
 	public static final int MAX_FOOD_COUNT = 750;
 	public static final int MAX_TRACK_NUMBER = 3;
 	
-	public static final Media SHAKE_SOUND = new Media(ClassLoader.getSystemResource("sound/ShakeSound.wav").toString());
-	public static final Media[] START_SOUND;
-	public static final Media[] LOOP_SOUND;
+	public static final Media SHAKE_SOUND = new Media(ClassLoader.getSystemResource("sound/ShakeSound.mp3").toString());
+	public static final Media[] GAME_SOUND;
 	public static final Media[] RESULT_SOUND;
 	
 	private static final GameComponent instance = new GameComponent();
@@ -56,8 +55,7 @@ public class GameComponent {
 	private Novice player;
 	
 	private int trackNumber;
-	private MediaPlayer startMP;
-	private MediaPlayer loopMP;
+	private MediaPlayer gameMP;
 	private MediaPlayer shakeMP;
 	private MediaPlayer resultMP;
 	
@@ -80,17 +78,15 @@ public class GameComponent {
 	private Canvas grid;
 	
 	static {
-		START_SOUND = new Media[MAX_TRACK_NUMBER];
-		LOOP_SOUND = new Media[MAX_TRACK_NUMBER];
+		GAME_SOUND = new Media[MAX_TRACK_NUMBER];
 		
 		for(int i = 0; i < MAX_TRACK_NUMBER; ++i) {
-			START_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayStart" + i + ".wav").toString());
-			LOOP_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/GameplayLoop" + i + ".wav").toString());
+			GAME_SOUND[i] = new Media(ClassLoader.getSystemResource("sound/Gameplay" + i + ".mp3").toString());
 		}
 		
 		RESULT_SOUND = new Media[2];
-		RESULT_SOUND[0] = new Media(ClassLoader.getSystemResource("sound/VictorySound.wav").toString());
-		RESULT_SOUND[1] = new Media(ClassLoader.getSystemResource("sound/DefeatSound.wav").toString());
+		RESULT_SOUND[0] = new Media(ClassLoader.getSystemResource("sound/VictorySound.mp3").toString());
+		RESULT_SOUND[1] = new Media(ClassLoader.getSystemResource("sound/DefeatSound.mp3").toString());
 	}
 	
 	public GameComponent() {
@@ -132,8 +128,9 @@ public class GameComponent {
 		addBoundary();
 		
 		new Thread(() -> {
-			startMP = new MediaPlayer(SHAKE_SOUND);
-			loopMP = new MediaPlayer(SHAKE_SOUND);
+			trackNumber = -1;
+			
+			gameMP = new MediaPlayer(SHAKE_SOUND);
 			shakeMP = new MediaPlayer(SHAKE_SOUND);
 			resultMP = new MediaPlayer(SHAKE_SOUND);
 		}).start();
@@ -248,8 +245,28 @@ public class GameComponent {
 		Random random = new Random();
 		
 		while(foodList.size() < MAX_FOOD_COUNT) {
-			int posx = random.nextInt((int) MAX_SIZE);
-			int posy = random.nextInt((int) MAX_SIZE);
+			double posx;
+			double posy;
+			
+			double x = random.nextDouble();
+			double y = random.nextDouble();
+			
+			// Probability linearly increases towards center (consider each dimension individually)
+			// Minimum probability (near border) is half of maximum probability (near center) 
+			if(x < 0.5) {
+				posx = -2 + Math.sqrt(1 + 6*x);
+			} else {
+				posx = 2 - Math.sqrt(7 - 6*x);
+			}
+			
+			if(y < 0.5) {
+				posy = -2 + Math.sqrt(1 + 6*y);
+			} else {
+				posy = 2 - Math.sqrt(7 - 6*y);
+			}
+			
+			posx = (posx + 1) * MAX_SIZE / 2;
+			posy = (posy + 1) * MAX_SIZE / 2;
 			
 			Food food = new Food(new Pair(posx, posy));
 			
@@ -377,18 +394,22 @@ public class GameComponent {
 	}
 	
 	public void playBGM() {
-		trackNumber = (new Random()).nextInt(MAX_TRACK_NUMBER);
+		int tmp;
+		while(true) {
+			tmp = (new Random()).nextInt(MAX_TRACK_NUMBER);
+			if(trackNumber != tmp) {
+				trackNumber = tmp;
+				break;
+			}
+		}
 		
-		startMP = new MediaPlayer(START_SOUND[trackNumber]);
-		loopMP = new MediaPlayer(LOOP_SOUND[trackNumber]);
-		startMP.setMute(SceneManager.isMuted());
-		loopMP.setMute(SceneManager.isMuted());
-		startMP.setCycleCount(1);
-		loopMP.setCycleCount(MediaPlayer.INDEFINITE);
-		startMP.setOnEndOfMedia(() -> {
-			loopMP.play();
+		gameMP = new MediaPlayer(GAME_SOUND[trackNumber]);
+		gameMP.setMute(SceneManager.isMuted());
+		gameMP.setCycleCount(1);
+		gameMP.setOnEndOfMedia(() -> {
+			playBGM();
 		});
-		startMP.play();
+		gameMP.play();
 	}
 	
 	public void playShakeSound() {
@@ -406,13 +427,11 @@ public class GameComponent {
 	}
 	
 	public void stopBGM() {
-		startMP.stop();
-		loopMP.stop();
+		gameMP.stop();
 	}
 	
 	public void setMute(boolean isMuted) {
-		startMP.setMute(isMuted);
-		loopMP.setMute(isMuted);
+		gameMP.setMute(isMuted);
 		shakeMP.setMute(isMuted);
 		resultMP.setMute(isMuted);
 	}
@@ -461,13 +480,6 @@ public class GameComponent {
 		}
 		
 		addBoundary();
-		
-		new Thread(() -> {
-			startMP = new MediaPlayer(SHAKE_SOUND);
-			loopMP = new MediaPlayer(SHAKE_SOUND);
-			shakeMP = new MediaPlayer(SHAKE_SOUND);
-			resultMP = new MediaPlayer(SHAKE_SOUND);
-		}).start();
 	}
 	
 	public static GameComponent getInstance() {

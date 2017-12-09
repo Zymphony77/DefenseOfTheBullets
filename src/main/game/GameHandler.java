@@ -87,6 +87,7 @@ public class GameHandler {
 			
 			String keyName = event.getCode().toString();
 			int number = Integer.parseInt(keyName.substring(keyName.length() - 1));
+			
 			if(activeKey.contains(KeyCode.CONTROL)) {
 				if(0 < number && number <= 6 && GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0 && 
 						GameComponent.getInstance().getStatusPane().getIconList().get(number - 1).isUpgradable()) {
