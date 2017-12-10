@@ -10,8 +10,8 @@ public class FrenzyBuff extends Buff implements Expirable{
 	private static final Image IMAGE = new Image("image/FrenzyIcon.png");
 	private double reloadFactor;
 	private double slow;
-	int duration;
-	int maxDuration;
+	private int duration;
+	private int maxDuration;
 	
 	public FrenzyBuff(Novice player, int level, int duration) {
 		super(player, BuffType.BUFF);
@@ -30,6 +30,7 @@ public class FrenzyBuff extends Buff implements Expirable{
 	
 	public void undrawEffect() {
 		player.setReloadDone((int) (player.getReloadDone() * reloadFactor));
+		player.setSpeed(player.getSpeed() / (1 - this.slow));
 		player.setDamageFactor(player.getDamageFactor() / 1.25);
 	}
 	
@@ -39,8 +40,7 @@ public class FrenzyBuff extends Buff implements Expirable{
 		--duration;
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 

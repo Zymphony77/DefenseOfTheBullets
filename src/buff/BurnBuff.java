@@ -35,8 +35,7 @@ public class BurnBuff extends Buff implements Expirable {
 		player.takeDamage(caster, burnDamage / Main.FRAME_RATE);
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 	

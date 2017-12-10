@@ -8,9 +8,9 @@ import skill.*;
 public class ShieldBuff extends Buff implements Expirable{
 	private static final Skill SKILL = new Shield();
 	private static final Image IMAGE = new Image("image/ShieldIcon.png");
-	protected int duration;
-	protected int maxDuration;
-	protected int maxHPShield;
+	private int duration;
+	private int maxDuration;
+	private int maxHPShield;
 	
 	public ShieldBuff(Novice player, int maxHPShield, int duration) {
 		super(player, BuffType.BUFF);
@@ -24,8 +24,7 @@ public class ShieldBuff extends Buff implements Expirable{
 		--duration;
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 	

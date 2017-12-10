@@ -80,7 +80,6 @@ public class Tank extends Novice{
 		gc.setFill(Color.GRAY);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
-		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		GameComponent.getInstance().addComponent(hpBar);
 	}
@@ -94,7 +93,7 @@ public class Tank extends Novice{
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		double currentDamage = random.nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
 		GameComponent.getInstance().addComponent(bullet);
@@ -102,7 +101,7 @@ public class Tank extends Novice{
 		x = refPoint.first - Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		y = refPoint.second - Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		currentDamage = random.nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		bullet = new Bullet(this, new Pair(x, y), bulletHP, direction + 180, currentDamage, bulletSpeed, side);
 		GameComponent.getInstance().addComponent(bullet);
 		
@@ -124,8 +123,8 @@ public class Tank extends Novice{
 	}
 	
 	@Override
-	public void upgradeAbility() {
-		super.upgradeAbility();
+	public void calculateAbility() {
+		super.calculateAbility();
 		maxHp = 8000 + 750 * status.getStatus(1);
 		healthRegen = maxHp / Main.FRAME_RATE / 50;
 	}

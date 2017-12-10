@@ -90,16 +90,13 @@ public class GameHandler {
 			
 			if(activeKey.contains(KeyCode.CONTROL)) {
 				if(0 < number && number <= 6 && GameComponent.getInstance().getPlayer().getExperience().getPointStatus() > 0 && 
-						GameComponent.getInstance().getStatusPane().getIconList().get(number - 1).isUpgradable()) {
+						GameComponent.getInstance().getStatusPane().getIcon(number - 1).isUpgradable()) {
 					GameComponent.getInstance().getPlayer().upgradeStatus(number - 1);
 				}
 			} else if(activeKey.contains(KeyCode.SHIFT)) {
-				if(0 < number && number <= GameComponent.getInstance().getPlayer().getSkillList().size()) {
-					for(SkillIcon icon: GameComponent.getInstance().getSkillPane().getIconList()) {
-						if(icon.getPosition() == number && icon.isUpgradable()) {
-							GameComponent.getInstance().getPlayer().upgradeSkill(number);
-						}
-					}
+				if(0 < number && number <= GameComponent.getInstance().getPlayer().getSkillList().size() &&
+						GameComponent.getInstance().getSkillPane().getIcon(number).isUpgradable()) {
+					GameComponent.getInstance().getPlayer().upgradeSkill(number);
 				}
 			} else {
 				if(0 < number && number <= GameComponent.getInstance().getPlayer().getSkillList().size()) {

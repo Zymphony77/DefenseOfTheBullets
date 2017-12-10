@@ -32,10 +32,12 @@ public class Status {
 	}
 	
 	public boolean canUpgradeStatus(int status) {
-		if(status < 0 || status > 6)
+		if(status < 0 || status > 6) {
 			return false;
-		if(stat[status] < MAX_STATUS)
+		}
+		if(stat[status] < MAX_STATUS) {
 			return true;
+		}
 		return false;
 	}
 	

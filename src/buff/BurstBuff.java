@@ -29,8 +29,7 @@ public class BurstBuff extends Buff implements Expirable {
 		--duration;
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 	

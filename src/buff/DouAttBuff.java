@@ -22,6 +22,7 @@ public class DouAttBuff extends Buff {
 	}
 	
 	public void undrawEffect() {
+		// NO EFFECT
 	}
 	
 	public Image getImage() {

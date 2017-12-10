@@ -14,8 +14,6 @@ import utility.Job;
 import utility.Pair;
 
 public class Magician extends Novice {
-	private static final int CANVAS_SIZE = 60;
-	private static final int RADIUS = 20;
 	private static final Job JOB = Job.MAGICIAN;
 	
 	public Magician(Novice oldPlayer) {
@@ -50,7 +48,6 @@ public class Magician extends Novice {
 		gc.setFill(Color.MEDIUMPURPLE);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
-		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		GameComponent.getInstance().addComponent(hpBar);
 	}
@@ -64,7 +61,7 @@ public class Magician extends Novice {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		double currentDamage = random.nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		
 		Bullet bullet = null;
 		

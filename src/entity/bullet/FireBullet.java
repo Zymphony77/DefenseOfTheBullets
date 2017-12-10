@@ -13,18 +13,19 @@ public class FireBullet extends Bullet implements Rotatable {
 	private static final Image BLUE_ORB = new Image("image/BlueFireOrb.png");
 	public static final int RADIUS = 9;
 	
-	protected double burnDamage;
-	protected int direction;
+	private double burnDamage;
+	private int angle;
 	
-	public FireBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, double speed, Side side, double burnDamage) {
+	public FireBullet(Entity shooter, Pair refPoint, double maxHp, double direction, double attack, 
+			double speed, Side side, double burnDamage) {
 		super(shooter, refPoint, maxHp, direction, attack, speed, side);
 		this.burnDamage = burnDamage;
-		direction = 0;
+		angle = 0;
 	}
 	
 	public void rotate() {
-		direction = (direction + 97) % 360;
-		canvas.setRotate(direction);
+		angle = (angle + 97) % 360;
+		canvas.setRotate(angle);
 	}
 	
 	@Override

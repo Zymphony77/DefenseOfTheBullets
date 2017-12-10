@@ -57,4 +57,13 @@ public class SkillPane extends Pane {
 	public Novice getPlayer() {
 		return player;
 	}
+	
+	public SkillIcon getIcon(int position) {
+		for(SkillIcon icon: iconList) {
+			if(icon.getPosition() == position) {
+				return icon;
+			}
+		}
+		return null;
+	}
 }

@@ -46,4 +46,13 @@ public class StatusPane extends Pane {
 	public ArrayList<StatusIcon> getIconList() {
 		return iconList;
 	}
+	
+	public StatusIcon getIcon(int position) {
+		for(StatusIcon icon: iconList) {
+			if(icon.getPosition() == position) {
+				return icon;
+			}
+		}
+		return null;
+	}
 }

@@ -59,6 +59,8 @@ public class Novice extends Entity implements Movable, Shootable {
 	protected Experience experience;
 	protected int reloadCount;
 	
+	protected Random random;
+	
 	/* ------------------- Constructor ------------------- */
 	public Novice(Pair refPoint, Side side, String name) {
 		super(refPoint, DEFAULT_MAX_HP, 0, side);
@@ -87,6 +89,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		death = 0;
 
 		experience = new Experience(1, 0);
+		
+		random = new Random();
 	}
 	
 	public Novice(Pair refPoint, Experience experience, Side side, int kill, int death, String name) {
@@ -105,6 +109,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		isMoving = false;
 		isPlayer = true;
+		isChangeJobRequested = false;
 		moveDirection = 0;
 		
 		skillList = new ArrayList<Skill>();
@@ -113,6 +118,8 @@ public class Novice extends Entity implements Movable, Shootable {
 		
 		reloadDone = DEFAULT_RELOAD;
 		reloadCount = DEFAULT_RELOAD;
+		
+		random = new Random();
 	}
 	
 	public Novice(Novice oldPlayer) {
@@ -124,10 +131,12 @@ public class Novice extends Entity implements Movable, Shootable {
 		status = oldPlayer.getStatus();
 		isMoving = oldPlayer.isMoving;
 		isPlayer = oldPlayer.isPlayer;
+		isChangeJobRequested = false;
 		moveDirection = oldPlayer.moveDirection;
 		reloadCount = oldPlayer.reloadCount;
 		kill = oldPlayer.kill;
 		death = oldPlayer.death;
+		random = oldPlayer.random;
 	}
 	
 	/* ------------------- UI ------------------- */
@@ -254,7 +263,7 @@ public class Novice extends Entity implements Movable, Shootable {
 		double x = refPoint.first + Math.cos(Math.toRadians(direction))*(RADIUS + 17);
 		double y = refPoint.second + Math.sin(Math.toRadians(direction))*(RADIUS + 17);
 		
-		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		double currentDamage = random.nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
 		GameComponent.getInstance().addComponent(bullet);
@@ -273,7 +282,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	
 	/* ------------------- Skill ------------------- */
 	public void useSkill(int position) {
-		if(position > skillList.size()) {
+		if(position > skillList.size() || position <= 0) {
 			return;
 		}
 		
@@ -345,6 +354,15 @@ public class Novice extends Entity implements Movable, Shootable {
 			buff.deactivateBuff();
 		}
 		
+		calculateAbility();
+		
+		// Re-activate Buff
+		for(Buff buff: buffList) {
+			buff.activateBuff();
+		}
+	}
+	
+	public void calculateAbility() {
 		// Status
 		bulletDamage = DEFAULT_BULLET_DAMAGE + 6 * status.getStatus(0);
 		attack = DEFAULT_ATTACK + 8 * status.getStatus(0);
@@ -357,11 +375,6 @@ public class Novice extends Entity implements Movable, Shootable {
 		reloadDone = DEFAULT_RELOAD - (int)(0.6667*status.getStatus(4));
 		criticalChance = DEFAULT_CRITICAL_CHANCE + 0.02 * status.getStatus(5);
 		criticalDamage = DEFAULT_CRITICAL_DAMAGE + 0.1 * status.getStatus(5);
-		
-		// Re-activate Buff
-		for(Buff buff: buffList) {
-			buff.activateBuff();
-		}
 	}
 	
 	public void upgradeStatus(int status) {
@@ -409,7 +422,7 @@ public class Novice extends Entity implements Movable, Shootable {
 	}
 	
 	public void setReloadCount() {
-		this.reloadCount = DEFAULT_RELOAD;
+		this.reloadCount = reloadDone;
 	}
 	
 	public void setBulletDamage(double bulletDamage) {

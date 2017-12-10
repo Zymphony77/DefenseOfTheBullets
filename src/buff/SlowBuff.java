@@ -7,7 +7,6 @@ import skill.Haste;
 import skill.Skill;
 
 public class SlowBuff extends Buff implements Expirable {
-	private static final Skill SKILL = null;
 	private static final Image IMAGE = new Image("image/IceOrbIcon.png");
 	private static final int MAX_DURATION = 1 * Main.FRAME_RATE;
 	
@@ -27,8 +26,7 @@ public class SlowBuff extends Buff implements Expirable {
 		--duration;
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 	
@@ -53,6 +51,6 @@ public class SlowBuff extends Buff implements Expirable {
 	}
 	
 	public Skill getSkill() {
-		return SKILL;
+		return null;
 	}
 }

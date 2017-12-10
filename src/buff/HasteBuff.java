@@ -25,8 +25,7 @@ public class HasteBuff extends Buff implements Expirable {
 		--duration;
 		
 		if(duration <= 0) {
-			isActive = false;
-			undrawEffect();
+			deactivateBuff();
 		}
 	}
 	

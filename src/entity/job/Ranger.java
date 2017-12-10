@@ -26,7 +26,6 @@ public class Ranger extends Novice{
 	
 	protected double ratioDoubleAtt;
 	protected int shootingState; 
-	protected Random rand = new Random();
 	
 //	public Ranger(Pair refPoint, Side side) {
 //		super(refPoint, side);
@@ -61,6 +60,7 @@ public class Ranger extends Novice{
 //		reloadCount = oldPlayer.reloadCount;
 		super(oldPlayer);
 		
+		shootingState = 0;
 		ratioDoubleAtt = 0;
 		skillList.add(new DouAtt());
 		skillList.add(new Frenzy());
@@ -83,7 +83,6 @@ public class Ranger extends Novice{
 		gc.setFill(Color.DARKSEAGREEN);
 		gc.fillOval(10, 10, 2*RADIUS, 2*RADIUS);
 		
-		GameComponent.getInstance().removeComponent(hpBar);
 		hpBar = new HpBar(this);
 		GameComponent.getInstance().addComponent(hpBar);
 	}
@@ -99,7 +98,7 @@ public class Ranger extends Novice{
 		double y = refPoint.second + Math.sin(Math.toRadians(direction) + (shootingState == 0? 1: -1) * 
 				Math.atan2(4, RADIUS + 17))*(Math.sqrt(Math.pow((RADIUS + 17), 2) + Math.pow(4, 2)));
 		
-		double currentDamage = (new Random()).nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
+		double currentDamage = random.nextDouble() < criticalChance? bulletDamage * criticalDamage: bulletDamage;
 		
 		Bullet bullet = new Bullet(this, new Pair(x, y), bulletHP, direction, currentDamage, bulletSpeed, side);
 		GameComponent.getInstance().addComponent(bullet);
@@ -107,7 +106,7 @@ public class Ranger extends Novice{
 		reloadCount = 0;
 		shootingState = 1 - shootingState;
 		
-		if(rand.nextDouble() * 100.0 < ratioDoubleAtt) {
+		if(random.nextDouble() * 100.0 < ratioDoubleAtt) {
 			reloadCount = (int)(getReloadDone() * 0.90);
 		}
 	}

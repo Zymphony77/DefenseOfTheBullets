@@ -84,7 +84,6 @@ public class StatusIcon extends Pane {
 		isCurrentlyUpgradable = true;
 		upgrade.setOpacity(0.75);
 		upgrade.setOnMouseClicked(event -> {
-			
 			player.upgradeStatus(position);
 			if(player.getStatus().getStatus(position) >= Status.MAX_STATUS) {
 				undrawUpgrade();
@@ -108,5 +107,9 @@ public class StatusIcon extends Pane {
 	
 	public Pair getIconShift() {
 		return new Pair(5, Main.SCREEN_SIZE - ExperienceBar.MAX_HEIGHT - 10 - (6 - position) * (MAX_HEIGHT + 4));
+	}
+	
+	public int getPosition() {
+		return position;
 	}
 }

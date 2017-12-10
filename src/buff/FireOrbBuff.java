@@ -11,8 +11,8 @@ public class FireOrbBuff extends Buff {
 	
 	private double burnDamage;
 	
-	public FireOrbBuff(Novice caster, double burnDamage) {
-		super(caster, BuffType.BUFF);
+	public FireOrbBuff(Novice player, double burnDamage) {
+		super(player, BuffType.BUFF);
 		this.burnDamage = burnDamage;
 		
 		activateBuff();

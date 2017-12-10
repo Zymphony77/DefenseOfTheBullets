@@ -15,16 +15,16 @@ import utility.*;
 
 public class Food extends Entity implements Rotatable {
 	public static final int CANVAS_SIZE = 20;
+	public static final int DEFAULT_MAX_HP = 150;
+	public static final int DEFAULT_ATTACK = 150;
 	public static final int FOOD_EXP = 100;
 	
 	private int rotateDirection;
-	private int foodExp;
 	
 	public Food(Pair refPoint) {
-		super(refPoint, 150, (new Random()).nextInt(360), Side.NEUTRAL);
+		super(refPoint, DEFAULT_MAX_HP, (new Random()).nextInt(360), Side.NEUTRAL);
 		
-		attack = 150;
-		foodExp = FOOD_EXP;
+		attack = DEFAULT_ATTACK;
 		rotateDirection = ((new Random()).nextInt(2) * 2) - 1;
 	}
 	
@@ -79,7 +79,7 @@ public class Food extends Entity implements Rotatable {
 		}
 		
 		if(realKiller != null) {
-			realKiller.gainExp(foodExp);
+			realKiller.gainExp(FOOD_EXP);
 		}
 		
 		GameComponent.getInstance().getFoodPane().getChildren().remove(canvas);
