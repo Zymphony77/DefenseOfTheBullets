@@ -33,17 +33,35 @@ import skill.*;
 import utility.*;
 
 public class GameHandler {
+	public static class PairFx<S, T> extends javafx.util.Pair<S, T> {
+		public PairFx(S s, T t) {
+			super(s, t);
+		}
+	}
+	
 	private static final int SPAWN_TIME = 5 * Main.FRAME_RATE;
 	
-	private static HashSet<KeyCode> activeKey = new HashSet<KeyCode>();
-	private static HashSet<MouseButton> activeMouse = new HashSet<MouseButton>();
-	private static HashMap<Novice, Integer> deadPlayer = new HashMap<Novice, Integer>();
-	private static boolean autoshoot = false;
-	private static boolean justDead = false;
-	private static boolean isEnd = false;
-	private static boolean changeSceneReady = false;
+	private static HashSet<KeyCode> activeKey;
+	private static HashSet<MouseButton> activeMouse;
+	private static HashSet<PairFx<Entity, Entity>> collisionPair;
+	private static HashMap<Novice, Integer> deadPlayer;
+	private static boolean autoshoot;
+	private static boolean justDead;
+	private static boolean isEnd;
+	private static boolean changeSceneReady;
 	
 	private static Timeline timer;
+	
+	static {
+		activeKey = new HashSet<KeyCode>();
+		activeMouse = new HashSet<MouseButton>();
+		collisionPair = new HashSet<PairFx<Entity, Entity>>();
+		deadPlayer = new HashMap<Novice, Integer>();
+		autoshoot = false;
+		justDead = false;
+		isEnd = false;
+		changeSceneReady = false;
+	}
 	
 	public static void keyPressed(KeyEvent event) {
 		if(event.getCode() == KeyCode.ENTER && changeSceneReady) {
@@ -117,7 +135,7 @@ public class GameHandler {
 		
 		// CHEAT -- FOR TESTING PURPOSES
 		
-		// OVER MAX STATUS
+		// MAX STATUS
 		if(event.getCode() == KeyCode.EQUALS) {
 			while(GameComponent.getInstance().getPlayer().getExperience().getLevel() < Experience.MAX_LEVEL) {
 				GameComponent.getInstance().getPlayer().gainExp(GameComponent.getInstance().getPlayer().getExperience().getMaxExp());
@@ -233,12 +251,12 @@ public class GameHandler {
 			return;
 		}
 		
-		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
-		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
-		
 		if(GameComponent.getInstance().getPlayer() instanceof Tank && ((Tank) GameComponent.getInstance().getPlayer()).isBurstBuff()) {
 			return;
 		}
+		
+		double x = event.getSceneX() - Main.SCREEN_SIZE / 2;
+		double y = event.getSceneY() - Main.SCREEN_SIZE / 2;
 		
 		GameComponent.getInstance().getPlayer().setDirection(Math.toDegrees(Math.atan2(y, x)));
 		GameComponent.getInstance().getPlayer().rotate();
@@ -265,7 +283,7 @@ public class GameHandler {
 	
 	private static void updateDeadPlayer() {
 		for(Novice player: deadPlayer.keySet()) {
-			if(deadPlayer.get(player).intValue() >= SPAWN_TIME - 1 || isEnd) {
+			if(deadPlayer.get(player).intValue() >= SPAWN_TIME || isEnd) {
 				GameComponent.getInstance().getBloodPane().undrawDeadScene();
 				player.getExperience().reborn();
 				
@@ -295,7 +313,7 @@ public class GameHandler {
 			deadPlayer.put(player, new Integer(deadPlayer.get(player).intValue() + 1));
 		}
 		
-		deadPlayer.keySet().removeIf(player -> deadPlayer.get(player).intValue() >= SPAWN_TIME || isEnd);
+		deadPlayer.keySet().removeIf(player -> deadPlayer.get(player).intValue() > SPAWN_TIME || isEnd);
 	}
 	
 	private static void checkPlayerUpgrade() {
@@ -495,6 +513,7 @@ public class GameHandler {
 				return 1;
 			}
 		});
+		collisionPair.clear();
 		pairwiseCheckCollision(list, 0, GameComponent.MAX_SIZE, 
 				Math.max(list1.get(0).getMaxRadius(), list2.get(0).getMaxRadius()) * 2);
 	}
@@ -512,9 +531,11 @@ public class GameHandler {
 			int j = i + 1;
 			while(j < middle.size() && middle.get(j).getRefPoint().second - middle.get(i).getRefPoint().second <= maxDist) {
 				if(middle.get(i).isCollided(middle.get(j)) && middle.get(i).getSide() != middle.get(j).getSide() &&
-						!middle.get(i).isDead() && !middle.get(j).isDead()) {
+						!middle.get(i).isDead() && !middle.get(j).isDead() && 
+						!collisionPair.contains(new PairFx<Entity, Entity>(middle.get(i), middle.get(j)))) {
 					middle.get(i).takeDamage(middle.get(j));
 					middle.get(j).takeDamage(middle.get(i));
+					collisionPair.add(new PairFx<Entity, Entity>(middle.get(i), middle.get(j)));
 				}
 				++j;
 			}

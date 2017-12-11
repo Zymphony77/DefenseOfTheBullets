@@ -10,13 +10,13 @@ public class ShieldBuff extends Buff implements Expirable{
 	private static final Image IMAGE = new Image("image/ShieldIcon.png");
 	private int duration;
 	private int maxDuration;
-	private int maxHPShield;
+	private double HPShield;
 	
-	public ShieldBuff(Novice player, int maxHPShield, int duration) {
+	public ShieldBuff(Novice player, double HPShield, int duration) {
 		super(player, BuffType.BUFF);
 		this.duration = duration;
 		this.maxDuration = duration;
-		this.maxHPShield = maxHPShield;
+		this.HPShield = HPShield;
 		activateBuff();
 	}
 	
@@ -29,10 +29,11 @@ public class ShieldBuff extends Buff implements Expirable{
 	}
 	
 	public void drawEffect() {
-		((Tank) player).setHPShield(maxHPShield);
+		((Tank) player).setHPShield(HPShield);
 	}
 	
 	public void undrawEffect() {
+		HPShield = ((Tank) player).getHPShield();
 		((Tank) player).setHPShield(0);
 	}
 	

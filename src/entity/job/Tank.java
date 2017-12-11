@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import buff.Buff;
+import buff.ShieldBuff;
 import entity.Entity;
 import entity.bullet.Bullet;
 import entity.property.Experience;
@@ -116,8 +117,15 @@ public class Tank extends Novice{
 		if(HPShield - damage > 1e-4) {
 			HPShield -= damage;
 			hpBar.draw();
-		} else {
+		} else if(HPShield > 1e-4) {
 			HPShield = 0;
+			for(Buff buff: buffList) {
+				if(buff instanceof ShieldBuff) {
+					removeBuff(buff);
+					break;
+				}
+			}
+		} else {
 			super.takeDamage(entity, damage);
 		}
 	}
@@ -133,8 +141,8 @@ public class Tank extends Novice{
 		return HPShield;
 	}
 
-	public void setHPShield(double hPShield) {
-		HPShield = hPShield;
+	public void setHPShield(double HPShield) {
+		this.HPShield = HPShield;
 	}
 	
 	public boolean isBurstBuff() {

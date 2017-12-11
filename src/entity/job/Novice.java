@@ -15,7 +15,7 @@ import entity.property.*;
 import skill.*;
 import utility.*;
 
-public class Novice extends Entity implements Movable, Shootable {
+public class Novice extends Entity implements Movable, Rotatable, Shootable {
 	private static final double DEFAULT_MAX_HP = 5000;
 	private static final double DEFAULT_ATTACK = 50;
 	private static final double DEFAULT_SPEED = 100;

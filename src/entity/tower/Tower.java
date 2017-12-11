@@ -12,16 +12,15 @@ import java.util.Random;
 import entity.*;
 import entity.bullet.*;
 import entity.job.Novice;
-import entity.property.HpBar;
-import entity.property.Shootable;
-import entity.property.Side;
+import entity.property.*;
 import utility.*;
 
-public class Tower extends Entity implements Shootable {
+public class Tower extends Entity implements Rotatable, Shootable {
 	public static final int CANVAS_SIZE = 200;
 	public static final int RADIUS = 75;
 	
 	public static final int MAX_HP = 100000;
+	public static final int ATTACK = 150;
 	public static final int RELOAD_DONE = 5;
 	public static final int BULLET_HP = 250;
 	public static final int BULLET_SPEED = 300;
@@ -35,7 +34,7 @@ public class Tower extends Entity implements Shootable {
 	public Tower(Pair refPoint, Side side) {
 		super(refPoint, MAX_HP, 0, side);
 		
-		attack = 150;
+		attack = ATTACK;
 		reloadCount = RELOAD_DONE;
 	}
 	
@@ -109,6 +108,10 @@ public class Tower extends Entity implements Shootable {
 		reloadCount = 0;
 	}
 	
+	public void reload() {
+		reloadCount = Math.min(reloadCount + 1, RELOAD_DONE);
+	}
+	
 	public void heal(double amount) {
 		hp = Math.min(hp + amount, maxHp);
 		hpBar.draw();
@@ -128,10 +131,6 @@ public class Tower extends Entity implements Shootable {
 	
 	public int getMaxRadius() {
 		return getRadius();
-	}
-	
-	public void reload() {
-		reloadCount = Math.min(reloadCount + 1, RELOAD_DONE);
 	}
 	
 	public static int getBulletSpeed() {
