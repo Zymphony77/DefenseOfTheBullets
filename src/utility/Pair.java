@@ -1,7 +1,8 @@
 package utility;
 
 public class Pair {
-	public double first, second;
+	public double first;
+	public double second;
 	
 	public Pair() {
 		first = 0;

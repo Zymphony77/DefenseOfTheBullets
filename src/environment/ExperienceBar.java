@@ -16,7 +16,7 @@ public class ExperienceBar extends Pane {
 	public static final int MAX_WIDTH = 500;
 	public static final int MAX_HEIGHT = 20;
 	
-	Experience experience;
+	private Experience experience;
 	
 	private Canvas expCanvas;
 	private String name;

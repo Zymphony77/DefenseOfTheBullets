@@ -79,11 +79,9 @@ public abstract class Bot {
 		queue.add(tmp);
 		grid[SIZE_OF_GRID/2][SIZE_OF_GRID/2] = new Grid(tmp);
 		
-		//System.out.println("tower: " + tmp.getX() + " " + tmp.getY());
 		try {
 			while(!queue.isEmpty()) {
 				tmp = queue.poll();
-				//System.out.println(" : == " +  tmp.getGridX() + " " + tmp.getGridY() + " time : " + tmp.getTime() + " First : "+  tmp.getFirstDirection());
 				double time = timeForOnePixel + tmp.getTime();
 				for(int i = 0; i < 8; i++) {
 					if(tmp.getGridX() == SIZE_OF_GRID/2 && tmp.getGridY() == SIZE_OF_GRID/2) 
@@ -274,7 +272,6 @@ public abstract class Bot {
 			}else {
 				if(tmpForMove == -1) {
 					tmpForMove = rand.nextInt(8);
-//					System.out.println("change direction 1");
 					while(utility.isHitTheWall(tmpForMove)) {
 						tmpForMove = rand.nextInt(8);
 					}
@@ -361,13 +358,7 @@ public abstract class Bot {
 		return -1;
 	}
 	
-	protected void escapeWithBullet() {
-
-		/// if you don't want to change direction many time.
-//		if(status == 4 && rand.nextInt(30) != 0) {
-//			return;
-//		}
-		
+	protected void escapeWithBullet() {		
 		if(((ActiveSkill) player.getSkillList().get(0)).isReady()) {
 			player.useSkill(1);
 		}
