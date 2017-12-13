@@ -102,6 +102,7 @@ public class MenuComponent {
 		sidePane = new Pane();
 		
 		red = new Canvas(203, 203);
+		red.setOpacity(0.75);
 		red.setTranslateX(2 * Main.SCREEN_SIZE);
 		red.setTranslateY(Main.SCREEN_SIZE * 13 / 30);
 		
@@ -117,6 +118,7 @@ public class MenuComponent {
 		gc.strokeRoundRect(3, 3, 197, 197, 44, 44);
 		
 		blue = new Canvas(203, 203);
+		blue.setOpacity(0.75);
 		blue.setTranslateX(2 * Main.SCREEN_SIZE);
 		blue.setTranslateY(Main.SCREEN_SIZE * 13 / 30);
 		
@@ -132,6 +134,7 @@ public class MenuComponent {
 		gc.strokeRoundRect(3, 3, 197, 197, 44, 44);
 		
 		moveBack = new Canvas(100, 100);
+		moveBack.setOpacity(0.75);
 		moveBack.setTranslateX(2 * Main.SCREEN_SIZE);
 		moveBack.setTranslateY(Main.SCREEN_SIZE * 23 / 30);
 		

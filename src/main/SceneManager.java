@@ -25,7 +25,7 @@ public class SceneManager {
 	private static Scene menuScene;
 	private static Scene rankingScene;
 	
-	private static boolean isMuted = false;;
+	private static boolean isMuted = false;
 	
 	public static void setGameScene(String name, Side side) {
 		GameComponent.getInstance().initialize(side, name);
@@ -126,6 +126,5 @@ public class SceneManager {
 	
 	public static void closeProgram() {
 		primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
-		Platform.exit();
 	}
 }

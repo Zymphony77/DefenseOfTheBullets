@@ -335,7 +335,8 @@ public class GameHandler {
 		}
 		
 		// Job
-		if(GameComponent.getInstance().getPlayer().getJob() == Job.NOVICE && GameComponent.getInstance().getPlayer().getLevel() > 10 &&
+		if(GameComponent.getInstance().getPlayer().getJob() == Job.NOVICE && 
+				GameComponent.getInstance().getPlayer().getLevel() > 10 &&
 				!GameComponent.getInstance().getClassPane().isShowing()) {
 			GameComponent.getInstance().getClassPane().showClassPane();
 		}
@@ -344,6 +345,7 @@ public class GameHandler {
 	private static void updateReloadAndSkill() {
 		// Player
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
+			player.heal(player.getHealthRegen());
 			player.reload();
 			// Buff
 			for(Buff buff: player.getBuffList()) {
@@ -385,7 +387,6 @@ public class GameHandler {
 	
 	private static void moveComponent() {
 		for(Bot bot: GameComponent.getInstance().getBotList()) {
-			bot.getPlayer().heal(bot.getPlayer().getHealthRegen());
 			bot.move();
 			bot.getPlayer().move();
 		}
@@ -398,7 +399,6 @@ public class GameHandler {
 		for(Food food: GameComponent.getInstance().getFoodList()) {
 			food.rotate();
 		}
-//		System.out.println();
 	}
 	
 	private static void movePlayer() {
@@ -590,7 +590,7 @@ public class GameHandler {
 		GameComponent.getInstance().getMinimap().update();
 	}
 	
-	public static void changeClass() {
+	private static void changeClass() {
 		ArrayList<Novice> newPlayerList = new ArrayList<Novice>();
 		
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
