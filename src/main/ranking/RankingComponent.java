@@ -27,38 +27,8 @@ import entity.property.*;
 import utility.*;
 
 public class RankingComponent {
-	private static final class PlayerWithName {
-		public static final double ICON_SIZE = Main.SCREEN_SIZE / 30.0;
-		public static final HashMap<Job, Image> ICON = new HashMap<Job, Image>();
-		
-		private Novice player;
-		private String name;
-		
-		static {
-			ICON.put(Job.NOVICE, new Image("image/NoviceIcon.png"));
-			ICON.put(Job.TANK, new Image("image/TankIcon.png"));
-			ICON.put(Job.MAGICIAN, new Image("image/MagicianIcon.png"));
-			ICON.put(Job.RANGER, new Image("image/RangerIcon.png"));
-		}
-		
-		public PlayerWithName(Novice player, String name) {
-			this.player = player;
-			this.name = name;
-		}
-		
-		public Novice getPlayer() {
-			return player;
-		}
-		
-		public int getScore() {
-			return 2 * player.getKill() - 3 * player.getDeath();
-		}
-		
-		public String getName() {
-			return name;
-		}
-	}
-	
+	private static final double ICON_SIZE = Main.SCREEN_SIZE / 30.0;
+	private static final HashMap<Job, Image> ICON = new HashMap<Job, Image>();
 	private static final RankingComponent instance = new RankingComponent();
 	
 	private Side winnerSide;
@@ -66,13 +36,19 @@ public class RankingComponent {
 	private Pane rankingPane;
 	private Canvas background;
 	
-	private ArrayList<PlayerWithName> playerList;
+	private ArrayList<Novice> playerList;
 	
 	private Timeline mover;
 	private int moveCount;
 	
+	static {
+		ICON.put(Job.NOVICE, new Image("image/NoviceIcon.png"));
+		ICON.put(Job.TANK, new Image("image/TankIcon.png"));
+		ICON.put(Job.MAGICIAN, new Image("image/MagicianIcon.png"));
+		ICON.put(Job.RANGER, new Image("image/RangerIcon.png"));
+	}
+	
 	public RankingComponent() {
-		
 		winnerSide = GameComponent.getInstance().getTowerList().get(0).getSide();
 		
 		backgroundPane = new Pane();
@@ -98,40 +74,39 @@ public class RankingComponent {
 		backgroundPane.getChildren().addAll(background, logoBig, logoSmall);
 		
 		rankingPane = new Pane();
-		playerList = new ArrayList<PlayerWithName>();
+		playerList = new ArrayList<Novice>();
 		calculateRanking();
 		drawRanking();
 	}
 	
 	public void calculateRanking() {
-		int cnt = 1;
 		playerList.clear();
 		
 		for(Novice player: GameComponent.getInstance().getPlayerList()) {
-			playerList.add(new PlayerWithName(player, player.getName()));
+			playerList.add(player);
 		}
 		
-		playerList.sort(new Comparator<PlayerWithName>() {
+		playerList.sort(new Comparator<Novice>() {
 			@Override
-			public int compare(PlayerWithName player1, PlayerWithName player2) {
-				if(player1.getPlayer().getLevel() > player2.getPlayer().getLevel()) {
+			public int compare(Novice player1, Novice player2) {
+				if(player1.getLevel() > player2.getLevel()) {
 					return -1;
-				} else if(player1.getPlayer().getLevel() < player2.getPlayer().getLevel()) {
+				} else if(player1.getLevel() < player2.getLevel()) {
 					return 1;
-				}  else if(player1.getScore() > player2.getScore()) {
+				}  else if(2 * player1.getKill() - 3 * player1.getDeath() > 2 * player2.getKill() - 3 * player2.getDeath()) {
 					return -1;
-				} else if(player1.getScore() < player2.getScore()) {
+				} else if(2 * player1.getKill() - 3 * player1.getDeath() < 2 * player2.getKill() - 3 * player2.getDeath()) {
 					return 1;
-				} else if(player1.getPlayer().getKill() > player2.getPlayer().getKill()) {
+				} else if(player1.getKill() > player2.getKill()) {
 					return -1;
-				} else if(player1.getPlayer().getKill() < player2.getPlayer().getKill()) {
+				} else if(player1.getKill() < player2.getKill()) {
 					return 1;
-				} else if(player1.getPlayer().getDeath() < player2.getPlayer().getDeath()) {
+				} else if(player1.getDeath() < player2.getDeath()) {
 					return -1;
-				} else if(player1.getPlayer().getDeath() > player2.getPlayer().getDeath()) {
+				} else if(player1.getDeath() > player2.getDeath()) {
 					return 1;
-				} else if(player1.getPlayer().getSide() != player2.getPlayer().getSide()) {
-					if(player1.getPlayer().getSide() == winnerSide) {
+				} else if(player1.getSide() != player2.getSide()) {
+					if(player1.getSide() == winnerSide) {
 						return -1;
 					} else {
 						return 1;
@@ -155,7 +130,7 @@ public class RankingComponent {
 		gc.fillRect(Main.SCREEN_SIZE / 20, Main.SCREEN_SIZE * 3 / 8.0, Main.SCREEN_SIZE * 9 / 10.0, Main.SCREEN_SIZE / 15.0);
 		
 		for(int i = 0; i < playerList.size(); ++i) {
-			if(playerList.get(i).getPlayer().getSide() == Side.BLUE) {
+			if(playerList.get(i).getSide() == Side.BLUE) {
 				gc.setFill(Color.rgb(23, 74, 109));
 			} else {
 				gc.setFill(Color.rgb(78, 15, 15));
@@ -184,13 +159,13 @@ public class RankingComponent {
 		for(int i = 0; i < playerList.size(); ++i) {
 			double y = Main.SCREEN_SIZE * 5 / 11.0 + (3 + Main.SCREEN_SIZE / 24.0) * i + Main.SCREEN_SIZE / 48.0;
 			gc.fillText("" + (i + 1), Main.SCREEN_SIZE / 10.0, y);
-			gc.drawImage(PlayerWithName.ICON.get(playerList.get(i).getPlayer().getJob()), 
-					Main.SCREEN_SIZE / 5.0 - PlayerWithName.ICON_SIZE / 2, y - Main.SCREEN_SIZE / 60.0, 
-					PlayerWithName.ICON_SIZE, PlayerWithName.ICON_SIZE);
+			gc.drawImage(ICON.get(playerList.get(i).getJob()), 
+					Main.SCREEN_SIZE / 5.0 - ICON_SIZE / 2, y - Main.SCREEN_SIZE / 60.0, 
+					ICON_SIZE, ICON_SIZE);
 			gc.fillText(playerList.get(i).getName(), Main.SCREEN_SIZE * 4 / 10.0, y);
-			gc.fillText("" + playerList.get(i).getPlayer().getLevel(), Main.SCREEN_SIZE * 9 / 15.0, y);
-			gc.fillText("" + playerList.get(i).getPlayer().getKill(), Main.SCREEN_SIZE * 11 / 15.0, y);
-			gc.fillText("" + playerList.get(i).getPlayer().getDeath(), Main.SCREEN_SIZE * 13 / 15.0, y);
+			gc.fillText("" + playerList.get(i).getLevel(), Main.SCREEN_SIZE * 9 / 15.0, y);
+			gc.fillText("" + playerList.get(i).getKill(), Main.SCREEN_SIZE * 11 / 15.0, y);
+			gc.fillText("" + playerList.get(i).getDeath(), Main.SCREEN_SIZE * 13 / 15.0, y);
 		}
 		
 		// Footer
